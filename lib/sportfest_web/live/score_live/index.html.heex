@@ -30,11 +30,11 @@
         <td><%= score.medaille %></td>
         <td><%= score.station.name %></td>
         <%= if score.station.team_challenge do %>
-          <td><%= score.klassen_scoreboard.klasse %></td>
-          <td><%= score.klassen_scoreboard.summe %></td>
+          <td><%= score.klasse %></td>
+          <td><%= Sportfest.Ergebnisse.get_score_sum(score.klasse) %></td>
         <% else %>
-          <td><%= score.schueler_scoreboard.schueler.name %></td>
-          <td><%= Sportfest.Ergebnisse.get_scoreboard_sum(score.schueler_scoreboard) %></td>
+          <td><%= score.schueler.name %></td>
+          <td><%= Sportfest.Ergebnisse.get_score_sum(score.schueler) %></td>
         <% end %>
 
         <td>

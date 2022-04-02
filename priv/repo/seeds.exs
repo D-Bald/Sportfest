@@ -12,8 +12,7 @@
 for jahrgang <- 5..8 do
   for team <- 1..2 do
     for kl <- 1..3 do
-      {:ok, klasse} = Sportfest.Vorbereitung.create_klasse("#{jahrgang}.#{team}.#{kl}")
-      {:ok, _} = Sportfest.Ergebnisse.create_klassen_scoreboard(klasse)
+      {:ok, _} = Sportfest.Vorbereitung.create_klasse("#{jahrgang}.#{team}.#{kl}")
     end
   end
 end
@@ -25,10 +24,6 @@ for number <- 21..40 do
 end
 for number <- 41..60 do
   {:ok, _} = Sportfest.Vorbereitung.create_schueler(Sportfest.Vorbereitung.get_klasse!(7), %{jahrgang: 6, name: "Schüler#{number}"})
-end
-
-for schueler <- Sportfest.Vorbereitung.list_schueler() do
-  {:ok, _scoreboard} = Sportfest.Ergebnisse.create_schueler_scoreboard(schueler)
 end
 
 {:ok, _ } = Sportfest.Vorbereitung.create_station(%{name: "Weitsprung", bronze: 5, silber: 10, gold: 15})

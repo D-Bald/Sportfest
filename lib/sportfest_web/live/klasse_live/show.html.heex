@@ -21,8 +21,8 @@
   </li>
 
   <li>
-    <strong>Class scoreboard:</strong>
-    <%= @klasse.klassen_scoreboard %>
+    <strong>Gesamtpunkte:</strong>
+    <%= Sportfest.Ergebnisse.get_score_sum(@klasse) %>
   </li>
 
 </ul>
@@ -38,7 +38,6 @@
     <%= for schueler <- @klasse.schueler do %>
       <tr id={"schueler-#{schueler.id}"}>
         <td><%= schueler.name %></td>
-        <td><%= schueler.schueler_scoreboard %></td>
       </tr>
     <% end %>
   </tbody>

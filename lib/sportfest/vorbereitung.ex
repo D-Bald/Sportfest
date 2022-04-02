@@ -7,6 +7,8 @@ defmodule Sportfest.Vorbereitung do
   alias Sportfest.Repo
 
   alias Sportfest.Vorbereitung.Station
+  alias Sportfest.Vorbereitung.Klasse
+  alias Sportfest.Vorbereitung.Schueler
 
   @doc """
   Returns the list of stationen.
@@ -109,8 +111,6 @@ defmodule Sportfest.Vorbereitung do
     Station.changeset(station, attrs)
   end
 
-  alias Sportfest.Vorbereitung.Klasse
-
   @doc """
   Returns the list of klassen.
 
@@ -122,7 +122,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def list_klassen do
     Klasse
-    |> Ecto.Query.preload([klassen_scoreboard: [:scores], schueler: [:schueler_scoreboard]])
+    |> Ecto.Query.preload([scores: [:station], schueler: []])
     |> Repo.all()
   end
 
@@ -149,7 +149,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def get_klasse!(id) do
     Klasse
-    |> Ecto.Query.preload([klassen_scoreboard: [:scores], schueler: [:schueler_scoreboard]])
+    |> Ecto.Query.preload([scores: [:station], schueler: []])
     |> Repo.get!(id)
   end
 
@@ -216,11 +216,9 @@ defmodule Sportfest.Vorbereitung do
   """
   def change_klasse(%Klasse{} = klasse, attrs \\ %{}) do
     klasse
-    |> Repo.preload([klassen_scoreboard: [:scores], schueler: [:schueler_scoreboard]])
+    |> Repo.preload([scores: [:station], schueler: []])
     |> Klasse.changeset(attrs)
   end
-
-  alias Sportfest.Vorbereitung.Schueler
 
   @doc """
   Returns the list of schueler.
@@ -233,7 +231,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def list_schueler do
     Schueler
-    |> Ecto.Query.preload([:klasse, :schueler_scoreboard])
+    |> Ecto.Query.preload([scores: [:station], klasse: []])
     |> Repo.all()
   end
 
@@ -260,7 +258,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def get_schueler!(id) do
     Schueler
-    |> Ecto.Query.preload([:klasse, :schueler_scoreboard])
+    |> Ecto.Query.preload([scores: [:station], klasse: []])
     |> Repo.get!(id)
   end
 
@@ -328,7 +326,7 @@ defmodule Sportfest.Vorbereitung do
   def change_schueler(%Schueler{} = schueler, attrs \\ %{}) do
     changeset =
       schueler
-      |> Repo.preload([:klasse, :schueler_scoreboard])
+      |> Repo.preload([scores: [:station], klasse: []])
       |> Schueler.changeset(attrs)
 
     # if Map.has_key?(attrs, "klasse_id") do

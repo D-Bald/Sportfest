@@ -5,8 +5,8 @@ defmodule Sportfest.Vorbereitung.Klasse do
   schema "klassen" do
     field :name, :string
 
-    has_one :klassen_scoreboard, Sportfest.Ergebnisse.KlassenScoreboard
     has_many :schueler, Sportfest.Vorbereitung.Schueler
+    has_many :scores, Sportfest.Ergebnisse.Score
 
     timestamps()
   end

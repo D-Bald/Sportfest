@@ -38,7 +38,7 @@ defmodule Sportfest.VorbereitungFixtures do
     {:ok, klasse} =
       attrs
       |> Enum.into(%{
-        klassen_scoreboard: "some klassen_scoreboard",
+        scores: "some scores",
         name: unique_klasse_name(),
         schueler: "some schueler",
         summe: 42
@@ -58,7 +58,7 @@ defmodule Sportfest.VorbereitungFixtures do
         jahrgang: "some jahrgang",
         klasse: "some klasse",
         name: "some name",
-        schueler_scoreboard: "some schueler_scoreboard"
+        scores: "some scores"
       })
       |> Sportfest.Vorbereitung.create_schueler()
 

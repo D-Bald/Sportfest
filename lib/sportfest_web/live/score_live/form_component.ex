@@ -12,16 +12,16 @@ defmodule SportfestWeb.ScoreLive.FormComponent do
                                                             true ->
                                                               socket
                                                               |> assign(:team_challenge, true)
-                                                              |> assign(:scoreboards, Sportfest.Ergebnisse.list_klassen_scoreboards())
+                                                              |> assign(:listofowners, Sportfest.Vorbereitung.list_klassen())
                                                             false ->
                                                               socket
                                                               |> assign(:team_challenge, false)
-                                                              |> assign(:scoreboards, Sportfest.Ergebnisse.list_schueler_scoreboards())
+                                                              |> assign(:listofowners, Sportfest.Vorbereitung.list_schueler())
                                                           end
                 true                                    ->
                                                           socket
                                                           |> assign(:team_challenge, false)
-                                                          |> assign(:scoreboards, Sportfest.Ergebnisse.list_schueler_scoreboards())
+                                                          |> assign(:listofowners, Sportfest.Vorbereitung.list_schueler())
               end
 
     {:ok,

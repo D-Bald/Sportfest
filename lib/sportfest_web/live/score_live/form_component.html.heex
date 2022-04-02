@@ -15,12 +15,12 @@
 
     <%= if @team_challenge do %>
       <%= label f, :klasse %>
-      <%= select f, :klassen_scoreboard_id, Enum.map(@scoreboards, &{&1.klasse.name, &1.id})%>
-      <%= error_tag f, :klassen_scoreboard_id %>
+      <%= select f, :klasse_id, Enum.map(@listofowners, &{&1.name, &1.id})%>
+      <%= error_tag f, :klasse_id %>
     <% else %>
       <%= label f, :schüler %>
-      <%= select f, :schueler_scoreboard_id, Enum.map(@scoreboards, &{&1.schueler.name, &1.id})%>
-      <%= error_tag f, :schueler_scoreboard_id %>
+      <%= select f, :schueler_id, Enum.map(@listofowners, &{&1.name, &1.id})%>
+      <%= error_tag f, :schueler_id %>
     <% end %>
   
     <%= label f, :station %>

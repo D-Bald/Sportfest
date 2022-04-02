@@ -12,14 +12,14 @@ defmodule SportfestWeb.LiveHelpers do
 
   ## Examples
 
-      <.modal return_to={Routes.schueler_scoreboard_index_path(@socket, :index)}>
+      <.modal return_to={Routes.score_index_path(@socket, :index)}>
         <.live_component
-          module={SportfestWeb.SchuelerScoreboardLive.FormComponent}
-          id={@schueler_scoreboard.id || :new}
+          module={sportfestWeb.ScoreLive.FormComponent}
+          id={@score.id || :new}
           title={@page_title}
           action={@live_action}
-          return_to={Routes.schueler_scoreboard_index_path(@socket, :index)}
-          schueler_scoreboard: @schueler_scoreboard
+          return_to={Routes.score_index_path(@socket, :index)}
+          score: @score
         />
       </.modal>
   """

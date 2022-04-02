@@ -40,19 +40,6 @@ defmodule SportfestWeb.Router do
     live "/schueler/:id", SchuelerLive.Show, :show
     live "/schueler/:id/show/edit", SchuelerLive.Show, :edit
 
-    live "/schueler_scoreboards", SchuelerScoreboardLive.Index, :index
-    live "/schueler_scoreboards/new", SchuelerScoreboardLive.Index, :new
-    live "/schueler_scoreboards/:id/edit", SchuelerScoreboardLive.Index, :edit
-
-    live "/schueler_scoreboards/:id", SchuelerScoreboardLive.Show, :show
-    live "/schueler_scoreboards/:id/show/edit", SchuelerScoreboardLive.Show, :edit
-
-    live "/klassen_scoreboards", KlassenScoreboardLive.Index, :index
-    live "/klassen_scoreboards/new", KlassenScoreboardLive.Index, :new
-    live "/klassen_scoreboards/:id/edit", KlassenScoreboardLive.Index, :edit
-
-    live "/klassen_scoreboards/:id", KlassenScoreboardLive.Show, :show
-    live "/klassen_scoreboards/:id/show/edit", KlassenScoreboardLive.Show, :edit
 
     live "/scores", ScoreLive.Index, :index
     live "/scores/new", ScoreLive.Index, :new

@@ -7,7 +7,7 @@ defmodule Sportfest.Vorbereitung.Schueler do
     field :name, :string
 
     belongs_to :klasse, Sportfest.Vorbereitung.Klasse
-    has_one :schueler_scoreboard, Sportfest.Ergebnisse.SchuelerScoreboard
+    has_many :scores, Sportfest.Ergebnisse.Score
 
     timestamps()
   end

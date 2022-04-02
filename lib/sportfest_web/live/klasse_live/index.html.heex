@@ -26,7 +26,7 @@
     <%= for klasse <- @klassen do %>
       <tr id={"klasse-#{klasse.id}"}>
         <td><%= klasse.name %></td>
-        <td><%= klasse.klassen_scoreboard %></td>
+        <td><%= Sportfest.Ergebnisse.get_score_sum(klasse) %></td>
 
         <td>
           <span><%= live_redirect "Show", to: Routes.klasse_show_path(@socket, :show, klasse) %></span>

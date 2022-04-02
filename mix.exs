@@ -3,7 +3,7 @@ defmodule Sportfest.MixProject do
 
   def project do
     [
-      app: :Sportfest,
+      app: :sportfest,
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),

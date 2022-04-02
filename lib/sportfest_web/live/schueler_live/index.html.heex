@@ -30,7 +30,7 @@
         <td><%= schueler.name %></td>
         <td><%= schueler.klasse.name %></td>
         <td><%= schueler.jahrgang %></td>
-        <td><%= schueler.schueler_scoreboard.summe %></td>
+        <td><%= Sportfest.Ergebnisse.get_score_sum(schueler) %></td>
 
         <td>
           <span><%= live_redirect "Show", to: Routes.schueler_show_path(@socket, :show, schueler) %></span>

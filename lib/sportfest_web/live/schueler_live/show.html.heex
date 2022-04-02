@@ -31,8 +31,8 @@
   </li>
 
   <li>
-    <strong>Schueler scoreboard:</strong>
-    <%= @schueler.schueler_scoreboard %>
+    <strong>Gesamtpunkte:</strong>
+    <%= Sportfest.Ergebnisse.get_score_sum(@schueler) %>
   </li>
 
 </ul>

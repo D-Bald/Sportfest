@@ -1,3 +1,3 @@
 defmodule Sportfest.Mailer do
-  use Swoosh.Mailer, otp_app: :Sportfest
+  use Swoosh.Mailer, otp_app: :sportfest
 end
