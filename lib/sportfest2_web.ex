@@ -1,12 +1,12 @@
-defmodule Sportfest2Web do
+defmodule SportfestWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use Sportfest2Web, :controller
-      use Sportfest2Web, :view
+      use SportfestWeb, :controller
+      use SportfestWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,19 +19,19 @@ defmodule Sportfest2Web do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: Sportfest2Web
+      use Phoenix.Controller, namespace: SportfestWeb
 
       import Plug.Conn
-      import Sportfest2Web.Gettext
-      alias Sportfest2Web.Router.Helpers, as: Routes
+      import SportfestWeb.Gettext
+      alias SportfestWeb.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/sportfest2_web/templates",
-        namespace: Sportfest2Web
+        root: "lib/Sportfest_web/templates",
+        namespace: SportfestWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
@@ -45,7 +45,7 @@ defmodule Sportfest2Web do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {Sportfest2Web.LayoutView, "live.html"}
+        layout: {SportfestWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
     end
@@ -80,7 +80,7 @@ defmodule Sportfest2Web do
   def channel do
     quote do
       use Phoenix.Channel
-      import Sportfest2Web.Gettext
+      import SportfestWeb.Gettext
     end
   end
 
@@ -91,14 +91,14 @@ defmodule Sportfest2Web do
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.LiveView.Helpers
-      import Sportfest2Web.LiveHelpers
+      import SportfestWeb.LiveHelpers
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import Sportfest2Web.ErrorHelpers
-      import Sportfest2Web.Gettext
-      alias Sportfest2Web.Router.Helpers, as: Routes
+      import SportfestWeb.ErrorHelpers
+      import SportfestWeb.Gettext
+      alias SportfestWeb.Router.Helpers, as: Routes
     end
   end
 

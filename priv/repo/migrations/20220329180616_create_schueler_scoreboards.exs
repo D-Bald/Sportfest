@@ -1,4 +1,4 @@
-defmodule Sportfest2.Repo.Migrations.CreateSchuelerScoreboards do
+defmodule Sportfest.Repo.Migrations.CreateSchuelerScoreboards do
   use Ecto.Migration
 
   def change do

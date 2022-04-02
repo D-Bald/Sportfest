@@ -1,8 +1,8 @@
-defmodule Sportfest2Web.StationLiveTest do
-  use Sportfest2Web.ConnCase
+defmodule SportfestWeb.StationLiveTest do
+  use SportfestWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Sportfest2.VorbereitungFixtures
+  import Sportfest.VorbereitungFixtures
 
   @create_attrs %{bronze: 42, gold: 42, name: "some name", silber: 42}
   @update_attrs %{bronze: 43, gold: 43, name: "some updated name", silber: 43}

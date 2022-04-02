@@ -1,4 +1,4 @@
-defmodule Sportfest2.Repo.Migrations.CreateScores do
+defmodule Sportfest.Repo.Migrations.CreateScores do
   use Ecto.Migration
 
   def change do

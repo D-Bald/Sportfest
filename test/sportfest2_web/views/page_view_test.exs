@@ -1,3 +1,3 @@
-defmodule Sportfest2Web.PageViewTest do
-  use Sportfest2Web.ConnCase, async: true
+defmodule SportfestWeb.PageViewTest do
+  use SportfestWeb.ConnCase, async: true
 end

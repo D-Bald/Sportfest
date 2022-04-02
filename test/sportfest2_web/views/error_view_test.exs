@@ -1,14 +1,14 @@
-defmodule Sportfest2Web.ErrorViewTest do
-  use Sportfest2Web.ConnCase, async: true
+defmodule SportfestWeb.ErrorViewTest do
+  use SportfestWeb.ConnCase, async: true
 
   # Bring render/3 and render_to_string/3 for testing custom views
   import Phoenix.View
 
   test "renders 404.html" do
-    assert render_to_string(Sportfest2Web.ErrorView, "404.html", []) == "Not Found"
+    assert render_to_string(SportfestWeb.ErrorView, "404.html", []) == "Not Found"
   end
 
   test "renders 500.html" do
-    assert render_to_string(Sportfest2Web.ErrorView, "500.html", []) == "Internal Server Error"
+    assert render_to_string(SportfestWeb.ErrorView, "500.html", []) == "Internal Server Error"
   end
 end

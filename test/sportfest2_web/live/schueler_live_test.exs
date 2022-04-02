@@ -1,8 +1,8 @@
-defmodule Sportfest2Web.SchuelerLiveTest do
-  use Sportfest2Web.ConnCase
+defmodule SportfestWeb.SchuelerLiveTest do
+  use SportfestWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Sportfest2.VorbereitungFixtures
+  import Sportfest.VorbereitungFixtures
 
   @create_attrs %{jahrgang: "some jahrgang", klasse: "some klasse", name: "some name", schueler_scoreboard: "some schueler_scoreboard"}
   @update_attrs %{jahrgang: "some updated jahrgang", klasse: "some updated klasse", name: "some updated name", schueler_scoreboard: "some updated schueler_scoreboard"}

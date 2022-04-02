@@ -1,7 +1,7 @@
-defmodule Sportfest2.VorbereitungFixtures do
+defmodule Sportfest.VorbereitungFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Sportfest2.Vorbereitung` context.
+  entities via the `Sportfest.Vorbereitung` context.
   """
 
   @doc """
@@ -21,7 +21,7 @@ defmodule Sportfest2.VorbereitungFixtures do
         name: unique_station_name(),
         silber: 42
       })
-      |> Sportfest2.Vorbereitung.create_station()
+      |> Sportfest.Vorbereitung.create_station()
 
     station
   end
@@ -43,7 +43,7 @@ defmodule Sportfest2.VorbereitungFixtures do
         schueler: "some schueler",
         summe: 42
       })
-      |> Sportfest2.Vorbereitung.create_klasse()
+      |> Sportfest.Vorbereitung.create_klasse()
 
     klasse
   end
@@ -60,7 +60,7 @@ defmodule Sportfest2.VorbereitungFixtures do
         name: "some name",
         schueler_scoreboard: "some schueler_scoreboard"
       })
-      |> Sportfest2.Vorbereitung.create_schueler()
+      |> Sportfest.Vorbereitung.create_schueler()
 
     schueler
   end

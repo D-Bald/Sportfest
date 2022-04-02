@@ -1,4 +1,4 @@
-defmodule Sportfest2.Repo.Migrations.CreateStationen do
+defmodule Sportfest.Repo.Migrations.CreateStationen do
   use Ecto.Migration
 
   def change do

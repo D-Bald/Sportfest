@@ -1,6 +1,6 @@
-defmodule Sportfest2 do
+defmodule Sportfest do
   @moduledoc """
-  Sportfest2 keeps the contexts that define your domain
+  Sportfest keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

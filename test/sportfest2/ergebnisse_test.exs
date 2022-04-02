@@ -1,12 +1,12 @@
-defmodule Sportfest2.ErgebnisseTest do
-  use Sportfest2.DataCase
+defmodule Sportfest.ErgebnisseTest do
+  use Sportfest.DataCase
 
-  alias Sportfest2.Ergebnisse
+  alias Sportfest.Ergebnisse
 
   describe "schueler_scoreboards" do
-    alias Sportfest2.Ergebnisse.SchuelerScoreboard
+    alias Sportfest.Ergebnisse.SchuelerScoreboard
 
-    import Sportfest2.ErgebnisseFixtures
+    import Sportfest.ErgebnisseFixtures
 
     @invalid_attrs %{schueler: nil, scores: nil, summe: nil}
 
@@ -62,9 +62,9 @@ defmodule Sportfest2.ErgebnisseTest do
   end
 
   describe "scores" do
-    alias Sportfest2.Ergebnisse.Score
+    alias Sportfest.Ergebnisse.Score
 
-    import Sportfest2.ErgebnisseFixtures
+    import Sportfest.ErgebnisseFixtures
 
     @invalid_attrs %{medaille: nil, scoreboard: nil, station: nil}
 
@@ -120,9 +120,9 @@ defmodule Sportfest2.ErgebnisseTest do
   end
 
   describe "klassen_scoreboards" do
-    alias Sportfest2.Ergebnisse.KlassenScoreboard
+    alias Sportfest.Ergebnisse.KlassenScoreboard
 
-    import Sportfest2.ErgebnisseFixtures
+    import Sportfest.ErgebnisseFixtures
 
     @invalid_attrs %{klasse: nil, scores: nil, summe: nil}
 

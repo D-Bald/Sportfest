@@ -1,0 +1,47 @@
+<h1>Listing Stationen</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.station_index_path(@socket, :index)}>
+    <.live_component
+      module={SportfestWeb.StationLive.FormComponent}
+      id={@station.id || :new}
+      title={@page_title}
+      action={@live_action}
+      station={@station}
+      return_to={Routes.station_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Bronze</th>
+      <th>Silber</th>
+      <th>Gold</th>
+      <th>Team Challenge</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="stationen">
+    <%= for station <- @stationen do %>
+      <tr id={"station-#{station.id}"}>
+        <td><%= station.name %></td>
+        <td><%= station.bronze %></td>
+        <td><%= station.silber %></td>
+        <td><%= station.gold %></td>
+        <td><%= station.team_challenge %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.station_show_path(@socket, :show, station) %></span>
+          <span><%= live_patch "Edit", to: Routes.station_index_path(@socket, :edit, station) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: station.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Station", to: Routes.station_index_path(@socket, :new) %></span>

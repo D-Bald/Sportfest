@@ -1,8 +1,8 @@
-defmodule Sportfest2Web.ScoreLiveTest do
-  use Sportfest2Web.ConnCase
+defmodule SportfestWeb.ScoreLiveTest do
+  use SportfestWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Sportfest2.ErgebnisseFixtures
+  import Sportfest.ErgebnisseFixtures
 
   @create_attrs %{medaille: "some medaille", scoreboard: "some scoreboard", station: "some station"}
   @update_attrs %{medaille: "some updated medaille", scoreboard: "some updated scoreboard", station: "some updated station"}

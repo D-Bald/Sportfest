@@ -1,7 +1,7 @@
-defmodule Sportfest2.ErgebnisseFixtures do
+defmodule Sportfest.ErgebnisseFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Sportfest2.Ergebnisse` context.
+  entities via the `Sportfest.Ergebnisse` context.
   """
 
   @doc """
@@ -15,7 +15,7 @@ defmodule Sportfest2.ErgebnisseFixtures do
         scores: "some scores",
         summe: 42
       })
-      |> Sportfest2.Ergebnisse.create_schueler_scoreboard()
+      |> Sportfest.Ergebnisse.create_schueler_scoreboard()
 
     schueler_scoreboard
   end
@@ -31,7 +31,7 @@ defmodule Sportfest2.ErgebnisseFixtures do
         scoreboard: "some scoreboard",
         station: "some station"
       })
-      |> Sportfest2.Ergebnisse.create_score()
+      |> Sportfest.Ergebnisse.create_score()
 
     score
   end
@@ -47,7 +47,7 @@ defmodule Sportfest2.ErgebnisseFixtures do
         scores: "some scores",
         summe: 42
       })
-      |> Sportfest2.Ergebnisse.create_klassen_scoreboard()
+      |> Sportfest.Ergebnisse.create_klassen_scoreboard()
 
     klassen_scoreboard
   end

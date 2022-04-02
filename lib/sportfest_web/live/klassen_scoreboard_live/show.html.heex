@@ -1,0 +1,36 @@
+<h1>Show Klassen scoreboard</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.klassen_scoreboard_show_path(@socket, :show, @klassen_scoreboard)}>
+    <.live_component
+      module={SportfestWeb.KlassenScoreboardLive.FormComponent}
+      id={@klassen_scoreboard.id}
+      title={@page_title}
+      action={@live_action}
+      klassen_scoreboard={@klassen_scoreboard}
+      return_to={Routes.klassen_scoreboard_show_path(@socket, :show, @klassen_scoreboard)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Summe:</strong>
+    <%= @klassen_scoreboard.summe %>
+  </li>
+
+  <li>
+    <strong>Klasse:</strong>
+    <%= @klassen_scoreboard.klasse %>
+  </li>
+
+  <li>
+    <strong>Scores:</strong>
+    <%= @klassen_scoreboard.scores %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.klassen_scoreboard_show_path(@socket, :edit, @klassen_scoreboard), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.klassen_scoreboard_index_path(@socket, :index) %></span>

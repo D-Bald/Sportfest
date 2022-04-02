@@ -1,5 +1,5 @@
-defmodule Sportfest2Web.PageControllerTest do
-  use Sportfest2Web.ConnCase
+defmodule SportfestWeb.PageControllerTest do
+  use SportfestWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")

@@ -1,9 +1,9 @@
-defmodule Sportfest2.MixProject do
+defmodule Sportfest.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :sportfest2,
+      app: :Sportfest,
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule Sportfest2.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Sportfest2.Application, []},
+      mod: {Sportfest.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

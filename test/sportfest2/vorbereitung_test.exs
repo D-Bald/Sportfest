@@ -1,12 +1,12 @@
-defmodule Sportfest2.VorbereitungTest do
-  use Sportfest2.DataCase
+defmodule Sportfest.VorbereitungTest do
+  use Sportfest.DataCase
 
-  alias Sportfest2.Vorbereitung
+  alias Sportfest.Vorbereitung
 
   describe "stationen" do
-    alias Sportfest2.Vorbereitung.Station
+    alias Sportfest.Vorbereitung.Station
 
-    import Sportfest2.VorbereitungFixtures
+    import Sportfest.VorbereitungFixtures
 
     @invalid_attrs %{bronze: nil, gold: nil, name: nil, silber: nil}
 
@@ -64,9 +64,9 @@ defmodule Sportfest2.VorbereitungTest do
   end
 
   describe "klassen" do
-    alias Sportfest2.Vorbereitung.Klasse
+    alias Sportfest.Vorbereitung.Klasse
 
-    import Sportfest2.VorbereitungFixtures
+    import Sportfest.VorbereitungFixtures
 
     @invalid_attrs %{klassen_scoreboard: nil, name: nil, schueler: nil, summe: nil}
 
@@ -124,9 +124,9 @@ defmodule Sportfest2.VorbereitungTest do
   end
 
   describe "schueler" do
-    alias Sportfest2.Vorbereitung.Schueler
+    alias Sportfest.Vorbereitung.Schueler
 
-    import Sportfest2.VorbereitungFixtures
+    import Sportfest.VorbereitungFixtures
 
     @invalid_attrs %{jahrgang: nil, klasse: nil, name: nil, schueler_scoreboard: nil}
 

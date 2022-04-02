@@ -1,2 +1,2 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(Sportfest2.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(Sportfest.Repo, :manual)

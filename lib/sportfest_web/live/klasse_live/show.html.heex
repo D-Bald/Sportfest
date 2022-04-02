@@ -1,0 +1,48 @@
+<h1>Show Klasse</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.klasse_show_path(@socket, :show, @klasse)}>
+    <.live_component
+      module={SportfestWeb.KlasseLive.FormComponent}
+      id={@klasse.id}
+      title={@page_title}
+      action={@live_action}
+      klasse={@klasse}
+      return_to={Routes.klasse_show_path(@socket, :show, @klasse)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @klasse.name %>
+  </li>
+
+  <li>
+    <strong>Class scoreboard:</strong>
+    <%= @klasse.klassen_scoreboard %>
+  </li>
+
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Schüler</th>
+      <th>Persönliches Scoreboard</th>
+    </tr>
+  </thead>
+  <tbody id="klassen">
+    <%= for schueler <- @klasse.schueler do %>
+      <tr id={"schueler-#{schueler.id}"}>
+        <td><%= schueler.name %></td>
+        <td><%= schueler.schueler_scoreboard %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "Edit", to: Routes.klasse_show_path(@socket, :edit, @klasse), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.klasse_index_path(@socket, :index) %></span>

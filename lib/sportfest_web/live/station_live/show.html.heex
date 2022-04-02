@@ -1,0 +1,41 @@
+<h1>Show Station</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.station_show_path(@socket, :show, @station)}>
+    <.live_component
+      module={SportfestWeb.StationLive.FormComponent}
+      id={@station.id}
+      title={@page_title}
+      action={@live_action}
+      station={@station}
+      return_to={Routes.station_show_path(@socket, :show, @station)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @station.name %>
+  </li>
+
+  <li>
+    <strong>Bronze:</strong>
+    <%= @station.bronze %>
+  </li>
+
+  <li>
+    <strong>Silber:</strong>
+    <%= @station.silber %>
+  </li>
+
+  <li>
+    <strong>Gold:</strong>
+    <%= @station.gold %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.station_index_path(@socket, :index) %></span>

@@ -7,14 +7,14 @@
 # General application configuration
 import Config
 
-config :sportfest2,
-  ecto_repos: [Sportfest2.Repo]
+config :Sportfest,
+  ecto_repos: [Sportfest.Repo]
 
 # Configures the endpoint
-config :sportfest2, Sportfest2Web.Endpoint,
+config :Sportfest, SportfestWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: Sportfest2Web.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Sportfest2.PubSub,
+  render_errors: [view: SportfestWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: Sportfest.PubSub,
   live_view: [signing_salt: "ymWHaZzg"]
 
 # Configures the mailer
@@ -24,7 +24,7 @@ config :sportfest2, Sportfest2Web.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :sportfest2, Sportfest2.Mailer, adapter: Swoosh.Adapters.Local
+config :Sportfest, Sportfest.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false

@@ -1,8 +1,8 @@
-defmodule Sportfest2Web.SchuelerScoreboardLiveTest do
-  use Sportfest2Web.ConnCase
+defmodule SportfestWeb.SchuelerScoreboardLiveTest do
+  use SportfestWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Sportfest2.ErgebnisseFixtures
+  import Sportfest.ErgebnisseFixtures
 
   @create_attrs %{schueler: "some schueler", scores: "some scores", summe: 42}
   @update_attrs %{schueler: "some updated schueler", scores: "some updated scores", summe: 43}
