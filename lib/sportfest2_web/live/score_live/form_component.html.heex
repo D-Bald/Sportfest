@@ -1,0 +1,34 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="score-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :medaille %>
+    <%= select f, :medaille, [:keine, :bronze, :silber, :gold] %>
+    <%= error_tag f, :medaille %>
+
+    <%= if @team_challenge do %>
+      <%= label f, :klasse %>
+      <%= select f, :klassen_scoreboard_id, Enum.map(@scoreboards, &{&1.klasse.name, &1.id})%>
+      <%= error_tag f, :klassen_scoreboard_id %>
+    <% else %>
+      <%= label f, :schüler %>
+      <%= select f, :schueler_scoreboard_id, Enum.map(@scoreboards, &{&1.schueler.name, &1.id})%>
+      <%= error_tag f, :schueler_scoreboard_id %>
+    <% end %>
+  
+    <%= label f, :station %>
+    <%= select f, :station_id, @stationen %>
+    <%= error_tag f, :station_id %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

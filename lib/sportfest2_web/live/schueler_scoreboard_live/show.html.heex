@@ -1,0 +1,36 @@
+<h1>Show Schueler scoreboard</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.schueler_scoreboard_show_path(@socket, :show, @schueler_scoreboard)}>
+    <.live_component
+      module={Sportfest2Web.SchuelerScoreboardLive.FormComponent}
+      id={@schueler_scoreboard.id}
+      title={@page_title}
+      action={@live_action}
+      schueler_scoreboard={@schueler_scoreboard}
+      return_to={Routes.schueler_scoreboard_show_path(@socket, :show, @schueler_scoreboard)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Summe:</strong>
+    <%= @schueler_scoreboard.summe %>
+  </li>
+
+  <li>
+    <strong>Schueler:</strong>
+    <%= @schueler_scoreboard.schueler %>
+  </li>
+
+  <li>
+    <strong>Scores:</strong>
+    <%= @schueler_scoreboard.scores %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.schueler_scoreboard_show_path(@socket, :edit, @schueler_scoreboard), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.schueler_scoreboard_index_path(@socket, :index) %></span>

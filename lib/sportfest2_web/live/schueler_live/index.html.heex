@@ -1,0 +1,45 @@
+<h1>Listing Schueler</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.schueler_index_path(@socket, :index)}>
+    <.live_component
+      module={Sportfest2Web.SchuelerLive.FormComponent}
+      id={@schueler.id || :new}
+      title={@page_title}
+      action={@live_action}
+      schueler={@schueler}
+      return_to={Routes.schueler_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Klasse</th>
+      <th>Jahrgang</th>
+      <th>Score insgesamt</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="schueler">
+    <%= for schueler <- @schueler_collection do %>
+      <tr id={"schueler-#{schueler.id}"}>
+        <td><%= schueler.name %></td>
+        <td><%= schueler.klasse.name %></td>
+        <td><%= schueler.jahrgang %></td>
+        <td><%= schueler.schueler_scoreboard.summe %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.schueler_show_path(@socket, :show, schueler) %></span>
+          <span><%= live_patch "Edit", to: Routes.schueler_index_path(@socket, :edit, schueler) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: schueler.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Schueler", to: Routes.schueler_index_path(@socket, :new) %></span>

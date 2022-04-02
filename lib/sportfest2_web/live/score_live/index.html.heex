@@ -1,0 +1,50 @@
+<h1>Listing Scores</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.score_index_path(@socket, :index)}>
+    <.live_component
+      module={Sportfest2Web.ScoreLive.FormComponent}
+      id={@score.id || :new}
+      title={@page_title}
+      action={@live_action}
+      score={@score}
+      return_to={Routes.score_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Medaille</th>
+      <th>Station</th>
+      <th>Besitzer</th>
+      <th>Scoreboard</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="scores" phx-update="prepend">
+    <%= for score <- @scores do %>
+      <tr id={"score-#{score.id}"}>
+        <td><%= score.medaille %></td>
+        <td><%= score.station.name %></td>
+        <%= if score.station.team_challenge do %>
+          <td><%= score.klassen_scoreboard.klasse %></td>
+          <td><%= score.klassen_scoreboard.summe %></td>
+        <% else %>
+          <td><%= score.schueler_scoreboard.schueler.name %></td>
+          <td><%= Sportfest2.Ergebnisse.get_scoreboard_sum(score.schueler_scoreboard) %></td>
+        <% end %>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.score_show_path(@socket, :show, score) %></span>
+          <span><%= live_patch "Edit", to: Routes.score_index_path(@socket, :edit, score) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: score.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Score", to: Routes.score_index_path(@socket, :new) %></span>

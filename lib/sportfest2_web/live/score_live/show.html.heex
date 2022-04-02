@@ -1,0 +1,36 @@
+<h1>Show Score</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.score_show_path(@socket, :show, @score)}>
+    <.live_component
+      module={Sportfest2Web.ScoreLive.FormComponent}
+      id={@score.id}
+      title={@page_title}
+      action={@live_action}
+      score={@score}
+      return_to={Routes.score_show_path(@socket, :show, @score)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Medaille:</strong>
+    <%= @score.medaille %>
+  </li>
+
+  <li>
+    <strong>Scoreboard:</strong>
+    <%= @score.scoreboard %>
+  </li>
+
+  <li>
+    <strong>Station:</strong>
+    <%= @score.station %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.score_show_path(@socket, :edit, @score), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.score_index_path(@socket, :index) %></span>
