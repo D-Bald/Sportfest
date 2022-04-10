@@ -1,13 +1,28 @@
 # Sportfest
-
+## Get Code:
+```console
+$ git clone https://github.com/D-Bald/Sportfest.git
+```
 ## Deployment
+### Set-up production database
+```console
+$ psql -U postgres
+psql (13.6)
+Type "help" for help.
+
+postgres=# CREATE DATABASE sportfest_prod
+CREATE DATABASE
+```
 ### Set Environment variables
-```console 
-$ export SECRET_KEY_BASE=$(mix phx.gen.secret)
+Ausführen der `mix`-Tasks (`mix phx.gen.secret`) im Projektordner.
+```console
+$ mix phx.gen.secret
+GENERIERTES_PASSWORT
+$ export SECRET_KEY_BASE=GENERIERTES_PASSWORT
 
 $ export DATABASE_URL=ecto://postgres:postgres@localhost/sportfest_prod
 
-$ export PHX_HOST=sportfest.davidbaldauf.me
+$ export PHX_HOST=HOSTNAME_ODER_localhost
 
 $ export PORT=4001
 ```
@@ -38,34 +53,23 @@ $ MIX_ENV=prod mix phx.server
 Für das starten des Servers im detached mode letzte Zeile ersetzen durch
 ODER
 ```console
-PORT=4001 MIX_ENV=prod elixir --erl "-detached" -S mix phx.server
+$ PORT=4001 MIX_ENV=prod elixir --erl "-detached" -S mix phx.server
 ```
 
 ### Ergänzung für allg. Deployment mit Releases
-=> Zuerst Schritte vom lokalen Deployment
-Dann:
+Zuerst Schritte vom lokalen Deployment
+
+#### Release erstellen:
 ```console
-$ mix phx.gen.release
-...
 $ MIX_ENV=prod mix release
 ```
 
-#### Setup production database
-```console
-$ psql -U postgres
-psql (13.6)
-Type "help" for help.
-
-postgres=# CREATE DATABASE sportfest_prod
-CREATE DATABASE
-```
-
-run migration:
+#### Run migration:
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.migrate"
 ```
 
-#### Start App
+#### Start app
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest start
 ```
