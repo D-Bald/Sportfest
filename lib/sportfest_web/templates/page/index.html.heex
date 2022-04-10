@@ -8,10 +8,10 @@
     <h2>Vorbereitung</h2>
     <ul>
       <li>
-        <a href="http://localhost:4000/schueler">Schüler:innen bearbeiten</a>
+        <%= link "Schüler:innen bearbeiten", to: Routes.schueler_index_path(@conn, :index) %>
       </li>
       <li>
-        <a href="http://localhost:4000/stationen">Stationen bearbeiten</a>
+        <%= link "Stationen bearbeiten", to: Routes.station_index_path(@conn, :index) %>
       </li>
     </ul>
   </article>
@@ -19,7 +19,7 @@
     <h2>Ergebnisse</h2>
     <ul>
       <li>
-        <a href="http://localhost:4000/scores">Scores bearbeiten</a>
+        <%= link "Scores bearbeiten", to: Routes.score_index_path(@conn, :index) %>
       </li>
     </ul>
   </article>
