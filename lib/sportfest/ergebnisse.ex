@@ -22,7 +22,7 @@ defmodule Sportfest.Ergebnisse do
   """
   def list_scores do
     Score
-    |> Ecto.Query.preload([klasse: [:scores], schueler: [scores: [:station]], station: []])
+    |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> Ecto.Query.order_by([s], desc: s.id)
     |> Repo.all()
   end
@@ -43,7 +43,7 @@ defmodule Sportfest.Ergebnisse do
   """
   def get_score!(id) do
     Score
-    |> Ecto.Query.preload([klasse: [:scores], schueler: [scores: [:station]], station: []])
+    |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> Repo.get!(id)
   end
 
@@ -113,7 +113,7 @@ defmodule Sportfest.Ergebnisse do
   """
   def change_score(%Score{} = score, attrs \\ %{}) do
     score
-    |> Repo.preload([klasse: [:scores], schueler: [scores: [:station]], station: []])
+    |> Repo.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> Score.changeset(attrs)
   end
 
@@ -147,5 +147,30 @@ defmodule Sportfest.Ergebnisse do
                 end
               end)
     |> Enum.sum()
+  end
+
+  # Functions to filter the output for the score list
+  defp base_query do
+    from s in Score
+  end
+
+  def query_table(criteria) do
+    base_query()
+    |> build_query(criteria)
+    |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+    |> Repo.all()
+  end
+
+  defp build_query(query, criteria) do
+    Enum.reduce(criteria, query, &compose_query/2)
+  end
+
+  defp compose_query({_, "All"}, query) do
+    query
+  end
+
+  defp compose_query({k,val},query) do
+    query
+    |> where([s], field(s,^String.to_atom(k)) == ^val)
   end
 end

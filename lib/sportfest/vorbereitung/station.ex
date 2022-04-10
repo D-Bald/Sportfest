@@ -3,10 +3,10 @@ defmodule Sportfest.Vorbereitung.Station do
   import Ecto.Changeset
 
   schema "stationen" do
-    field :bronze, :integer
-    field :gold, :integer
     field :name, :string
-    field :silber, :integer
+    field :bronze, :integer, default: 1
+    field :silber, :integer, default: 2
+    field :gold, :integer, default: 3
     field :team_challenge, :boolean, default: false
 
     has_many :scores, Sportfest.Ergebnisse.Score

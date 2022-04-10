@@ -16,6 +16,6 @@ defmodule Sportfest.Ergebnisse.Score do
   def changeset(score, attrs) do
     score
     |> cast(attrs, [:medaille, :klasse_id, :schueler_id, :station_id])
-    |> validate_required([:medaille, :station_id])
+    |> validate_required([:medaille, :klasse_id, :station_id])
   end
 end

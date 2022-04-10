@@ -14,15 +14,14 @@
       <section class="container">
         <nav>
           <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
-            <% end %>
+            <li><%= link "Leaderboard", to: Routes.page_path(@conn, :index) %></li>
+            <li><%= link "Scores bearbeiten", to: Routes.score_index_path(@conn, :index) %></li>
           </ul>
         </nav>
-        <a href="https://phoenixframework.org/" class="phx-logo">
-          <img src={Routes.static_path(@conn, "/images/phoenix.png")} alt="Phoenix Framework Logo"/>
+        <a href="https://www.gesamtschule-wasseramselweg.de/" class="phx-logo">
+          <img src={Routes.static_path(@conn, "/images/logo_wasseramsel.png")} width="145" height="205" alt="Logo der Gesamtschule Wasseramselweg"/>
         </a>
+        <h1> Wasseramsel Sportfest </h1>
       </section>
     </header>
     <%= @inner_content %>

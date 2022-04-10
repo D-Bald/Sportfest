@@ -1,4 +1,4 @@
-<h1>Listing Scores</h1>
+<h1><%= @page_title %></h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.score_index_path(@socket, :index)}>
@@ -30,7 +30,7 @@
         <td><%= score.medaille %></td>
         <td><%= score.station.name %></td>
         <%= if score.station.team_challenge do %>
-          <td><%= score.klasse %></td>
+          <td><%= score.klasse.name %></td>
           <td><%= Sportfest.Ergebnisse.get_score_sum(score.klasse) %></td>
         <% else %>
           <td><%= score.schueler.name %></td>
@@ -48,3 +48,76 @@
 </table>
 
 <span><%= live_patch "New Score", to: Routes.score_index_path(@socket, :new) %></span>
+
+<center><button phx-click="reset">RESET FILTERS</button></center>
+
+<table>
+  <thead>
+    <tr>
+      
+      <th>Station</th>
+      <th>Klasse</th>
+      <th>Schüler:in</th>
+      <th>Medaille</th>
+      <th>Medaille festlegen</th>
+
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        <form phx-change="filter">
+          <select name="station_id">
+              <%= for station <- @stationen do %>
+                  <option value={station.id} selected={selected?(@filter, "station_id", station.id)} > <%= station.name %> </option>
+                  <% end %>
+              </select>
+        </form>
+      </td>
+      <td>
+        <form phx-change="filter">
+          <select name="klasse_id">
+              <%= for klasse <- @klassen do %>
+                  <option value={klasse.id} selected={selected?(@filter, "klasse_id", klasse.id)} > <%= klasse.name %> </option>
+                  <% end %>
+              </select>
+        </form>
+      </td>
+
+      <td></td>
+      <td></td>
+    </tr>
+    <%= for row <- @rows do %>
+      <tr>
+        <td><%= row.station.name %></td>
+        <td><%= row.klasse.name %></td>
+        <td><%= if row.station.team_challenge do "" else row.schueler.name end%></td>
+        <td><%= row.medaille %></td>
+        <td>
+          <div class="row">
+            <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={row.id} phx-value-medaille="bronze">
+                <img src={Routes.static_path(@socket, "/images/bronze_medaille.png")} width="50" height="50" alt="Bronzemedaille"/>
+              </a>
+            </div>
+            <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={row.id} phx-value-medaille="silber">
+                <img src={Routes.static_path(@socket, "/images/silber_medaille.png")} width="50" height="50" alt="Silbermedaille"/>
+              </a>
+            </div>
+            <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={row.id} phx-value-medaille="gold">
+                <img src={Routes.static_path(@socket, "/images/gold_medaille.png")} width="50" height="50" alt="Goldmedaille"/>
+              </a>
+            </div>
+          </div>
+        </td>
+        
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<a href="https://www.flaticon.com/de/kostenlose-icons/medaille" title="medaillen_icons">Medaillen Icons erstellt von Freepik - Flaticon</a>
