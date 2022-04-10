@@ -40,8 +40,8 @@ defmodule SportfestWeb.KlasseLive.FormComponent do
     end
   end
 
-  defp save_klasse(socket, :new, klasse_params) do
-    case Vorbereitung.create_klasse(klasse_params) do
+  defp save_klasse(socket, :new, %{"name" => name}) do
+    case Vorbereitung.create_klasse(name) do
       {:ok, _klasse} ->
         {:noreply,
          socket
