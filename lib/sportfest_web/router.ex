@@ -47,6 +47,8 @@ defmodule SportfestWeb.Router do
 
     live "/scores/:id", ScoreLive.Show, :show
     live "/scores/:id/show/edit", ScoreLive.Show, :edit
+
+    live "/leaderboard", LeaderboardLive.Index, :index
   end
 
   # Other scopes may use custom stacks.

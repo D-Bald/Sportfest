@@ -13,7 +13,7 @@
 alias Sportfest.Vorbereitung
 alias Sportfest.Ergebnisse
 
-for jahrgang <- 5..8 do
+for jahrgang <- 5..8  do
   for team <- 1..2 do
     for kl <- 1..3 do
       {:ok, _} = Vorbereitung.create_klasse("#{jahrgang}.#{team}.#{kl}")
@@ -33,7 +33,3 @@ end
 {:ok, weitsprung } = Vorbereitung.create_station(%{name: "Weitsprung"})
 {:ok, sprint } = Vorbereitung.create_station(%{name: "Sprint"})
 {:ok, fußball } = Vorbereitung.create_station(%{name: "Fußball", team_challenge: true})
-
-{:ok, _} = Ergebnisse.create_score(%{medaille: :bronze, station_id: weitsprung.id,  klasse_id: Vorbereitung.get_schueler!(1).klasse.id, schueler_id: Vorbereitung.get_schueler!(1).id})
-{:ok, _} = Ergebnisse.create_score(%{medaille: :silber, station_id: sprint.id,      klasse_id: Vorbereitung.get_schueler!(1).klasse.id, schueler_id: Vorbereitung.get_schueler!(1).id})
-{:ok, _} = Ergebnisse.create_score(%{medaille: :silber, station_id: fußball.id,     klasse_id: Vorbereitung.get_schueler!(1).klasse.id})

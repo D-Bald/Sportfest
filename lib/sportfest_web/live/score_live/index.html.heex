@@ -1,55 +1,6 @@
 <h1><%= @page_title %></h1>
 
-<%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.score_index_path(@socket, :index)}>
-    <.live_component
-      module={SportfestWeb.ScoreLive.FormComponent}
-      id={@score.id || :new}
-      title={@page_title}
-      action={@live_action}
-      score={@score}
-      return_to={Routes.score_index_path(@socket, :index)}
-    />
-  </.modal>
-<% end %>
-
-<table>
-  <thead>
-    <tr>
-      <th>Medaille</th>
-      <th>Station</th>
-      <th>Besitzer</th>
-      <th>Scoreboard</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="scores" phx-update="prepend">
-    <%= for score <- @scores do %>
-      <tr id={"score-#{score.id}"}>
-        <td><%= score.medaille %></td>
-        <td><%= score.station.name %></td>
-        <%= if score.station.team_challenge do %>
-          <td><%= score.klasse.name %></td>
-          <td><%= Sportfest.Ergebnisse.get_score_sum(score.klasse) %></td>
-        <% else %>
-          <td><%= score.schueler.name %></td>
-          <td><%= Sportfest.Ergebnisse.get_score_sum(score.schueler) %></td>
-        <% end %>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.score_show_path(@socket, :show, score) %></span>
-          <span><%= live_patch "Edit", to: Routes.score_index_path(@socket, :edit, score) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: score.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<span><%= live_patch "New Score", to: Routes.score_index_path(@socket, :new) %></span>
-
-<center><button phx-click="reset">RESET FILTERS</button></center>
+<center><button phx-click="reset">FILTER ZURÜCKSETZEN</button></center>
 
 <table>
   <thead>
@@ -59,13 +10,10 @@
       <th>Klasse</th>
       <th>Schüler:in</th>
       <th>Medaille</th>
-      <th>Medaille festlegen</th>
 
       <th></th>
     </tr>
-  </thead>
 
-  <tbody>
     <tr>
       <td>
         <form phx-change="filter">
@@ -89,27 +37,37 @@
       <td></td>
       <td></td>
     </tr>
-    <%= for row <- @rows do %>
-      <tr>
-        <td><%= row.station.name %></td>
-        <td><%= row.klasse.name %></td>
-        <td><%= if row.station.team_challenge do "" else row.schueler.name end%></td>
-        <td><%= row.medaille %></td>
+  </thead>
+
+  <tbody id="scores">
+    <%= for score <- @scores do %>
+      <tr id={"score-#{score.id}"}>
+        <td><%= score.station.name %></td>
+        <td><%= score.klasse.name %></td>
+        <td><%= if score.station.team_challenge do "" else score.schueler.name end%></td>
         <td>
           <div class="row">
-            <div class="column">
-              <a href="#" phx-click="set_medaille" phx-value-score_id={row.id} phx-value-medaille="bronze">
-                <img src={Routes.static_path(@socket, "/images/bronze_medaille.png")} width="50" height="50" alt="Bronzemedaille"/>
+          <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="keine">
+                keine
               </a>
             </div>
             <div class="column">
-              <a href="#" phx-click="set_medaille" phx-value-score_id={row.id} phx-value-medaille="silber">
-                <img src={Routes.static_path(@socket, "/images/silber_medaille.png")} width="50" height="50" alt="Silbermedaille"/>
+              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="bronze">
+                <img  src={Routes.static_path(@socket, "/images/bronze_medaille.png")}
+                      width={"#{img_size(score, :bronze)}"} height={"#{img_size(score, :bronze)}"} alt="Bronzemedaille"/>
               </a>
             </div>
             <div class="column">
-              <a href="#" phx-click="set_medaille" phx-value-score_id={row.id} phx-value-medaille="gold">
-                <img src={Routes.static_path(@socket, "/images/gold_medaille.png")} width="50" height="50" alt="Goldmedaille"/>
+              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="silber">
+                <img  src={Routes.static_path(@socket, "/images/silber_medaille.png")}
+                      width={"#{img_size(score, :silber)}"} height={"#{img_size(score, :silber)}"} alt="Silbermedaille"/>
+              </a>
+            </div>
+            <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="gold">
+                <img  src={Routes.static_path(@socket, "/images/gold_medaille.png")}
+                      width={"#{img_size(score, :gold)}"} height={"#{img_size(score, :gold)}"} alt="Goldmedaille"/>
               </a>
             </div>
           </div>

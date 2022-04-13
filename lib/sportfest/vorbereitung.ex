@@ -122,12 +122,12 @@ defmodule Sportfest.Vorbereitung do
   """
   def list_klassen do
     Klasse
-    |> Ecto.Query.preload([scores: [:station], schueler: []])
+    |> preload([scores: [:station], schueler: []])
     |> Repo.all()
   end
 
   @doc """
-  Gibt Name und ID für alle Klassen zurück.
+  Gibt Klassen mit gegebenen IDs und Namen zurück.
   """
   def list_klassen_for_dropdown do
     Repo.all(from k in Klasse, select: {k.name, k.id})

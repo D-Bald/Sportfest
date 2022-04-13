@@ -2,7 +2,6 @@ defmodule SportfestWeb.ScoreLive.Index do
   use SportfestWeb, :live_view
 
   alias Sportfest.Ergebnisse
-  alias Sportfest.Ergebnisse.Score
   alias Sportfest.Vorbereitung
 
   @impl true
@@ -12,46 +11,30 @@ defmodule SportfestWeb.ScoreLive.Index do
     #filter is set to All for each column
     filter = %{"station_id" => "All", "klasse_id" => "All"}
 
-    socket = assign(socket, scores: list_scores(), rows: get_rows(), stationen: list_stationen(), klassen: list_klassen(), schueler: list_schueler(), filter: filter)
-    {:ok, socket, temporary_assigns: [scores: [], rows: []]}
+    socket =
+      assign(socket, page_title: "Scores", stationen: list_stationen(),
+              klassen: list_klassen(), schueler: list_schueler(), filter: filter)
+
+    socket = assign(socket, scores: get_scores(socket))
+
+    {:ok, socket}
   end
 
-  @impl true
-  def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
-  end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Bearbeite Score")
-    |> assign(:score, Ergebnisse.get_score!(id))
-  end
-
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "Neuer Score")
-    |> assign(:score, %Score{})
-  end
-
-  defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "Scores")
-    |> assign(:score, nil)
-  end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     score = Ergebnisse.get_score!(id)
     {:ok, _} = Ergebnisse.delete_score(score)
 
-    {:noreply, assign(socket, :scores, list_scores())}
+    {:noreply, assign(socket, :scores, get_scores(socket))}
   end
 
   # reset filters : each col filter is set to "All"
   def handle_event("reset", _, socket) do
-    rows = get_rows()
+    scores = get_scores(socket)
     filter =  %{station_id: "All", klasse_id: "All"}
-    {:noreply, assign(socket, rows: rows, filter: filter)}
+    {:noreply, assign(socket, scores: scores, filter: filter)}
   end
 
   # filter : add new filter to the socket
@@ -67,17 +50,17 @@ defmodule SportfestWeb.ScoreLive.Index do
     end
 
     filter_rows = get_filter_rows(new_filter)
-    {:noreply, assign(socket, rows: filter_rows, filter: new_filter)}
+    {:noreply, assign(socket, scores: filter_rows, filter: new_filter)}
   end
 
   # handles clicks on different medals
   def handle_event("set_medaille", %{"score_id" => score_id, "medaille" => medaille}, socket) do
-    with %Ergebnisse.Score{} = score <- Ergebnisse.get_score!(score_id) do
+    with score = Ergebnisse.get_score!(score_id) do
       case Ergebnisse.update_score(score, %{"medaille" => medaille}) do
         {:ok, _score} ->
           {:noreply,
            socket
-           |> put_flash(:info, "Score updated successfully")}
+           |> put_flash(:info, "Medaille erfolgreich hinzugefügt")}
 
         {:error, %Ecto.Changeset{} = changeset} ->
           {:noreply, assign(socket, :changeset, changeset)}
@@ -89,20 +72,30 @@ defmodule SportfestWeb.ScoreLive.Index do
   def handle_info({:score_created, score}, socket) do
     {:noreply,
            socket
-           |> update(:scores, fn scores -> [score | scores] end)
-           |> update(:rows, fn scores -> [score | scores] end)}
+           |> update(:scores, fn scores -> [score | scores] end)}
   end
 
   @impl true
   def handle_info({:score_updated, score}, socket) do
     {:noreply,
            socket
-           |> update(:scores, fn scores -> [score | scores] end)
-           |> update(:rows, fn scores -> [score | scores] end)}
+           |> update(:scores, fn scores ->  List.replace_at(scores, # Manual replacement, since the scores cannot be tracked by liveview due to filters
+                                                            Enum.find_index(scores, fn s -> s.id == score.id end),
+                                                            score) end )}
   end
 
-  defp list_scores do
-    Ergebnisse.list_scores()
+  def selected?(filter,key,value) do
+    case Map.has_key?(filter, key) do
+      true -> filter[key]==value
+      false -> false
+      end
+    end
+
+  def img_size(score, medaille) do
+    case score.medaille == medaille do
+      true  -> 70
+      false -> 40
+    end
   end
 
   defp list_stationen do
@@ -117,48 +110,25 @@ defmodule SportfestWeb.ScoreLive.Index do
     Vorbereitung.list_schueler()
   end
 
-  ###################################
-  ### COPY PASTE FROM https://github.com/imartinat/phoenix_live_view_tablefilter/blob/master/lib/demo_web/live/table_filter/search_filter.ex
-  ###################################
+  defp get_scores(socket) do
+    single_challenges = Enum.filter(socket.assigns.stationen, fn s -> not s.team_challenge end)
+    rows_single_challenges =  for  station <- single_challenges,
+                                  schueler <- socket.assigns.schueler do
+                                    Ergebnisse.get_or_create_score!(station, schueler)
+                              end
 
-  def selected?(filter,key,value) do
-    case Map.has_key?(filter, key) do
-      true -> filter[key]==value
-      false -> false
-      end
-    end
-
-  # get the list of values from rows for the column filter
-  def get_list(rows, filter) do
-    list =
-      Enum.map(rows, fn r -> Map.get(r,String.to_atom(filter)) end)
-      |> Enum.uniq()
-      |> Enum.sort()
-    ["All" | list]
+    team_challenges = Enum.filter(socket.assigns.stationen, fn s -> s.team_challenge end)
+    rows_team_challenges =  for  station <- team_challenges,
+                                  klasse <- socket.assigns.klassen do
+                                    Ergebnisse.get_or_create_score!(station, klasse)
+                            end
+    rows_single_challenges ++ rows_team_challenges
   end
 
-  # get the list of values from rows for each column of col_list
-  def select_list(col_list,rows) do
-    Enum.map(col_list, fn c ->
-      { c, get_list(rows,c) }
-      end)
-    |> Enum.into(%{})
-  end
-
-  def get_filter_list do
-    ["station","klasse"]
-  end
-
-  def get_cols do
-    #should get the cols from a database or a json config file
-    [ {"station", "Station"}, {"klasse", "Klasse"}, {"schueler", "Schüler:in"}, {"medaille", "Medaille"} ]
-  end
-
-  def get_rows do
-    Ergebnisse.list_scores()
-  end
-
-  def get_filter_rows(filter) do
+  defp get_filter_rows(filter) do
     Ergebnisse.query_table(filter)
+    |> Enum.sort_by(fn score -> score.schueler end, :asc)
+    |> Enum.sort_by(fn score -> score.klasse end, :asc)
+    |> Enum.sort_by(fn score -> score.station end, :asc)
   end
 end

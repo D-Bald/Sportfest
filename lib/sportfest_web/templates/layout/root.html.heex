@@ -14,7 +14,7 @@
       <section class="container">
         <nav>
           <ul>
-            <li><%= link "Leaderboard", to: Routes.page_path(@conn, :index) %></li>
+            <li><%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %></li>
             <li><%= link "Scores bearbeiten", to: Routes.score_index_path(@conn, :index) %></li>
           </ul>
         </nav>

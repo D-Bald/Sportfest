@@ -1,0 +1,22 @@
+<h1><%= @page_title %></h1>
+<table>
+  <thead>
+    <tr>
+      <th>Rang</th>
+      <th>Klasse</th>
+      <th>Score</th>
+
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody id="team_scores">
+    <%= for i <- 0..Enum.count(@klassen) - 1 do %>
+      <tr id={"klasse-#{Enum.at(@klassen,i).id}"}>
+        <td><%= i %></td>
+        <td><%= Enum.at(@klassen,i).name %></td>
+        <td><%= Sportfest.Ergebnisse.get_score_sum(Enum.at(@klassen,i)) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

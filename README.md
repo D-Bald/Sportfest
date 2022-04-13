@@ -5,6 +5,9 @@ $ git clone https://github.com/D-Bald/Sportfest.git
 ```
 ## Deployment
 ### Set-up production database
+#### Installiere Postgres SQL
+
+#### Erstelle Datenbank
 ```console
 $ psql -U postgres
 psql (13.6)
@@ -72,4 +75,13 @@ $ _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.migrate"
 #### Start app
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest start
+```
+ODER
+Starten der App im Hintergrund
+```console
+$ _build/prod/rel/sportfest/bin/sportfest daemon
+```
+Um die so gestartete App zu stoppen:
+```console
+$ _build/prod/rel/sportfest/bin/sportfest stop
 ```
