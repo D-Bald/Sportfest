@@ -4,10 +4,14 @@
 $ git clone https://github.com/D-Bald/Sportfest.git
 ```
 ## Deployment
-### Set-up production database
+### Datenbank
 #### Installiere Postgres SQL
+https://www.postgresql.org/
+#### Konfiguration
+Aus der Dokumentation des Phoenix Frameworks:
+> "Phoenix assumes that our PostgreSQL database will have a postgres user account with the correct permissions and a password of "postgres"."
 
-#### Erstelle Datenbank
+#### Erstelle Datenbank `sportfest_prod` für die Sportfest App
 ```console
 $ psql -U postgres
 psql (13.6)
@@ -16,6 +20,7 @@ Type "help" for help.
 postgres=# CREATE DATABASE sportfest_prod
 CREATE DATABASE
 ```
+
 ### Set Environment variables
 Ausführen der `mix`-Tasks (`mix phx.gen.secret`) im Projektordner.
 ```console
@@ -29,38 +34,19 @@ $ export PHX_HOST=HOSTNAME_ODER_localhost
 
 $ export PORT=4001
 ```
-Do not copy those values directly, set SECRET_KEY_BASE according to the result of mix phx.gen.secret and DATABASE_URL according to your database address.
+> Do not copy those values directly, set SECRET_KEY_BASE according to the result of mix phx.gen.secret and DATABASE_URL according to your database address.
 
 
-### Lokales Deployment mit Elixir und Phoenix Installation
+### Deployment mit Releases
+#### Zuerst Schritte vom lokalen Deployment:
 ```console
 # Initial setup
-
 $ mix deps.get --only prod
-
 $ MIX_ENV=prod mix compile
 
 # Compile assets
-
 $ MIX_ENV=prod mix assets.deploy
-
-# Custom tasks (like DB migrations)
-
-$ MIX_ENV=prod mix ecto.migrate
-
-# Finally run the server
-
-$ MIX_ENV=prod mix phx.server
 ```
-
-Für das starten des Servers im detached mode letzte Zeile ersetzen durch
-ODER
-```console
-$ PORT=4001 MIX_ENV=prod elixir --erl "-detached" -S mix phx.server
-```
-
-### Ergänzung für allg. Deployment mit Releases
-Zuerst Schritte vom lokalen Deployment
 
 #### Release erstellen:
 ```console
@@ -76,7 +62,9 @@ $ _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.migrate"
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest start
 ```
+
 ODER
+
 Starten der App im Hintergrund
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest daemon
