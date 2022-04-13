@@ -3,6 +3,12 @@
 ```console
 $ git clone https://github.com/D-Bald/Sportfest.git
 ```
+Zum Updaten (`git pull` läuft auf error, da `priv/static/cache_manifest.json` überschrieben wird):
+```console
+$ git fetch
+$ git reset --hard HEAD
+$ git merge origin/main
+```
 ## Deployment
 ### Datenbank
 #### Installiere Postgres SQL

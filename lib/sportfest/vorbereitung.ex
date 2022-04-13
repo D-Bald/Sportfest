@@ -20,14 +20,16 @@ defmodule Sportfest.Vorbereitung do
 
   """
   def list_stationen do
-    Repo.all(Station)
+    Station
+    |> order_by(asc: :name)
+    |> Repo.all()
   end
 
   @doc """
   Gibt Name und ID für alle Stationen zurück.
   """
   def list_stationen_for_dropdown do
-    Repo.all(from s in Station, select: {s.name, s.id})
+    Repo.all(from s in Station, order_by: s.name, select: {s.name, s.id})
   end
 
   @doc """
@@ -123,6 +125,7 @@ defmodule Sportfest.Vorbereitung do
   def list_klassen do
     Klasse
     |> preload([scores: [:station], schueler: []])
+    |> order_by(asc: :name)
     |> Repo.all()
   end
 
@@ -130,7 +133,7 @@ defmodule Sportfest.Vorbereitung do
   Gibt Klassen mit gegebenen IDs und Namen zurück.
   """
   def list_klassen_for_dropdown do
-    Repo.all(from k in Klasse, select: {k.name, k.id})
+    Repo.all(from k in Klasse, order_by: k.name, select: {k.name, k.id})
   end
 
   @doc """
@@ -232,6 +235,7 @@ defmodule Sportfest.Vorbereitung do
   def list_schueler do
     Schueler
     |> Ecto.Query.preload([scores: [:station], klasse: []])
+    |> order_by(asc: :name)
     |> Repo.all()
   end
 
@@ -239,7 +243,7 @@ defmodule Sportfest.Vorbereitung do
   Gibt Name und ID für alle Schüler:innen zurück.
   """
   def list_schueler_for_dropdown do
-    Repo.all(from s in Schueler, select: {s.name, s.id})
+    Repo.all(from s in Schueler, order_by: s.name, select: {s.name, s.id})
   end
 
   @doc """

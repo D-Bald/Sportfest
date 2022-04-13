@@ -11,7 +11,6 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Sportfest.Vorbereitung
-alias Sportfest.Ergebnisse
 
 for jahrgang <- 5..8  do
   for team <- 1..2 do
@@ -30,6 +29,6 @@ for number <- 41..60 do
   {:ok, _} = Vorbereitung.create_schueler(Vorbereitung.get_klasse!(7), %{jahrgang: 6, name: "Schüler#{number}"})
 end
 
-{:ok, weitsprung } = Vorbereitung.create_station(%{name: "Weitsprung"})
-{:ok, sprint } = Vorbereitung.create_station(%{name: "Sprint"})
-{:ok, fußball } = Vorbereitung.create_station(%{name: "Fußball", team_challenge: true})
+{:ok, _ } = Vorbereitung.create_station(%{name: "5.6 Spinnenhof - Klassenstaffellauf", team_challenge: true})
+{:ok, _ } = Vorbereitung.create_station(%{name: "1.1 Paper Toss - Doppeltisch"})
+{:ok, _ } = Vorbereitung.create_station(%{name: "1.2 Paper Toss - Übers Tafeleck"})
