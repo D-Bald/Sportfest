@@ -1,11 +1,11 @@
 # Sportfest
 ## Nutzungshinweise
 ### Pfade
-Homepage: HOSTNAME/
-Bearbeiten der Medaillen: HOSTNAME/scores
-Anzeigen der Rangliste: HOSTNAME/leaderboard
-Bearbeiten der Schüler:innen: HOSTNAME/schueler
-Bearbeiten der Stationen: HOSTNAME/stationen
+- Homepage: HOSTNAME/
+- Bearbeiten der Medaillen: HOSTNAME/scores
+- Anzeigen der Rangliste: HOSTNAME/leaderboard
+- Bearbeiten der Schüler:innen: HOSTNAME/schueler
+- Bearbeiten der Stationen: HOSTNAME/stationen
 
 ### Einschränkung beim Bearbeiten der Stationen
 Theoretisch kann bearbeitet werden, ob eine Station eine `team challenge` ist oder nicht. Wenn man diesen Status der Station ändert, funktioniert allerdings zur Zeit der Filter für die Scores nicht mehr korrekt. Daher muss bis zur Behebung des Problems die Station gelöscht und mit dem gewünschten Status neu erstellt werden.
