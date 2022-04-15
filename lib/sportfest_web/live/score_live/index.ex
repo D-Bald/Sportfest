@@ -121,19 +121,25 @@ defmodule SportfestWeb.ScoreLive.Index do
                                   schueler <- socket.assigns.schueler do
                                     Ergebnisse.get_or_create_score!(station, schueler)
                               end
+                              |> Enum.sort_by(fn score -> score.schueler.name end, :asc)
+                              |> Enum.sort_by(fn score -> score.klasse.name end, :asc)
+                              |> Enum.sort_by(fn score -> score.station.name end, :asc)
 
     team_challenges = Enum.filter(socket.assigns.stationen, fn s -> s.team_challenge end)
     rows_team_challenges =  for  station <- team_challenges,
                                   klasse <- socket.assigns.klassen do
                                     Ergebnisse.get_or_create_score!(station, klasse)
                             end
+                            |> Enum.sort_by(fn score -> score.klasse.name end, :asc)
+                            |> Enum.sort_by(fn score -> score.station.name end, :asc)
+
     rows_single_challenges ++ rows_team_challenges
   end
 
   defp get_filter_rows(filter) do
     Ergebnisse.query_table(filter)
-    |> Enum.sort_by(fn score -> score.schueler end, :asc)
-    |> Enum.sort_by(fn score -> score.klasse end, :asc)
-    |> Enum.sort_by(fn score -> score.station end, :asc)
+    |> Enum.sort_by(fn score -> score.schueler.name end, :asc)
+    |> Enum.sort_by(fn score -> score.klasse.name end, :asc)
+    |> Enum.sort_by(fn score -> score.station.name end, :asc)
   end
 end
