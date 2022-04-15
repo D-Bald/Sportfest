@@ -13,9 +13,11 @@
     <%= text_input f, :name %>
     <%= error_tag f, :name %>
 
-    <%= label f, :team_challenge %>
-    <%= checkbox f, :team_challenge %>
-    <%= error_tag f, :team_challenge %>
+    <%= if :new == @action do %>
+      <%= label f, :team_challenge %>
+      <%= checkbox f, :team_challenge %>
+      <%= error_tag f, :team_challenge %>
+    <% end %>
   
     <%= label f, :bronze %>
     <%= number_input f, :bronze %>
