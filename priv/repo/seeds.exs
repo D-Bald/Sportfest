@@ -12,16 +12,16 @@
 
 alias Sportfest.Vorbereitung
 
-for jahrgang <- 5..8  do
-  for team <- 1..2 do
-    for kl <- 1..3 do
-      {:ok, _} = Vorbereitung.create_klasse("#{jahrgang}.#{team}.#{kl}")
-    end
-  end
-end
-for number <- 1..5 do
-  {:ok, _} = Vorbereitung.create_schueler(Vorbereitung.get_klasse!(1), %{jahrgang: 5, name: "Schüler#{number}"})
-end
+# for jahrgang <- 5..8  do
+#   for team <- 1..2 do
+#     for kl <- 1..3 do
+#       {:ok, _} = Vorbereitung.create_klasse("#{jahrgang}.#{team}.#{kl}")
+#     end
+#   end
+# end
+# for number <- 1..5 do
+#   {:ok, _} = Vorbereitung.create_schueler(Vorbereitung.get_klasse!(1), %{jahrgang: 5, name: "Schüler#{number}"})
+# end
 # for number <- 21..40 do
 #   {:ok, _} = Vorbereitung.create_schueler(Vorbereitung.get_klasse!(2), %{jahrgang: 5, name: "Schüler#{number}"})
 # end
@@ -31,4 +31,4 @@ end
 
 {:ok, _ } = Vorbereitung.create_station(%{name: "5.6 Spinnenhof - Klassenstaffellauf", team_challenge: true})
 {:ok, _ } = Vorbereitung.create_station(%{name: "1.1 Paper Toss - Doppeltisch"})
-# {:ok, _ } = Vorbereitung.create_station(%{name: "1.2 Paper Toss - Übers Tafeleck"})
+{:ok, _ } = Vorbereitung.create_station(%{name: "1.2 Paper Toss - Übers Tafeleck"})

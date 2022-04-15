@@ -157,6 +157,27 @@ defmodule Sportfest.Vorbereitung do
   end
 
   @doc """
+  Gets a single klasse by given name.
+
+  Raise Error if more than one Klasse with given name exist.
+  Since on creation a unique constraint for name is applied, this should not occure.
+
+  ## Examples
+
+      iex> get_klasse_by_name("5b)")
+      %Klasse{}
+
+      iex> get_klasse_by_name("14f)")
+      ** nil
+
+  """
+  def get_klasse_by_name(name) do
+    Klasse
+    |> Ecto.Query.preload([scores: [:station], schueler: []])
+    |> Repo.get_by(name: name)
+  end
+
+  @doc """
   Creates a klasse.
 
   ## Examples
@@ -282,6 +303,31 @@ defmodule Sportfest.Vorbereitung do
     Ecto.build_assoc(klasse, :schueler)
     |> change_schueler(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Creates a schueler if no schueler with the same name and klasse exists.
+
+  ## Examples
+
+      iex> get_or_create_schueler(%{name: name, klasse: klasse, jahrgang: 5})
+      {:ok, %Schueler{}}
+
+      iex> get_or_create_schueler(%{name: vergebener_name, klasse: klasse, jahrgang: 5})
+      {:ok, %Schueler{}}
+
+      iex> get_or_create_schueler(%{name: bad_value, klasse: bad_value, jahrgang: bad_value})
+      {:error, %Ecto.Changeset{}}
+  """
+  def get_or_create_schueler(%{name: name, klasse: klasse} = attrs) do
+    case Schueler |> where(name: ^name)
+                  |> where(klasse_id: ^klasse.id)
+                  |> Ecto.Query.preload([scores: [:station], klasse: []])
+                  |> Repo.one()
+                  do
+      nil -> create_schueler(klasse, attrs)
+      schueler -> {:ok, schueler}
+    end
   end
 
   @doc """

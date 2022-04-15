@@ -2,16 +2,19 @@
 ## Nutzungshinweise
 ### Pfade
 - Homepage: HOSTNAME/
-- Bearbeiten der Medaillen: HOSTNAME/scores
-- Anzeigen der Rangliste: HOSTNAME/leaderboard
-- Bearbeiten der Schüler:innen: HOSTNAME/schueler
-- Bearbeiten der Stationen: HOSTNAME/stationen
+- Bearbeiten der Medaillen: `HOSTNAME/scores`
+- Anzeigen der Rangliste: `HOSTNAME/leaderboard`
+- Bearbeiten der Schüler:innen: `HOSTNAME/schueler`
+- Bearbeiten der Stationen: `HOSTNAME/stationen`
 
 ### Einschränkung beim Bearbeiten der Stationen
 Theoretisch kann bearbeitet werden, ob eine Station eine `team challenge` ist oder nicht. Wenn man diesen Status der Station ändert, funktioniert allerdings zur Zeit der Filter für die Scores nicht mehr korrekt. Daher muss bis zur Behebung des Problems die Station gelöscht und mit dem gewünschten Status neu erstellt werden.
 
 ### Import von Schüler:innen
-Import aus CSV-Dateien in Planung.
+Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen von CSV-Dateien eingelesen werden. Die CSV-Dateien müssen folgende Eigenschaften erfüllen:
+- Trennzeichen: Komma: `,`
+- Spalten: `Klasse`, `Vorname`, `Nachname`
+- Die Klassenbezeichnung muss am Anfang den Jahrgang als Zahl stehen haben: `"5 b)"` oder `"5.1.1"`
 
 ## Get Code:
 ```console

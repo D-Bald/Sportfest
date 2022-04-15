@@ -6,7 +6,10 @@ defmodule SportfestWeb.SchuelerLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :schueler_collection, list_schueler())}
+    {:ok,
+      socket
+      |> assign(:schueler_collection, list_schueler())
+      |> allow_upload(:schueler_data, accept: ~w(.csv), max_entries: 10)}
   end
 
   @impl true
@@ -16,20 +19,30 @@ defmodule SportfestWeb.SchuelerLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Schueler")
+    |> assign(:page_title, "Bearbeite Schüler:in")
     |> assign(:schueler, Vorbereitung.get_schueler!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Schueler")
+    |> assign(:page_title, "Neue:r Schüler:in")
     |> assign(:schueler, %Schueler{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Schueler")
+    |> assign(:page_title, "Schüler:innen")
     |> assign(:schueler, nil)
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("validate", _params, socket) do
+    {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :schueler_data, ref)}
   end
 
   @impl true
@@ -40,7 +53,23 @@ defmodule SportfestWeb.SchuelerLive.Index do
     {:noreply, assign(socket, :schueler_collection, list_schueler())}
   end
 
+  @impl Phoenix.LiveView
+  def handle_event("save", _params, socket) do
+    uploaded_schueler = List.flatten(consume_uploaded_entries(socket, :schueler_data,
+                              fn %{path: path}, _ ->
+                                {:ok, Sportfest.Utils.CSVDataImports.add_schueler_from_csv(path)}
+                              end))
+    IO.inspect(uploaded_schueler)
+    {:noreply, assign(socket, :schueler_collection, list_schueler())}
+  end
+
+  def error_to_string(:too_large), do: "Zu große Datei"
+  def error_to_string(:not_accepted), do: "Dieser Datei Typ wird nicht unterstützt"
+
   defp list_schueler do
     Vorbereitung.list_schueler()
+    |> Enum.sort_by(fn s -> s.name end, :asc)
+    |> Enum.sort_by(fn s -> s.klasse end, :asc)
+    |> Enum.sort_by(fn s -> s.jahrgang end, :asc)
   end
 end

@@ -1,4 +1,4 @@
-<h1>Listing Schueler</h1>
+<h1>Schüler:innen</h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.schueler_index_path(@socket, :index)}>
@@ -13,12 +13,51 @@
   </.modal>
 <% end %>
 
+<section phx-drop-target={@uploads.schueler_data.ref}>
+<form id="upload-form" phx-submit="save" phx-change="validate">
+  <%= live_file_input @uploads.schueler_data %>
+  <button type="submit">Hochladen</button>
+</form>
+<%= for entry <- @uploads.schueler_data.entries do %>
+  <%= for err <- upload_errors(@uploads.schueler_data, entry) do %>
+    <div class="alert alert-danger">
+      <%= error_to_string(err) %>
+    </div>
+  <% end %>
+<% end %>
+
+<%# render each schueler_data entry %>
+<%= for entry <- @uploads.schueler_data.entries do %>
+  <article class="upload-entry">
+
+    <%# entry.progress will update automatically for in-flight entries %>
+    <progress value={entry.progress} max="100"> <%= entry.progress %>% </progress>
+
+    <%# a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 %>
+    <button phx-click="cancel-upload" phx-value-ref={entry.ref} aria-label="cancel">&times;</button>
+
+    <%# Phoenix.LiveView.Helpers.upload_errors/2 returns a list of error atoms %>
+    <%= for err <- upload_errors(@uploads.schueler_data, entry) do %>
+      <p class="alert alert-danger"><%= error_to_string(err) %></p>
+    <% end %>
+
+  </article>
+<% end %>
+
+<%# Phoenix.LiveView.Helpers.upload_errors/1 returns a list of error atoms %>
+<%= for err <- upload_errors(@uploads.schueler_data) do %>
+  <p class="alert alert-danger"><%= error_to_string(err) %></p>
+<% end %>
+</section>
+
+<span><%= live_patch "Schüler:in manuell hinzufügen", to: Routes.schueler_index_path(@socket, :new) %></span>
+
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Klasse</th>
       <th>Jahrgang</th>
+      <th>Klasse</th>
+      <th>Name</th>
       <th>Score insgesamt</th>
 
       <th></th>
@@ -27,9 +66,9 @@
   <tbody id="schueler">
     <%= for schueler <- @schueler_collection do %>
       <tr id={"schueler-#{schueler.id}"}>
-        <td><%= schueler.name %></td>
-        <td><%= schueler.klasse.name %></td>
         <td><%= schueler.jahrgang %></td>
+        <td><%= schueler.klasse.name %></td>
+        <td><%= schueler.name %></td>
         <td><%= Sportfest.Ergebnisse.get_score_sum(schueler) %></td>
 
         <td>
@@ -41,5 +80,3 @@
     <% end %>
   </tbody>
 </table>
-
-<span><%= live_patch "New Schueler", to: Routes.schueler_index_path(@socket, :new) %></span>
