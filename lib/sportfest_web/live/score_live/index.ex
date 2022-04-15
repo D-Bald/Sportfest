@@ -137,7 +137,14 @@ defmodule SportfestWeb.ScoreLive.Index do
   end
 
   defp get_filter_rows(filter) do
-    Ergebnisse.query_table(filter)
+    ergebnisse = Ergebnisse.query_table(filter)
+    ergebnisse_single_sorted =
+      ergebnisse
+      |> Enum.filter(fn score -> not score.station.team_challenge end)
+      |> Enum.sort_by(fn score -> score.schueler.name end, :asc)
+    ergebnisse_team = Enum.filter(ergebnisse, fn score -> score.station.team_challenge end)
+
+    ergebnisse_single_sorted ++ ergebnisse_team
     |> Enum.sort_by(fn score -> score.klasse.name end, :asc)
     |> Enum.sort_by(fn score -> score.station.name end, :asc)
   end
