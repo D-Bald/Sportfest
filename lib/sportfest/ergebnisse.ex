@@ -211,6 +211,7 @@ defmodule Sportfest.Ergebnisse do
         end
       end)
     |> Enum.sum()
+    |> Float.round(2)
   end
 
   @doc """
