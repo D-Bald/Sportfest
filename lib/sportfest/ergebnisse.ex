@@ -213,6 +213,54 @@ defmodule Sportfest.Ergebnisse do
     |> Enum.sum()
   end
 
+  @doc """
+  Gibt die Anzahl der Bronze Medaillen eines Besitzers zurück.
+
+  ## Examples
+
+      iex> count_bronze_medaillen(owner)
+      3
+
+  """
+  def count_bronze_medaillen(owner) do
+    count_medaillen(owner, :bronze)
+  end
+
+  @doc """
+  Gibt die Anzahl der Silber Medaillen eines Besitzers zurück.
+
+  ## Examples
+
+      iex> count_silber_medaillen(owner)
+      5
+
+  """
+  def count_silber_medaillen(owner) do
+    count_medaillen(owner, :silber)
+  end
+
+  @doc """
+  Gibt die Anzahl der Gold Medaillen eines Besitzers zurück.
+
+  ## Examples
+
+      iex> count_gold_medaillen(owner)
+      1
+
+  """
+  def count_gold_medaillen(owner) do
+    count_medaillen(owner, :gold)
+  end
+
+
+
+
+
+  defp count_medaillen(owner, medaille) do
+    Enum.filter(owner.scores, fn score -> medaille == score.medaille end)
+    |> Enum.count()
+  end
+
   # Functions to filter the output for the score list
   defp base_query do
     from s in Score
