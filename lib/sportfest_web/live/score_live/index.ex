@@ -138,7 +138,6 @@ defmodule SportfestWeb.ScoreLive.Index do
 
   defp get_filter_rows(filter) do
     Ergebnisse.query_table(filter)
-    |> Enum.sort_by(fn score -> score.schueler.name end, :asc)
     |> Enum.sort_by(fn score -> score.klasse.name end, :asc)
     |> Enum.sort_by(fn score -> score.station.name end, :asc)
   end
