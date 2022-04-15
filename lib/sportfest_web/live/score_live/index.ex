@@ -91,6 +91,13 @@ defmodule SportfestWeb.ScoreLive.Index do
       end
     end
 
+  def selected_or_empty?(filter, key, value) do
+    case Map.has_key?(filter, key) do
+      true -> filter[key]==value
+      false -> true
+      end
+  end
+
   def img_size(score, medaille) do
     case score.medaille == medaille do
       true  -> 70
