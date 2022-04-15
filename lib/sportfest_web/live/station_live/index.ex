@@ -16,19 +16,19 @@ defmodule SportfestWeb.StationLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Station")
+    |> assign(:page_title, "Station bearbeiten")
     |> assign(:station, Vorbereitung.get_station!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Station")
+    |> assign(:page_title, "Station erstellen")
     |> assign(:station, %Station{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Stationen")
+    |> assign(:page_title, "Stationen")
     |> assign(:station, nil)
   end
 

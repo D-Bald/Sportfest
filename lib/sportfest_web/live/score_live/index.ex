@@ -20,8 +20,6 @@ defmodule SportfestWeb.ScoreLive.Index do
     {:ok, socket}
   end
 
-
-
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     score = Ergebnisse.get_score!(id)

@@ -1,4 +1,4 @@
-<h1>Show Schueler</h1>
+<h1><%= @schueler.name %></h1>
 
 <%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.schueler_show_path(@socket, :show, @schueler)}>
@@ -14,11 +14,6 @@
 <% end %>
 
 <ul>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @schueler.name %>
-  </li>
 
   <li>
     <strong>Klasse:</strong>
@@ -37,5 +32,5 @@
 
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.schueler_show_path(@socket, :edit, @schueler), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.schueler_index_path(@socket, :index) %></span>
+<span><%= live_patch "Bearbeiten", to: Routes.schueler_show_path(@socket, :edit, @schueler), class: "button" %></span> |
+<span><%= live_redirect "Zurück", to: Routes.schueler_index_path(@socket, :index) %></span>

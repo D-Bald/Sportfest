@@ -16,6 +16,6 @@ defmodule SportfestWeb.ScoreLive.Show do
      |> assign(:score, Ergebnisse.get_score!(id))}
   end
 
-  defp page_title(:show), do: "Show Score"
-  defp page_title(:edit), do: "Edit Score"
+  defp page_title(:show), do: "Score zeigen"
+  defp page_title(:edit), do: "Score bearbeiten"
 end

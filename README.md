@@ -12,9 +12,9 @@ Theoretisch kann bearbeitet werden, ob eine Station eine `team challenge` ist od
 
 ### Import von Schüler:innen
 Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen von CSV-Dateien eingelesen werden. Die CSV-Dateien müssen folgende Eigenschaften erfüllen:
-- Trennzeichen: Komma: `,`
+- Trennzeichen: Komma (`,`)
 - Spalten: `Klasse`, `Vorname`, `Nachname`
-- Die Klassenbezeichnung muss am Anfang den Jahrgang als Zahl stehen haben: `"5 b)"` oder `"5.1.1"`
+- Die Klassenbezeichnung muss am Anfang den Jahrgang als Zahl stehen haben: `5 b)` oder `5.1.1`
 
 ## Get Code:
 ```console

@@ -1,4 +1,4 @@
-<h1>Listing Klassen</h1>
+<h1>Klassen</h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.klasse_index_path(@socket, :index)}>
@@ -12,6 +12,8 @@
     />
   </.modal>
 <% end %>
+
+<span><%= live_patch "Klasse hinzufügen", to: Routes.klasse_index_path(@socket, :new) %></span>
 
 <table>
   <thead>
@@ -29,13 +31,11 @@
         <td><%= Sportfest.Ergebnisse.get_score_sum(klasse) %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.klasse_show_path(@socket, :show, klasse) %></span>
-          <span><%= live_patch "Edit", to: Routes.klasse_index_path(@socket, :edit, klasse) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: klasse.id, data: [confirm: "Are you sure?"] %></span>
+          <span><%= live_redirect "Zeigen", to: Routes.klasse_show_path(@socket, :show, klasse) %></span>
+          <span><%= live_patch "Bearbeiten", to: Routes.klasse_index_path(@socket, :edit, klasse) %></span>
+          <span><%= link "Löschen", to: "#", phx_click: "delete", phx_value_id: klasse.id, data: [confirm: "Sicher fortfahren?"] %></span>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<span><%= live_patch "New Klasse", to: Routes.klasse_index_path(@socket, :new) %></span>

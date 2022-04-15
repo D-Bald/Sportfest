@@ -16,6 +16,6 @@ defmodule SportfestWeb.SchuelerLive.Show do
      |> assign(:schueler, Vorbereitung.get_schueler!(id))}
   end
 
-  defp page_title(:show), do: "Show Schueler"
-  defp page_title(:edit), do: "Edit Schueler"
+  defp page_title(:show), do: "Schüler:in zeigen"
+  defp page_title(:edit), do: "Schüler:in bearbeiten"
 end

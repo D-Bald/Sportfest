@@ -51,7 +51,7 @@ defmodule SportfestWeb.ScoreLive.FormComponent do
       {:ok, _score} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Score updated successfully")
+         |> put_flash(:info, "Score erfolreich aktualisiert")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -64,7 +64,7 @@ defmodule SportfestWeb.ScoreLive.FormComponent do
       {:ok, _score} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Score created successfully")
+         |> put_flash(:info, "Score erfolgreich erstellt")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

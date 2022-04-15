@@ -19,13 +19,13 @@ defmodule SportfestWeb.SchuelerLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Bearbeite Schüler:in")
+    |> assign(:page_title, "Schüler:in bearbeiten")
     |> assign(:schueler, Vorbereitung.get_schueler!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "Neue:r Schüler:in")
+    |> assign(:page_title, "Schüler:in erstellen")
     |> assign(:schueler, %Schueler{})
   end
 

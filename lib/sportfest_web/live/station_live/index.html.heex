@@ -1,4 +1,4 @@
-<h1>Listing Stationen</h1>
+<h1>Stationen</h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.station_index_path(@socket, :index)}>
@@ -12,6 +12,8 @@
     />
   </.modal>
 <% end %>
+
+<span><%= live_patch "Station hinzufügen", to: Routes.station_index_path(@socket, :new) %></span>
 
 <table>
   <thead>
@@ -35,13 +37,11 @@
         <td><%= station.team_challenge %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.station_show_path(@socket, :show, station) %></span>
-          <span><%= live_patch "Edit", to: Routes.station_index_path(@socket, :edit, station) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: station.id, data: [confirm: "Are you sure?"] %></span>
+          <span><%= live_redirect "Zeigen", to: Routes.station_show_path(@socket, :show, station) %></span>
+          <span><%= live_patch "Bearbeiten", to: Routes.station_index_path(@socket, :edit, station) %></span>
+          <span><%= link "Löschen", to: "#", phx_click: "delete", phx_value_id: station.id, data: [confirm: "Sicher fortfahren?"] %></span>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<span><%= live_patch "New Station", to: Routes.station_index_path(@socket, :new) %></span>

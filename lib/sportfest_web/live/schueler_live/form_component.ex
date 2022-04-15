@@ -34,7 +34,7 @@ defmodule SportfestWeb.SchuelerLive.FormComponent do
       {:ok, _schueler} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Schueler updated successfully")
+         |> put_flash(:info, "Schüler:in erfolgreich aktualisiert")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -49,7 +49,7 @@ defmodule SportfestWeb.SchuelerLive.FormComponent do
       {:ok, _schueler} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Schueler created successfully")
+         |> put_flash(:info, "Schüler:in erfolgreich erstellt")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

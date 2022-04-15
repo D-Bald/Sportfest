@@ -32,7 +32,7 @@ defmodule SportfestWeb.KlasseLive.FormComponent do
       {:ok, _klasse} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Klasse updated successfully")
+         |> put_flash(:info, "Klasse erfolgreich aktualisiert")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -45,7 +45,7 @@ defmodule SportfestWeb.KlasseLive.FormComponent do
       {:ok, _klasse} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Klasse created successfully")
+         |> put_flash(:info, "Klasse erfolgreich erstellt")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

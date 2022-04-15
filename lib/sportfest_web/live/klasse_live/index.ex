@@ -16,19 +16,19 @@ defmodule SportfestWeb.KlasseLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Klasse")
+    |> assign(:page_title, "Klasse bearbeiten")
     |> assign(:klasse, Vorbereitung.get_klasse!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Klasse")
+    |> assign(:page_title, "Klasse erstellen")
     |> assign(:klasse, %Klasse{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Klassen")
+    |> assign(:page_title, "Klassen")
     |> assign(:klasse, nil)
   end
 

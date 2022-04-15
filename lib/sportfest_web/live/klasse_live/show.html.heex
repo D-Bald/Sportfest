@@ -1,4 +1,4 @@
-<h1>Show Klasse</h1>
+<h1><%= @klasse.name %></h1>
 
 <%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.klasse_show_path(@socket, :show, @klasse)}>
@@ -16,11 +16,6 @@
 <ul>
 
   <li>
-    <strong>Name:</strong>
-    <%= @klasse.name %>
-  </li>
-
-  <li>
     <strong>Gesamtpunkte:</strong>
     <%= Sportfest.Ergebnisse.get_score_sum(@klasse) %>
   </li>
@@ -31,7 +26,7 @@
   <thead>
     <tr>
       <th>Schüler</th>
-      <th>Persönliches Scoreboard</th>
+
     </tr>
   </thead>
   <tbody id="klassen">
@@ -43,5 +38,5 @@
   </tbody>
 </table>
 
-<span><%= live_patch "Edit", to: Routes.klasse_show_path(@socket, :edit, @klasse), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.klasse_index_path(@socket, :index) %></span>
+<span><%= live_patch "Bearbeiten", to: Routes.klasse_show_path(@socket, :edit, @klasse), class: "button" %></span> |
+<span><%= live_redirect "Zurück", to: Routes.klasse_index_path(@socket, :index) %></span>

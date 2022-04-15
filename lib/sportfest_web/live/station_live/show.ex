@@ -16,6 +16,6 @@ defmodule SportfestWeb.StationLive.Show do
      |> assign(:station, Vorbereitung.get_station!(id))}
   end
 
-  defp page_title(:show), do: "Show Station"
-  defp page_title(:edit), do: "Edit Station"
+  defp page_title(:show), do: "Station zeigen"
+  defp page_title(:edit), do: "Station bearbeiten"
 end

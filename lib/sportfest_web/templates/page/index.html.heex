@@ -19,6 +19,9 @@
     <h2>Ergebnisse</h2>
     <ul>
       <li>
+        <%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %>
+      </li>
+      <li>
         <%= link "Scores bearbeiten", to: Routes.score_index_path(@conn, :index) %>
       </li>
     </ul>

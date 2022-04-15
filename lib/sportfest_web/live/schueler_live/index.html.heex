@@ -72,9 +72,9 @@
         <td><%= Sportfest.Ergebnisse.get_score_sum(schueler) %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.schueler_show_path(@socket, :show, schueler) %></span>
-          <span><%= live_patch "Edit", to: Routes.schueler_index_path(@socket, :edit, schueler) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: schueler.id, data: [confirm: "Are you sure?"] %></span>
+          <span><%= live_redirect "Zeigen", to: Routes.schueler_show_path(@socket, :show, schueler) %></span>
+          <span><%= live_patch "Bearbeiten", to: Routes.schueler_index_path(@socket, :edit, schueler) %></span>
+          <span><%= link "Löschen", to: "#", phx_click: "delete", phx_value_id: schueler.id, data: [confirm: "Sicher fortfahren?"] %></span>
         </td>
       </tr>
     <% end %>

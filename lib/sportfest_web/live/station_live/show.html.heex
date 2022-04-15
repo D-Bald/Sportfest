@@ -1,4 +1,4 @@
-<h1>Show Station</h1>
+<h1><%= @station.name %></h1>
 
 <%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.station_show_path(@socket, :show, @station)}>
@@ -13,13 +13,8 @@
   </.modal>
 <% end %>
 
+<h2> Punkte für Medaillen </h2>
 <ul>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @station.name %>
-  </li>
-
   <li>
     <strong>Bronze:</strong>
     <%= @station.bronze %>
@@ -37,5 +32,5 @@
 
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.station_index_path(@socket, :index) %></span>
+<span><%= live_patch "Bearbeiten", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span> |
+<span><%= live_redirect "Löschen", to: Routes.station_index_path(@socket, :index) %></span>

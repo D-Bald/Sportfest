@@ -16,6 +16,6 @@ defmodule SportfestWeb.KlasseLive.Show do
      |> assign(:klasse, Vorbereitung.get_klasse!(id))}
   end
 
-  defp page_title(:show), do: "Show Klasse"
-  defp page_title(:edit), do: "Edit Klasse"
+  defp page_title(:show), do: "Klasse zeigen"
+  defp page_title(:edit), do: "Klasse bearbeiten"
 end
