@@ -18,7 +18,7 @@
       <td>
         <form phx-change="filter">
           <select name="station_id">
-              <option value="All" selected={IO.inspect(selected_or_empty?(@filter, "station_id", "All"))} > Alle </option>
+              <option value="All" selected={selected_or_empty?(@filter, "station_id", "All")} > Alle </option>
               <%= for station <- @stationen do %>
                   <option value={station.id} selected={selected?(@filter, "station_id", station.id)} > <%= station.name %> </option>
                   <% end %>

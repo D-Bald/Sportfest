@@ -7,7 +7,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
-    klassen = Vorbereitung.list_klassen() |> Enum.sort_by(fn klasse -> Ergebnisse.get_score_sum(klasse) end, :desc)
+    klassen = Vorbereitung.list_klassen() |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
     socket = assign(socket, page_title: "Leaderboard", schueler: Vorbereitung.list_schueler(), klassen: klassen)
 
     {:ok, socket}
@@ -18,7 +18,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
     {:noreply,
            socket
            |> update(:scores, fn scores ->  [score | scores]
-                                            |> Enum.sort_by(fn klasse -> Ergebnisse.get_score_sum(klasse) end, :desc) end)}
+                                            |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc) end)}
   end
 
   @impl true
@@ -29,6 +29,6 @@ defmodule SportfestWeb.LeaderboardLive.Index do
            |> update(:klassen, fn klassen ->  List.replace_at(klassen, # Manual replacement because klassen is not tracked
                                                   Enum.find_index(klassen, fn s -> s.id == score.klasse_id end),
                                                   klasse)
-                                              |> Enum.sort_by(fn klasse -> Ergebnisse.get_score_sum(klasse) end, :desc) end)}
+                                              |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc) end)}
   end
 end

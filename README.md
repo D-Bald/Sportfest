@@ -44,9 +44,7 @@ CREATE DATABASE
 ### Set Environment variables
 Ausführen der `mix`-Tasks (`mix phx.gen.secret`) im Projektordner.
 ```console
-$ mix phx.gen.secret
-GENERIERTES_PASSWORT
-$ export SECRET_KEY_BASE=GENERIERTES_PASSWORT
+$ export SECRET_KEY_BASE=$(mix phx.gen.secret)
 
 $ export DATABASE_URL=ecto://postgres:postgres@localhost/sportfest_prod
 

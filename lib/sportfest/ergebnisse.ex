@@ -159,6 +159,24 @@ defmodule Sportfest.Ergebnisse do
   end
 
   @doc """
+  Gibt die Punkte zurück, die für die assoziierte Station für die gegebene medaille vergeben werden.
+
+  ## Examples
+
+      iex> get_medal_points(score)
+      3
+
+  """
+  def get_medal_points(score) do
+    case score.medaille do
+      :bronze -> score.station.bronze
+      :silber -> score.station.silber
+      :gold -> score.station.gold
+      :keine -> 0
+    end
+  end
+
+  @doc """
   Returns the sum of all scores associated to a given owner (schueler or klasse).
 
   ## Examples
@@ -169,14 +187,29 @@ defmodule Sportfest.Ergebnisse do
   """
   def get_score_sum(owner) do
     Enum.map(owner.scores,
-              fn score ->
-                case score.medaille do
-                  :bronze -> score.station.bronze
-                  :silber -> score.station.silber
-                  :gold -> score.station.gold
-                  :keine -> 0
-                end
-              end)
+              fn score -> get_medal_points(score) end)
+    |> Enum.sum()
+  end
+
+  @doc """
+  Gibt die Summe der Scores an, die mit einer Klasse assoziiert sind.
+  Skaliert dabei den Anteil der nicht Team Challenges am Klassenscore auf die Anzahl der Schueler in einer Klasse.
+
+  ## Examples
+
+      iex> scaled_class_score(klasse)
+      50
+
+  """
+  def scaled_class_score(klasse) do
+    Enum.map(klasse.scores,
+      fn score ->
+        if score.station.team_challenge do
+          get_medal_points(score)
+        else
+          get_medal_points(score) / (klasse.schueler |> Enum.count())
+        end
+      end)
     |> Enum.sum()
   end
 

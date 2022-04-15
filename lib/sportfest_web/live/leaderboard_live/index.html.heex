@@ -15,7 +15,7 @@
       <tr id={"klasse-#{Enum.at(@klassen,i).id}"}>
         <td><%= i %></td>
         <td><%= Enum.at(@klassen,i).name %></td>
-        <td><%= Sportfest.Ergebnisse.get_score_sum(Enum.at(@klassen,i)) %></td>
+        <td><%= Sportfest.Ergebnisse.scaled_class_score(Enum.at(@klassen,i)) %></td>
       </tr>
     <% end %>
   </tbody>
