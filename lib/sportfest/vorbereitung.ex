@@ -308,7 +308,7 @@ defmodule Sportfest.Vorbereitung do
   @doc """
   Returns schueler with given name and klasse.
   Creates a schueler if no schueler with the given name and klasse exists.
-  Raises Ecto.MultipleResultsError if more than one schueler with the same name and klasse already exists.
+  Raises `Ecto.MultipleResultsError` if more than one schueler with the same name and klasse already exists.
 
   ## Examples
 
