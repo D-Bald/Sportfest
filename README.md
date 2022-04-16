@@ -1,5 +1,8 @@
 # Sportfest
 ## Nutzungshinweise
+### Authentication and authorization
+Not working yet!
+
 ### Pfade
 - Homepage: HOSTNAME/
 - Bearbeiten der Medaillen: `HOSTNAME/scores`
