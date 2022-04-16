@@ -1,7 +1,7 @@
 # Sportfest
 ## Nutzungshinweise
-### Authentication and authorization
-Not working yet!
+### Athentifizierung und Authorisierung
+Registrierungs- und Login-Link werden angezeigt, aber die Funktoinalität ist noch nicht implementiert!
 
 ### Pfade
 - Homepage: HOSTNAME/
