@@ -306,7 +306,9 @@ defmodule Sportfest.Vorbereitung do
   end
 
   @doc """
-  Creates a schueler if no schueler with the same name and klasse exists.
+  Returns schueler with given name and klasse.
+  Creates a schueler if no schueler with the given name and klasse exists.
+  Raises Ecto.MultipleResultsError if more than one schueler with the same name and klasse already exists.
 
   ## Examples
 
@@ -318,6 +320,9 @@ defmodule Sportfest.Vorbereitung do
 
       iex> get_or_create_schueler(%{name: bad_value, klasse: bad_value, jahrgang: bad_value})
       {:error, %Ecto.Changeset{}}
+
+      iex> get_or_create_scuheler(%{name: name_mehrfach, klasse: klasse_mehrfach, jahrgang: 5})
+      ** (Ecto.MultipleResultsError)
   """
   def get_or_create_schueler(%{name: name, klasse: klasse} = attrs) do
     case Schueler |> where(name: ^name)

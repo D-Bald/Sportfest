@@ -45,34 +45,36 @@ defmodule Sportfest.Ergebnisse do
     |> Repo.get!(id)
   end
 
-   @doc """
-  Returns the list of scores with given station and klasse (if station is a team challenge) or schueler
+  @doc """
+  Returns score with given station and owner (klasse if station is a team challenge, schueler else).
+  Creates a score if no score with the given station and owner exists.
+  Raises `Ecto.MultipleResultsError` if more than one score with the same station and owner already exists.
 
   ## Examples
 
-      iex> get_score(station, besitzer)
+      iex> get_or_create_score(station, besitzer)
       %Score{}
 
-      iex> get_score!(bad_station, bad_besitzer)
-      ** (Ecto.NoResultsError)
+      iex> get_or_create_score(station_mehrfach, besitzer_mehrfach)
+      ** (Ecto.MultipleResultsError)
   """
-  def get_or_create_score!(%Station{team_challenge: true} = station, %Klasse{} = klasse) do
-    case  Score |> where(station_id: ^station.id)
-                |> where(klasse_id: ^klasse.id)
-                |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
-                |> Repo.one() do
-                  nil   ->  {:ok, score} = create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
-                            score
-                  score ->  score
-                end
-  end
-
   def get_or_create_score!(%Station{team_challenge: false} = station, %Schueler{} = schueler) do
     case  Score |> where(station_id: ^station.id)
                 |> where(schueler_id: ^schueler.id)
                 |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
                 |> Repo.one() do
                   nil   ->  {:ok, score} = create_score( %{station_id: station.id, klasse_id: schueler.klasse_id, schueler_id: schueler.id, medaille: :keine})
+                            score
+                  score ->  score
+                end
+  end
+
+  def get_or_create_score!(%Station{team_challenge: true} = station, %Klasse{} = klasse) do
+    case  Score |> where(station_id: ^station.id)
+                |> where(klasse_id: ^klasse.id)
+                |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+                |> Repo.one() do
+                  nil   ->  {:ok, score} = create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
                             score
                   score ->  score
                 end

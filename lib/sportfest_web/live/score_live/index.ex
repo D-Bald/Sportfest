@@ -117,23 +117,19 @@ defmodule SportfestWeb.ScoreLive.Index do
 
   defp get_scores(socket) do
     single_challenges = Enum.filter(socket.assigns.stationen, fn s -> not s.team_challenge end)
-    rows_single_challenges =  for  station <- single_challenges,
-                                  schueler <- socket.assigns.schueler do
-                                    Ergebnisse.get_or_create_score!(station, schueler)
-                              end
-                              |> Enum.sort_by(fn score -> score.schueler.name end, :asc)
-                              |> Enum.sort_by(fn score -> score.klasse.name end, :asc)
-                              |> Enum.sort_by(fn score -> score.station.name end, :asc)
+    for station <- single_challenges,
+        schueler <- socket.assigns.schueler do
+          IO.inspect(%{station: station.id, schueler: schueler.id})
+          Ergebnisse.get_or_create_score!(station, schueler)
+    end
 
     team_challenges = Enum.filter(socket.assigns.stationen, fn s -> s.team_challenge end)
-    rows_team_challenges =  for  station <- team_challenges,
-                                  klasse <- socket.assigns.klassen do
-                                    Ergebnisse.get_or_create_score!(station, klasse)
-                            end
-                            |> Enum.sort_by(fn score -> score.klasse.name end, :asc)
-                            |> Enum.sort_by(fn score -> score.station.name end, :asc)
+    for station <- team_challenges,
+        klasse <- socket.assigns.klassen do
+          Ergebnisse.get_or_create_score!(station, klasse)
+    end
 
-    rows_single_challenges ++ rows_team_challenges
+    get_filter_rows(%{station_id: "All", klasse_id: "All"})
   end
 
   defp get_filter_rows(filter) do
