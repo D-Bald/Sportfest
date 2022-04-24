@@ -34,7 +34,7 @@
         <td><%= station.bronze %></td>
         <td><%= station.silber %></td>
         <td><%= station.gold %></td>
-        <td><%= station.team_challenge %></td>
+        <td><%= if station.team_challenge do "Ja" else "Nein" end%></td>
 
         <td>
           <span><%= live_redirect "Zeigen", to: Routes.station_show_path(@socket, :show, station) %></span>

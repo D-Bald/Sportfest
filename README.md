@@ -4,11 +4,13 @@
 Registrierungs- und Login-Link werden angezeigt, aber die Funktoinalität ist noch nicht implementiert!
 
 ### Pfade
-- Homepage: HOSTNAME/
+- Homepage: `HOSTNAME/`
 - Bearbeiten der Medaillen: `HOSTNAME/scores`
 - Anzeigen der Rangliste: `HOSTNAME/leaderboard`
-- Bearbeiten der Schüler:innen: `HOSTNAME/schueler`
-- Bearbeiten der Stationen: `HOSTNAME/stationen`
+- Auflistung zum Bearbeiten der Schüler:innen: `HOSTNAME/schueler`
+- (In Planung: Bearbeiten von inaktiven SuS: `HOSTNAME/klassen/:id/show`)
+- Auflistung zum Bearbeiten der Stationen: `HOSTNAME/stationen`
+- (In Planung: Erklärung der Station und Bearbeiten der Medaillen zu dieser Station: `HOSTNAME/stationen/:id/show`)
 
 ### Einschränkung beim Bearbeiten der Stationen
 Theoretisch kann bearbeitet werden, ob eine Station eine `team challenge` ist oder nicht. Wenn man diesen Status der Station ändert, funktioniert allerdings zur Zeit der Filter für die Scores nicht mehr korrekt. Daher muss bis zur Behebung des Problems die Station gelöscht und mit dem gewünschten Status neu erstellt werden.

@@ -42,8 +42,8 @@ config :esbuild,
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id] #, # Uncomment the comma and the following line to hide debugging logs
-  # level: :info
+  metadata: [:request_id] , # Uncomment the comma and the following line to hide debugging logs
+  level: :info
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason

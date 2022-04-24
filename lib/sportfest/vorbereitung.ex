@@ -321,7 +321,7 @@ defmodule Sportfest.Vorbereitung do
       iex> get_or_create_schueler(%{name: bad_value, klasse: bad_value, jahrgang: bad_value})
       {:error, %Ecto.Changeset{}}
 
-      iex> get_or_create_scuheler(%{name: name_mehrfach, klasse: klasse_mehrfach, jahrgang: 5})
+      iex> get_or_create_schueler(%{name: name_mehrfach, klasse: klasse_mehrfach, jahrgang: 5})
       ** (Ecto.MultipleResultsError)
   """
   def get_or_create_schueler(%{name: name, klasse: klasse} = attrs) do

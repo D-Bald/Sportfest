@@ -18,7 +18,49 @@
       <%= checkbox f, :team_challenge %>
       <%= error_tag f, :team_challenge %>
     <% end %>
-  
+
+    <%= label f, :beschreibung %>
+    <%= textarea f, :beschreibung %>
+    <%= error_tag f, :beschreibung %>
+
+    <%= label f, :Bilder %>
+    <div phx-drop-target={@uploads.images.ref}>
+      <%= live_file_input @uploads.images %>
+
+      <%# render each image entry %>
+      <%= for entry <- @uploads.images.entries do %>
+        <article class="upload-entry">
+
+          <figure>
+            <%# Phoenix.LiveView.Helpers.live_img_preview/2 renders a client-side preview %>
+            <%= live_img_preview entry %>
+            <figcaption><%= entry.client_name %></figcaption>
+          </figure>
+
+          <%# entry.progress will update automatically for in-flight entries %>
+          <progress value={entry.progress} max="100"> <%= entry.progress %>% </progress>
+
+          <%# a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 %>
+          <button phx-click="cancel-upload" phx-value-ref={entry.ref} aria-label="abbrechen">&times;</button>
+
+          <%# Phoenix.LiveView.Helpers.upload_errors/2 returns a list of error atoms %>
+          <%= for err <- upload_errors(@uploads.images, entry) do %>
+            <p class="alert alert-danger"><%= error_to_string(err) %></p>
+          <% end %>
+
+        </article>
+      <% end %>
+
+      <%= for entry <- @uploads.images.entries do %>
+        <%= for err <- upload_errors(@uploads.images, entry) do %>
+          <div class="alert alert-danger">
+            <%= error_to_string(err) %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    
+
     <%= label f, :bronze %>
     <%= number_input f, :bronze %>
     <%= error_tag f, :bronze %>
