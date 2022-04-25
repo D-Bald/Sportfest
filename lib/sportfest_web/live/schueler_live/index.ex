@@ -63,6 +63,7 @@ defmodule SportfestWeb.SchuelerLive.Index do
   end
 
   def error_to_string(:too_large), do: "Zu große Datei"
+  def error_to_string(:too_many_files), do: "Zu viele Dateien"
   def error_to_string(:not_accepted), do: "Dieser Datei Typ wird nicht unterstützt"
 
   defp list_schueler do

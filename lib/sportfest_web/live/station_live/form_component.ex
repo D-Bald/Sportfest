@@ -10,7 +10,8 @@ defmodule SportfestWeb.StationLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> allow_upload(:images, accept: ~w(.jpg .jpeg .png), max_entries: 5)} # NOCH FESTLEGEN WIE VIELE MAX
   end
 
   @impl true
@@ -23,8 +24,36 @@ defmodule SportfestWeb.StationLive.FormComponent do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
+  @impl true
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :images, ref)}
+  end
+
   def handle_event("save", %{"station" => station_params}, socket) do
-    save_station(socket, socket.assigns.action, station_params)
+    # file_paths =
+    #   consume_uploaded_entries(socket, :images,
+    #                           fn %{path: path}, _entry ->
+    #                               dest = Path.join("priv/static/uploads", Path.basename(path))
+    #                               File.cp!(path, dest)
+    #                               {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
+    #                           end)
+
+    # save_station(socket, socket.assigns.action, Map.put(station_params, "image_uploads", IO.inspect(file_paths)))
+
+    case uploaded_entries(socket, :images) do
+      {[_|_] = entries, []} ->
+        uploaded_files = for entry <- entries do
+          consume_uploaded_entry(socket, entry, fn %{path: path} ->
+            dest = Path.join("priv/static/uploads", Path.basename(path))
+            File.cp!(path, dest)
+            {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
+          end)
+        end
+        save_station(socket, socket.assigns.action, Map.put(station_params, "image_uploads", uploaded_files))
+
+      _ ->
+        save_station(socket, socket.assigns.action, station_params)
+    end
   end
 
   defp save_station(socket, :edit, station_params) do
@@ -52,4 +81,8 @@ defmodule SportfestWeb.StationLive.FormComponent do
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
+
+  def error_to_string(:too_large), do: "Zu große Datei"
+  def error_to_string(:too_many_files), do: "Zu viele Dateien"
+  def error_to_string(:not_accepted), do: "Dieser Datei Typ wird nicht unterstützt"
 end

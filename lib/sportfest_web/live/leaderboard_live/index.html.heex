@@ -19,7 +19,7 @@
   <tbody id="team_scores">
     <%= for i <- 0..Enum.count(@klassen) - 1 do %>
       <tr id={"klasse-#{Enum.at(@klassen,i).id}"}>
-        <td><%= i %></td>
+        <td><%= i+1 %></td>
         <td><%= Enum.at(@klassen,i).name %></td>
         <td><%= Sportfest.Ergebnisse.scaled_class_score(Enum.at(@klassen,i)) %></td>
         <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(@klassen,i)) %></td>

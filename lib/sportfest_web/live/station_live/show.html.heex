@@ -13,6 +13,28 @@
   </.modal>
 <% end %>
 
+<%= if @station.beschreibung != nil do %>
+  <h2> Beschreibung </h2>
+  <p>
+    <%= @station.beschreibung %>
+  </p>
+<% end %>
+
+<%= if @station.image_uploads != nil do %>
+  <h2> Bilder </h2>
+  <%= for img_path <- IO.inspect(@station.image_uploads) do %>
+    <article class="column">
+      <img
+          alt="Station Bild" width="200" height="200"
+          src={Routes.static_path(
+                  @socket, 
+                  img_path)}/>
+    </article>
+    <% end %>
+<% end %>
+
+
+
 <h2> Punkte für Medaillen </h2>
 <ul>
   <li>
