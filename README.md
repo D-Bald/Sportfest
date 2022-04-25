@@ -1,5 +1,7 @@
 # Sportfest
+
 ## Nutzungshinweise
+
 ### Athentifizierung und Authorisierung
 Registrierungs- und Login-Link werden angezeigt, aber die Funktoinalität ist noch nicht implementiert!
 
@@ -21,17 +23,8 @@ Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen v
 ### Videoeinbettung für Stationen
 Es werden nur Links zu Youtube Videos unterstützt.
 
-## Code herunterladen
-```console
-$ git clone https://github.com/D-Bald/Sportfest.git
-```
-Zum Updaten (`git pull` läuft auf error, da `priv/static/cache_manifest.json` überschrieben wird):
-```console
-$ git fetch
-$ git reset --hard HEAD
-$ git merge origin/main
-```
 ## Deployment
+
 ### Datenbank
 #### Installiere Postgres SQL
 https://www.postgresql.org/
@@ -47,6 +40,17 @@ Type "help" for help.
 
 postgres=# CREATE DATABASE sportfest_prod
 CREATE DATABASE
+```
+
+### Code herunterladen
+```console
+$ git clone https://github.com/D-Bald/Sportfest.git
+```
+Zum Updaten (`git pull` läuft auf error, da `priv/static/cache_manifest.json` überschrieben wird):
+```console
+$ git fetch
+$ git reset --hard HEAD
+$ git merge origin/main
 ```
 
 ### Deployment mit Releases
