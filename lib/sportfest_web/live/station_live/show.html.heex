@@ -13,46 +13,39 @@
   </.modal>
 <% end %>
 
-<%= if @station.beschreibung != nil do %>
-  <h2> Beschreibung </h2>
-  <p>
-    <%= @station.beschreibung %>
-  </p>
-<% end %>
+<div>
+  <%= if @station.beschreibung != nil do %>
+    <h2> Beschreibung </h2>
+    <p>
+      <%= @station.beschreibung %>
+    </p>
+  <% end %>
+</div>
 
-<%= if @station.image_uploads != nil do %>
-  <h2> Bilder </h2>
-  <%= for img_path <- IO.inspect(@station.image_uploads) do %>
-    <article class="column">
-      <img
-          alt="Station Bild" width="200" height="200"
-          src={Routes.static_path(
-                  @socket, 
-                  img_path)}/>
-    </article>
+<div>
+  <%= if @station.image_uploads != nil do %>
+    <h2> Bilder </h2>
+    <%= for img_path <- @station.image_uploads do %>
+      <div class="column">
+        <img src={IO.inspect(Routes.static_path(@socket, img_path))} width="200" height="200" alt="Station Bild"/>
+      </div>
+      <% end %>
+  <% end %>
+</div>
+
+<div class="column">
+                <img  src={IO.inspect(Routes.static_path(@socket, "/images/gold_medaille.png"))}
+                      width="50" height="50" alt="Goldmedaille"/>
+            </div>
+
+<div>
+  <%= if @station.video_link != nil do %>
+    <h2> Video </h2>
+    <%= with {:youtube, id} <- VideoLinkHelper.extract_id(@station.video_link) do%>
+        <iframe width="560" height="315" src={"//www.youtube.com/embed/#{id}"} style="border: none;" allowfullscreen></iframe>
     <% end %>
-<% end %>
-
-
-
-<h2> Punkte für Medaillen </h2>
-<ul>
-  <li>
-    <strong>Bronze:</strong>
-    <%= @station.bronze %>
-  </li>
-
-  <li>
-    <strong>Silber:</strong>
-    <%= @station.silber %>
-  </li>
-
-  <li>
-    <strong>Gold:</strong>
-    <%= @station.gold %>
-  </li>
-
-</ul>
+  <% end %>
+</div>
 
 <span><%= live_patch "Bearbeiten", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span> |
 <span><%= live_redirect "Löschen", to: Routes.station_index_path(@socket, :index) %></span>

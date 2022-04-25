@@ -50,17 +50,14 @@
 
         </article>
       <% end %>
-
-      <%= for entry <- @uploads.images.entries do %>
-        <%= for err <- upload_errors(@uploads.images, entry) do %>
-          <div class="alert alert-danger">
-            <%= error_to_string(err) %>
-          </div>
-        <% end %>
-      <% end %>
     </div>
-    
 
+    <%= label f, :video_link %>
+    <%= text_input f, :video_link %>
+    <%= error_tag f, :video_link %>
+    
+    <h3> Punkte für Medaillen </h3>
+    
     <%= label f, :bronze %>
     <%= number_input f, :bronze %>
     <%= error_tag f, :bronze %>

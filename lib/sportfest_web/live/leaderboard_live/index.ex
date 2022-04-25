@@ -15,14 +15,28 @@ defmodule SportfestWeb.LeaderboardLive.Index do
 
   @impl true
   def handle_info({:score_created, score}, socket) do
+    klasse = Vorbereitung.get_klasse!(score.klasse_id)
     {:noreply,
            socket
-           |> update(:scores, fn scores ->  [score | scores]
-                                            |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc) end)}
+           |> update(:klassen, fn klassen ->  List.replace_at(klassen, # Manual replacement because klassen is not tracked
+                                                  Enum.find_index(klassen, fn s -> s.id == score.klasse_id end),
+                                                  klasse)
+                                              |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc) end)}
   end
 
   @impl true
   def handle_info({:score_updated, score}, socket) do
+    klasse = Vorbereitung.get_klasse!(score.klasse_id)
+    {:noreply,
+           socket
+           |> update(:klassen, fn klassen ->  List.replace_at(klassen, # Manual replacement because klassen is not tracked
+                                                  Enum.find_index(klassen, fn s -> s.id == score.klasse_id end),
+                                                  klasse)
+                                              |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc) end)}
+  end
+
+  @impl true
+  def handle_info({:score_deleted, score}, socket) do
     klasse = Vorbereitung.get_klasse!(score.klasse_id)
     {:noreply,
            socket

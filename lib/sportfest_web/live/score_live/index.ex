@@ -82,6 +82,13 @@ defmodule SportfestWeb.ScoreLive.Index do
                                                             score) end )}
   end
 
+  @impl true
+  def handle_info({:score_deleted, score}, socket) do
+    {:noreply,
+           socket
+           |> update(:scores, fn scores -> List.delete(scores, score) end)}
+  end
+
   def selected?(filter,key,value) do
     case Map.has_key?(filter, key) do
       true -> filter[key]==value
@@ -119,7 +126,7 @@ defmodule SportfestWeb.ScoreLive.Index do
     single_challenges = Enum.filter(socket.assigns.stationen, fn s -> not s.team_challenge end)
     for station <- single_challenges,
         schueler <- socket.assigns.schueler do
-          IO.inspect(%{station: station.id, schueler: schueler.id})
+          %{station: station.id, schueler: schueler.id}
           Ergebnisse.get_or_create_score!(station, schueler)
     end
 

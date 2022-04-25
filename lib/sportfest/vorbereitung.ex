@@ -321,7 +321,7 @@ defmodule Sportfest.Vorbereitung do
       iex> get_or_create_schueler(%{name: bad_value, klasse: bad_value, jahrgang: bad_value})
       {:error, %Ecto.Changeset{}}
 
-      iex> get_or_create_schueler(%{name: name_mehrfach, klasse: klasse_mehrfach, jahrgang: 5})
+      iex> get_or_create_scuheler(%{name: name_mehrfach, klasse: klasse_mehrfach, jahrgang: 5})
       ** (Ecto.MultipleResultsError)
   """
   def get_or_create_schueler(%{name: name, klasse: klasse} = attrs) do
@@ -366,7 +366,15 @@ defmodule Sportfest.Vorbereitung do
 
   """
   def delete_schueler(%Schueler{} = schueler) do
-    Repo.delete(schueler)
+    case Repo.delete(schueler) do
+      {:ok, schueler} ->
+        for score <- schueler.scores do
+          Sportfest.Ergebnisse.broadcast({:ok, score}, :score_deleted)
+        end
+        {:ok, schueler}
+      {:error, schueler} ->
+        {:error, schueler}
+    end
   end
 
   @doc """

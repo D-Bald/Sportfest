@@ -30,21 +30,12 @@ defmodule SportfestWeb.StationLive.FormComponent do
   end
 
   def handle_event("save", %{"station" => station_params}, socket) do
-    # file_paths =
-    #   consume_uploaded_entries(socket, :images,
-    #                           fn %{path: path}, _entry ->
-    #                               dest = Path.join("priv/static/uploads", Path.basename(path))
-    #                               File.cp!(path, dest)
-    #                               {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
-    #                           end)
-
-    # save_station(socket, socket.assigns.action, Map.put(station_params, "image_uploads", IO.inspect(file_paths)))
-
     case uploaded_entries(socket, :images) do
       {[_|_] = entries, []} ->
         uploaded_files = for entry <- entries do
+          file_ext = Path.extname(entry.client_name)
           consume_uploaded_entry(socket, entry, fn %{path: path} ->
-            dest = Path.join("priv/static/uploads", Path.basename(path))
+            dest = Path.join(["priv/static/uploads", Path.basename(path <> file_ext)])
             File.cp!(path, dest)
             {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
           end)
@@ -57,6 +48,13 @@ defmodule SportfestWeb.StationLive.FormComponent do
   end
 
   defp save_station(socket, :edit, station_params) do
+    # Lösche mögicherweise vorher hinzugefügte Fotos, damit diese nicht ungenutzt im uploads Ordner bleiben.
+    if Map.has_key?(station_params, "image_uploads") do
+      for img <- socket.assigns.station.image_uploads do
+        File.rm!(Path.join("priv/static/", img))
+      end
+    end
+
     case Vorbereitung.update_station(socket.assigns.station, station_params) do
       {:ok, _station} ->
         {:noreply,

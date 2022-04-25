@@ -154,8 +154,18 @@ defmodule Sportfest.Ergebnisse do
     Phoenix.PubSub.subscribe(Sportfest.PubSub, "scores")
   end
 
-  defp broadcast({:error, _error} = error, _event), do: error
-  defp broadcast({:ok, score}, event) do
+  @doc """
+  Broadcasting Events zu Scores im Phoenix PubSub, falls im ersten Parameter kein Error übergeben wird.
+
+  ## Examples
+      iex> broadcast({:ok, score}, event)
+      {:ok, score}
+
+      iex> broadcast({:error, error}, event)
+      {:error, error}
+  """
+  def broadcast({:error, _error} = error, _event), do: error
+  def broadcast({:ok, score}, event) do
     Phoenix.PubSub.broadcast!(Sportfest.PubSub, "scores", {event, score})
     {:ok, score}
   end
