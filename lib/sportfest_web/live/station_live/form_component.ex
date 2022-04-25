@@ -49,7 +49,7 @@ defmodule SportfestWeb.StationLive.FormComponent do
 
   defp save_station(socket, :edit, station_params) do
     # Lösche mögicherweise vorher hinzugefügte Fotos, damit diese nicht ungenutzt im uploads Ordner bleiben.
-    if Map.has_key?(station_params, "image_uploads") do
+    if Map.has_key?(station_params, "image_uploads") and socket.assigns.station.image_uploads do
       for img <- socket.assigns.station.image_uploads do
         File.rm!(Path.join("priv/static/", img))
       end

@@ -37,6 +37,13 @@ defmodule SportfestWeb.StationLive.Index do
     station = Vorbereitung.get_station!(id)
     {:ok, _} = Vorbereitung.delete_station(station)
 
+    # Lösche mögicherweise vorher hinzugefügte Fotos, damit diese nicht ungenutzt im uploads Ordner bleiben.
+    if station.image_uploads do
+      for img <- station.image_uploads do
+        File.rm!(Path.join("priv/static/", img))
+      end
+    end
+
     {:noreply, assign(socket, :stationen, list_stationen())}
   end
 

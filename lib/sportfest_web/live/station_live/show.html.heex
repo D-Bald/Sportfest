@@ -27,16 +27,11 @@
     <h2> Bilder </h2>
     <%= for img_path <- @station.image_uploads do %>
       <div class="column">
-        <img src={IO.inspect(Routes.static_path(@socket, img_path))} width="200" height="200" alt="Station Bild"/>
+        <img src={Routes.static_path(@socket, img_path)} width="200" height="200" alt="Station Bild"/>
       </div>
       <% end %>
   <% end %>
 </div>
-
-<div class="column">
-                <img  src={IO.inspect(Routes.static_path(@socket, "/images/gold_medaille.png"))}
-                      width="50" height="50" alt="Goldmedaille"/>
-            </div>
 
 <div>
   <%= if @station.video_link != nil do %>
@@ -48,4 +43,4 @@
 </div>
 
 <span><%= live_patch "Bearbeiten", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span> |
-<span><%= live_redirect "Löschen", to: Routes.station_index_path(@socket, :index) %></span>
+<span><%= live_redirect "Zurück", to: Routes.station_index_path(@socket, :index) %></span>
