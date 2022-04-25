@@ -7,7 +7,7 @@ export PHX_HOST=HOSTNAME_ODER_localhost
 export PORT=4001
 
 # load dependencies to compile code and assets:
-# Initial setup
+# initial setup
 mix deps.get --only prod
 MIX_ENV=prod mix compile
 
