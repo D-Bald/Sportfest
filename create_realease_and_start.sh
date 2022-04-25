@@ -1,9 +1,9 @@
 #!/bin/sh
 
 echo "Setting environment variables"
-export SECRET_KEY_BASE=$(mix phx.gen.secret)
+export SECRET_KEY_BASE=SICHERES_PASSWORT
 export DATABASE_URL=ecto://postgres:postgres@localhost/sportfest_prod
-export PHX_HOST=HOSTNAME_ODER_localhost
+export PHX_HOST=HOSTNAME_ODER_LOCALHOST
 export PORT=4001
 
 echo "Loading dependencies to compile code and assets"

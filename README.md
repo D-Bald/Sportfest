@@ -36,7 +36,7 @@ $ git merge origin/main
 #### Installiere Postgres SQL
 https://www.postgresql.org/
 #### Konfiguration
-Aus der Dokumentation des Phoenix Frameworks:
+Aus der [Dokumentation des Phoenix Frameworks](https://hexdocs.pm/phoenix/up_and_running.html):
 > "Phoenix assumes that our PostgreSQL database will have a postgres user account with the correct permissions and a password of "postgres"."
 
 #### Erstelle Datenbank `sportfest_prod` für die Sportfest App
@@ -50,24 +50,24 @@ CREATE DATABASE
 ```
 
 ### Deployment mit Releases
-#### Bearbeiten des Skripts `create_realease_and_start.sh`
-Generiere Passwort für `SECRET_KEY_BASE` durch Ausführen folgender Zeile im Projektordner ([Phoenix Installation](https://hexdocs.pm/phoenix/1.6.6/installation.html) vorausgesetzt):
+#### Bearbeiten der Umgebungsvariablen im Skript `create_realease_and_start.sh`
+Generiere eine sicheres Passwort für `SECRET_KEY_BASE` durch Ausführen folgender Zeile im Projektordner ([Phoenix Installation](https://hexdocs.pm/phoenix/1.6.6/installation.html) vorausgesetzt):
 ```console
 $ mix phx.gen.secret
 ```
 Setze das generierte Passwort in der entsprechenden Zeile im Skript ein.
 
-Ändere auch den Eintrag für `PHX_HOST`
+Ändere auch den Eintrag für `PHX_HOST`.
 
-Aus der [Phoenix Dokumentation](https://hexdocs.pm/phoenix/1.6.6/deployment.html)
-> Do not copy those values directly, set `SECRET_KEY_BASE` according to the result of `mix phx.gen.secret` and `DATABASE_URL` according to your database address.
+Vgl. auch Hinweis aus der [Phoenix Dokumentation](https://hexdocs.pm/phoenix/1.6.6/deployment.html):
+> "Do not copy those values directly, set `SECRET_KEY_BASE` according to the result of `mix phx.gen.secret` and `DATABASE_URL` according to your database address."
 
-#### Ausfühern des Skripts:
+#### Ausführen des Skripts
 ```console
 $ sudo sh create_realease_and_start.sh
 ```
 
-#### Um die so gestartete App zu stoppen:
+#### Um die so gestartete App zu stoppen
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest stop
 ```
