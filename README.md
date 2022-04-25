@@ -21,7 +21,7 @@ Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen v
 ### Videoeinbettung für Stationen
 Es werden nur Links zu Youtube Videos unterstützt.
 
-## Get Code:
+## Code herunterladen
 ```console
 $ git clone https://github.com/D-Bald/Sportfest.git
 ```
