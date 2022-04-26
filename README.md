@@ -31,6 +31,15 @@ https://www.postgresql.org/
 #### Konfiguration
 Aus der [Dokumentation des Phoenix Frameworks](https://hexdocs.pm/phoenix/up_and_running.html):
 > "Phoenix assumes that our PostgreSQL database will have a postgres user account with the correct permissions and a password of "postgres"."
+Falls das Password noch nicht stimmt:
+```console
+$ psql -U postgres
+psql (13.6)
+Type "help" for help.
+
+postgres=# ALTER USER postgres PASSWORD 'postgres';
+ALTER ROLE
+```
 
 #### Erstelle Datenbank `sportfest_prod` für die Sportfest App
 ```console
@@ -38,7 +47,7 @@ $ psql -U postgres
 psql (13.6)
 Type "help" for help.
 
-postgres=# CREATE DATABASE sportfest_prod
+postgres=# CREATE DATABASE sportfest_prod;
 CREATE DATABASE
 ```
 

@@ -25,14 +25,23 @@
 <table>
   <thead>
     <tr>
-      <th>Schüler</th>
+      <th>Schüler:in</th>
+      <th>Gesamtpunkte</th>
+      <th>Aktiv</th>
 
     </tr>
   </thead>
   <tbody id="klassen">
-    <%= for schueler <- @klasse.schueler do %>
+    <%= for schueler <- @schueler do %>
       <tr id={"schueler-#{schueler.id}"}>
         <td><%= schueler.name %></td>
+        <td><%= if schueler.aktiv do
+                  Sportfest.Ergebnisse.get_score_sum(schueler)
+                else "" end%>
+        </td>
+        <td>
+          <input phx-click="toggle_aktiv" phx-value-schueler_id={schueler.id} type="checkbox" name="aktiv" checked={schueler.aktiv}>
+        </td>
       </tr>
     <% end %>
   </tbody>

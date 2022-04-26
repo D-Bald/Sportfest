@@ -77,16 +77,18 @@ defmodule SportfestWeb.ScoreLive.Index do
   def handle_info({:score_updated, score}, socket) do
     {:noreply,
            socket
-           |> update(:scores, fn scores ->  List.replace_at(scores, # Manual replacement, since the scores cannot be tracked by liveview due to filters
-                                                            Enum.find_index(scores, fn s -> s.id == score.id end),
-                                                            score) end )}
+           |> update(:scores, fn scores ->
+                List.replace_at(scores, # Manual replacement, since the scores cannot be tracked by liveview due to filters
+                  Enum.find_index(scores, fn s -> s.id == score.id end),
+                  score) end )}
   end
 
   @impl true
   def handle_info({:score_deleted, score}, socket) do
     {:noreply,
            socket
-           |> update(:scores, fn scores -> List.delete(scores, score) end)}
+           |> update(:scores, fn scores ->
+                List.delete(scores, score) end)}
   end
 
   def selected?(filter,key,value) do

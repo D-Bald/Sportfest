@@ -260,6 +260,29 @@ defmodule Sportfest.Vorbereitung do
     |> Repo.all()
   end
 
+    @doc """
+  Gets a single klasse by given name.
+
+  Raise Error if more than one Klasse with given name exist.
+  Since on creation a unique constraint for name is applied, this should not occure.
+
+  ## Examples
+
+      iex> list_schueler_by_klasse("5b)")
+      %Klasse{}
+
+      iex> list_schueler_by_klasse("14f)")
+      ** nil
+
+  """
+  def list_schueler_by_klasse(%Klasse{} = klasse) do
+    Schueler
+    |> Ecto.Query.preload([scores: [:station], klasse: []])
+    |> where(klasse_id: ^klasse.id)
+    |> order_by(asc: :name)
+    |> Repo.all()
+  end
+
   @doc """
   Gibt Name und ID für alle Schüler:innen zurück.
   """
@@ -303,6 +326,7 @@ defmodule Sportfest.Vorbereitung do
     Ecto.build_assoc(klasse, :schueler)
     |> change_schueler(attrs)
     |> Repo.insert()
+    |> broadcast(:schueler_created)
   end
 
   @doc """
@@ -351,6 +375,7 @@ defmodule Sportfest.Vorbereitung do
     schueler
     |> change_schueler(attrs)
     |> Repo.update()
+    |> broadcast(:schueler_updated)
   end
 
   @doc """
@@ -366,15 +391,18 @@ defmodule Sportfest.Vorbereitung do
 
   """
   def delete_schueler(%Schueler{} = schueler) do
-    case Repo.delete(schueler) do
-      {:ok, schueler} ->
-        for score <- schueler.scores do
-          Sportfest.Ergebnisse.broadcast({:ok, score}, :score_deleted)
-        end
-        {:ok, schueler}
-      {:error, schueler} ->
-        {:error, schueler}
-    end
+    Repo.delete(schueler)
+    |> broadcast(:schueler_deleted)
+    |> case do
+        {:ok, schueler} ->
+          for score <- schueler.scores do
+            Sportfest.Ergebnisse.broadcast({:ok, score}, :score_deleted)
+          end
+          {:ok, schueler}
+        {:error, schueler} ->
+          {:error, schueler}
+      end
+
   end
 
   @doc """
@@ -398,5 +426,35 @@ defmodule Sportfest.Vorbereitung do
     # end
 
     changeset
+  end
+
+  @doc """
+  Subscribe, um events zum Thema "scores" aus dem PubSub zu erhalten.any()
+
+  ## Examples
+      iex> Sportfest.Ergebnisse.subscribe
+      :ok
+
+      iex> Sportfest.Ergebnisse.subscribe
+      {:error, term}
+  """
+  def subscribe do
+    Phoenix.PubSub.subscribe(Sportfest.PubSub, "schueler")
+  end
+
+  @doc """
+  Broadcasting Events zu Schüler:innen im Phoenix PubSub, falls im ersten Parameter kein Error übergeben wird.
+
+  ## Examples
+      iex> broadcast({:ok, schueler}, event)
+      {:ok, schueler}
+
+      iex> broadcast({:error, error}, event)
+      {:error, error}
+  """
+  def broadcast({:error, _error} = error, _event), do: error
+  def broadcast({:ok, schueler}, event) do
+    Phoenix.PubSub.broadcast!(Sportfest.PubSub, "schueler", {event, schueler})
+    {:ok, schueler}
   end
 end

@@ -69,7 +69,10 @@
         <td><%= schueler.jahrgang %></td>
         <td><%= schueler.klasse.name %></td>
         <td><%= schueler.name %></td>
-        <td><%= Sportfest.Ergebnisse.get_score_sum(schueler) %></td>
+        <td><%= if schueler.aktiv do
+                  Sportfest.Ergebnisse.get_score_sum(schueler)
+                else "Inaktiv oder abwesend" end%>
+        </td>
 
         <td>
           <span><%= live_redirect "Zeigen", to: Routes.schueler_show_path(@socket, :show, schueler) %></span>

@@ -20,6 +20,10 @@
     <%= label f, :jahrgang %>
     <%= text_input f, :jahrgang %>
     <%= error_tag f, :jahrgang %>
+
+    <%= label f, :aktiv %>
+    <%= checkbox f, :aktiv %>
+    <%= error_tag f, :aktiv %>
   
     <div>
       <%= submit "Speichern", phx_disable_with: "Speichern..." %>

@@ -150,6 +150,16 @@ defmodule Sportfest.Ergebnisse do
     |> Score.changeset(attrs)
   end
 
+  @doc """
+  Subscribe, um events zum Thema "scores" aus dem PubSub zu erhalten.any()
+
+  ## Examples
+      iex> Sportfest.Ergebnisse.subscribe
+      :ok
+
+      iex> Sportfest.Ergebnisse.subscribe
+      {:error, term}
+  """
   def subscribe do
     Phoenix.PubSub.subscribe(Sportfest.PubSub, "scores")
   end
@@ -266,9 +276,8 @@ defmodule Sportfest.Ergebnisse do
   end
 
 
-
-
-
+  # Zählt Medaillen gegeben durch ein Atom aus [:bronze, :silber, :gold]
+  # von einem gegebenen Owner (%Klasse{} oder %Schueler{})
   defp count_medaillen(owner, medaille) do
     Enum.filter(owner.scores, fn score -> medaille == score.medaille end)
     |> Enum.count()

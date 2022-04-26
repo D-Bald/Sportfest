@@ -25,10 +25,16 @@
     <%= @schueler.jahrgang %>
   </li>
 
-  <li>
-    <strong>Persönliche Gesamtpunkte:</strong>
-    <%= Sportfest.Ergebnisse.get_score_sum(@schueler) %>
-  </li>
+  <%= if @schueler.aktiv do %>
+    <li>
+      <strong>Persönliche Gesamtpunkte:</strong>
+      <%= Sportfest.Ergebnisse.get_score_sum(@schueler) %>
+    </li>
+  <% else %>
+    <li>
+        <strong>Inaktiv oder abwesend</strong>
+    </li>
+  <% end %>
 
 </ul>
 
