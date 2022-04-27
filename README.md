@@ -6,13 +6,19 @@
 Registrierungs- und Login-Link werden angezeigt, aber die Funktoinalität ist noch nicht implementiert!
 
 ### Pfade
-- Homepage: `HOSTNAME/`
-- Bearbeiten der Medaillen: `HOSTNAME/scores`
-- Anzeigen der Rangliste: `HOSTNAME/leaderboard`
-- Auflistung zum Bearbeiten der Schüler:innen: `HOSTNAME/schueler`
-- (In Planung: Bearbeiten von inaktiven SuS: `HOSTNAME/klassen/:id/show`)
-- Auflistung zum Bearbeiten der Stationen: `HOSTNAME/stationen`
-- (In Planung: Erklärung der Station und Bearbeiten der Medaillen zu dieser Station: `HOSTNAME/stationen/:id/show`)
+Jede Route beginnt mit dem festgelegten Host Namen durch `PHX_HOST` (s.u.).
+
+| Route | Beschreibung | Autorisierte Rolle(n) |
+|:------|:-------------|:---------------------:|
+| `/` | Homepage | `admin`, `lehrer`, `schueler` |
+| `/klassen` | Auflistung zum Anzeigen und Bearbeiten der Klassen | `admin`, `lehrer` |
+| `/klassen/:id` | Bearbeiten von inaktiven Schüler:innen einer Klasse | `admin`, `lehrer` |
+| `/stationen` | Auflistung zum Anzeigen und Bearbeiten der Stationen | `admin`, `lehrer` |
+| `/stationen/:id` | Erklärung der Station und Bearbeiten von Medaillen für aktive Schüler:innen für diese Station |`admin`, `lehrer` |
+| `/leaderboard` | Anzeigen der Rangliste | `admin`, `lehrer`, `schueler` |
+| `/schueler` | Auflistung zum Bearbeiten der Schüler:innen | `admin` |
+| `/scores` | Bearbeiten aller Medaillen | `admin` |
+
 
 ### Import von Schüler:innen
 Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen von CSV-Dateien eingelesen werden. Die CSV-Dateien müssen folgende Eigenschaften erfüllen:
