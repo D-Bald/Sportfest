@@ -9,3 +9,8 @@ erl_crash.dump
 *.beam
 /config/*.secret.exs
 .elixir_ls/
+
+### Uploads ###
+/lib/priv/static/uploads/*
+# Behalte den uploads-Ordner, indem eine Dummy-Datei enthalten bleibt
+!/lib/priv/static/uploads/.gitkeepfolder
