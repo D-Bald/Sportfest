@@ -336,19 +336,19 @@ defmodule Sportfest.Vorbereitung do
 
   ## Examples
 
-      iex> get_or_create_schueler(%{name: name, klasse: klasse, jahrgang: 5})
+      iex> create_or_skip_schueler(%{name: name, klasse: klasse, jahrgang: 5})
       {:ok, %Schueler{}}
 
-      iex> get_or_create_schueler(%{name: vergebener_name, klasse: klasse, jahrgang: 5})
+      iex> create_or_skip_schueler(%{name: vergebener_name, klasse: klasse, jahrgang: 5})
       {:ok, %Schueler{}}
 
-      iex> get_or_create_schueler(%{name: bad_value, klasse: bad_value, jahrgang: bad_value})
+      iex> create_or_skip_schueler(%{name: bad_value, klasse: bad_value, jahrgang: bad_value})
       {:error, %Ecto.Changeset{}}
 
-      iex> get_or_create_scuheler(%{name: name_mehrfach, klasse: klasse_mehrfach, jahrgang: 5})
+      iex> create_or_skip_schueler(%{name: name_mehrfach, klasse: klasse_mehrfach, jahrgang: 5})
       ** (Ecto.MultipleResultsError)
   """
-  def get_or_create_schueler(%{name: name, klasse: klasse} = attrs) do
+  def create_or_skip_schueler(%{name: name, klasse: klasse} = attrs) do
     case Schueler |> where(name: ^name)
                   |> where(klasse_id: ^klasse.id)
                   |> Ecto.Query.preload([scores: [:station], klasse: []])

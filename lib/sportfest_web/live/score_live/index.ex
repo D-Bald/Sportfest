@@ -129,13 +129,13 @@ defmodule SportfestWeb.ScoreLive.Index do
     single_challenges = Enum.filter(socket.assigns.stationen, fn s -> not s.team_challenge end)
     for station <- single_challenges,
         schueler <- socket.assigns.schueler do
-          Ergebnisse.get_or_create_score!(station, schueler)
+          Ergebnisse.create_or_skip_score(station, schueler)
     end
 
     team_challenges = Enum.filter(socket.assigns.stationen, fn s -> s.team_challenge end)
     for station <- team_challenges,
         klasse <- socket.assigns.klassen do
-          Ergebnisse.get_or_create_score!(station, klasse)
+          Ergebnisse.create_or_skip_score(station, klasse)
     end
 
     get_filter_rows(%{station_id: "All", klasse_id: "All"})

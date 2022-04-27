@@ -128,11 +128,11 @@ defmodule SportfestWeb.StationLive.Show do
     cond do
       station.team_challenge ->
         for klasse <- socket.assigns.klassen do
-          Ergebnisse.get_or_create_score!(station, klasse)
+          Ergebnisse.create_or_skip_score(station, klasse)
         end
       true ->
         for schueler <- socket.assigns.schueler do
-          Ergebnisse.get_or_create_score!(station, schueler)
+          Ergebnisse.create_or_skip_score(station, schueler)
         end
     end
 

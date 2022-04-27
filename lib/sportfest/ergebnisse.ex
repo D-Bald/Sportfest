@@ -52,31 +52,32 @@ defmodule Sportfest.Ergebnisse do
 
   ## Examples
 
-      iex> get_or_create_score(station, besitzer)
-      %Score{}
+      iex> create_or_skip_score(station, besitzer)
+      {:ok, %Score{}}
 
-      iex> get_or_create_score(station_mehrfach, besitzer_mehrfach)
+      iex> create_or_skip_score(bad_station, bad_besitzer)
+      {:error, %Ecto.Changeset{}}
+
+      iex> create_or_skip_score(station_mehrfach, besitzer_mehrfach)
       ** (Ecto.MultipleResultsError)
   """
-  def get_or_create_score!(%Station{team_challenge: false} = station, %Schueler{} = schueler) do
+  def create_or_skip_score(%Station{team_challenge: false} = station, %Schueler{} = schueler) do
     case  Score |> where(station_id: ^station.id)
                 |> where(schueler_id: ^schueler.id)
                 |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
                 |> Repo.one() do
-                  nil   ->  {:ok, score} = create_score( %{station_id: station.id, klasse_id: schueler.klasse_id, schueler_id: schueler.id, medaille: :keine})
-                            score
-                  score ->  score
+                  nil   ->  create_score( %{station_id: station.id, klasse_id: schueler.klasse_id, schueler_id: schueler.id, medaille: :keine})
+                  score ->  {:ok, score}
                 end
   end
 
-  def get_or_create_score!(%Station{team_challenge: true} = station, %Klasse{} = klasse) do
+  def create_or_skip_score(%Station{team_challenge: true} = station, %Klasse{} = klasse) do
     case  Score |> where(station_id: ^station.id)
                 |> where(klasse_id: ^klasse.id)
                 |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
                 |> Repo.one() do
-                  nil   ->  {:ok, score} = create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
-                            score
-                  score ->  score
+                  nil   ->  create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
+                  score ->  {:ok, score}
                 end
   end
 
@@ -85,10 +86,10 @@ defmodule Sportfest.Ergebnisse do
 
   ## Examples
 
-      iex> create_score(%{field: value})
+      iex> create_score(%{klasse_id: 1, station_id: 1})
       {:ok, %Score{}}
 
-      iex> create_score(%{field: bad_value})
+      iex> create_score(%{medaille: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """

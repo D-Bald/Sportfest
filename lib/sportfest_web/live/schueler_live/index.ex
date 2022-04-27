@@ -9,7 +9,9 @@ defmodule SportfestWeb.SchuelerLive.Index do
     {:ok,
       socket
       |> assign(:schueler_collection, list_schueler())
-      |> allow_upload(:schueler_data, accept: ~w(.csv), max_entries: 10)}
+      # Bei mehreren CSV kommt es vor, dass in der Datenbank zwei Schüler:innen mit der
+      # gleichen ID erstellt werden => max_entries: 1
+      |> allow_upload(:schueler_data, accept: ~w(.csv), max_entries: 1)}
   end
 
   @impl true

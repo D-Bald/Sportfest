@@ -11,8 +11,7 @@ defmodule Sportfest.Utils.CSVDataImports do
     |> File.stream!
     |> CSV.decode(headers: true)
     |> Enum.map(fn {:ok, line} -> build_schueler_attributes(line) end)
-    |> Enum.map(fn attrs -> Vorbereitung.get_or_create_schueler(attrs) end)
-    |> Enum.map(fn {:ok, schueler} -> schueler end)
+    |> Enum.map(fn attrs -> Vorbereitung.create_or_skip_schueler(attrs) end)
   end
 
   def build_schueler_attributes(line) do
