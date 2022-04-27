@@ -44,3 +44,75 @@
 
 <span><%= live_patch "Bearbeiten", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span> |
 <span><%= live_redirect "Zurück", to: Routes.station_index_path(@socket, :index) %></span>
+
+<h2> Medaillen bearbeiten </h2>
+<table>
+  <thead>
+    <tr>
+      <th>Station</th>
+      <th>Klasse</th>
+      <th>Schüler:in</th>
+      <th>Medaille</th>
+
+      <th></th>
+    </tr>
+
+    <tr>
+      <td></td>
+      
+      <td>
+        <form phx-change="filter">
+          <select name="klasse_id">
+              <option value="All" selected={selected_or_empty?(@filter, "klasse_id", "All")} > Alle </option>
+              <%= for klasse <- @klassen do %>
+                  <option value={klasse.id} selected={selected?(@filter, "klasse_id", klasse.id)} > <%= klasse.name %> </option>
+                  <% end %>
+              </select>
+        </form>
+      </td>
+
+      <td></td>
+      <td></td>
+    </tr>
+  </thead>
+
+  <tbody id="scores">
+    <%= for score <- @scores do %>
+      <tr id={"score-#{score.id}"}>
+        <td><%= score.station.name %></td>
+        <td><%= score.klasse.name %></td>
+        <td><%= if score.station.team_challenge do "" else score.schueler.name end%></td>
+        <td>
+          <div class="row">
+          <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="keine">
+                keine
+              </a>
+            </div>
+            <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="bronze">
+                <img  src={Routes.static_path(@socket, "/images/bronze_medaille.png")}
+                      width={"#{img_size(score, :bronze)}"} height={"#{img_size(score, :bronze)}"} alt="Bronzemedaille"/>
+              </a>
+            </div>
+            <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="silber">
+                <img  src={Routes.static_path(@socket, "/images/silber_medaille.png")}
+                      width={"#{img_size(score, :silber)}"} height={"#{img_size(score, :silber)}"} alt="Silbermedaille"/>
+              </a>
+            </div>
+            <div class="column">
+              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="gold">
+                <img  src={Routes.static_path(@socket, "/images/gold_medaille.png")}
+                      width={"#{img_size(score, :gold)}"} height={"#{img_size(score, :gold)}"} alt="Goldmedaille"/>
+              </a>
+            </div>
+          </div>
+        </td>
+        
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<a href="https://www.flaticon.com/de/kostenlose-icons/medaille" title="medaillen_icons">Medaillen Icons erstellt von Freepik - Flaticon</a>

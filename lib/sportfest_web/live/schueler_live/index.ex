@@ -55,10 +55,14 @@ defmodule SportfestWeb.SchuelerLive.Index do
 
   @impl Phoenix.LiveView
   def handle_event("save", _params, socket) do
-    consume_uploaded_entries(socket, :schueler_data,
-                              fn %{path: path}, _ ->
-                                {:ok, Sportfest.Utils.CSVDataImports.add_schueler_from_csv(path)}
-                              end)
+    with {[_|_] = entries, []} <- uploaded_entries(socket, :schueler_data) do
+      for entry <- entries do
+        consume_uploaded_entry(socket, entry, fn %{path: path} ->
+          {:ok, Sportfest.Utils.CSVDataImports.add_schueler_from_csv(path)}
+        end)
+      end
+    end
+
     {:noreply, assign(socket, :schueler_collection, list_schueler())}
   end
 

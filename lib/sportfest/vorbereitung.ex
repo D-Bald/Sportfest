@@ -124,7 +124,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def list_klassen do
     Klasse
-    |> preload([scores: [:station], schueler: []])
+    |> preload([scores: [:station, :schueler], schueler: []])
     |> order_by(asc: :name)
     |> Repo.all()
   end
@@ -152,7 +152,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def get_klasse!(id) do
     Klasse
-    |> Ecto.Query.preload([scores: [:station], schueler: []])
+    |> Ecto.Query.preload([scores: [:station, :schueler], schueler: []])
     |> Repo.get!(id)
   end
 
@@ -173,7 +173,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def get_klasse_by_name(name) do
     Klasse
-    |> Ecto.Query.preload([scores: [:station], schueler: []])
+    |> Ecto.Query.preload([scores: [:station, :schueler], schueler: []])
     |> Repo.get_by(name: name)
   end
 
@@ -240,7 +240,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def change_klasse(%Klasse{} = klasse, attrs \\ %{}) do
     klasse
-    |> Repo.preload([scores: [:station], schueler: []])
+    |> Repo.preload([scores: [:station, :schueler], schueler: []])
     |> Klasse.changeset(attrs)
   end
 

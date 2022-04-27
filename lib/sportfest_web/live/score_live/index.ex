@@ -11,9 +11,9 @@ defmodule SportfestWeb.ScoreLive.Index do
     #filter is set to All for each column
     filter = %{"station_id" => "All", "klasse_id" => "All"}
 
-    socket =
-      assign(socket, page_title: "Scores", stationen: list_stationen(),
-              klassen: list_klassen(), schueler: list_schueler(), filter: filter)
+    socket = assign(socket, page_title: "Scores", stationen: list_stationen(),
+                            klassen: list_klassen(), schueler: list_schueler(),
+                            filter: filter)
 
     socket = assign(socket, scores: get_scores(socket))
 
@@ -124,11 +124,11 @@ defmodule SportfestWeb.ScoreLive.Index do
     Vorbereitung.list_schueler()
   end
 
+  # Wrapper für create_or_skip_score/2
   defp get_scores(socket) do
     single_challenges = Enum.filter(socket.assigns.stationen, fn s -> not s.team_challenge end)
     for station <- single_challenges,
         schueler <- socket.assigns.schueler do
-          %{station: station.id, schueler: schueler.id}
           Ergebnisse.get_or_create_score!(station, schueler)
     end
 
@@ -141,6 +141,7 @@ defmodule SportfestWeb.ScoreLive.Index do
     get_filter_rows(%{station_id: "All", klasse_id: "All"})
   end
 
+  # Datenbankergebnisse mit gegebenem Filter sortiert nach Schüler-Name, Klasse und Station
   defp get_filter_rows(filter) do
     ergebnisse = Ergebnisse.query_table(filter)
     ergebnisse_single_sorted =

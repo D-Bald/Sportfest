@@ -224,16 +224,24 @@ defmodule Sportfest.Ergebnisse do
 
   """
   def scaled_class_score(klasse) do
-    Enum.map(klasse.scores,
-      fn score ->
-        if score.station.team_challenge do
-          get_medal_points(score)
-        else
-          get_medal_points(score) / (klasse.schueler |> Enum.count())
-        end
-      end)
+    team_points = klasse.scores
+      |> Enum.filter(fn score -> score.station.team_challenge end)
+      |> Enum.map(fn score -> get_medal_points(score) end)
+      |> Enum.sum()
+
+    aggregated_schueler_points =
+      klasse.scores
+      |> Enum.filter(fn score -> not score.station.team_challenge end)
+      |> Enum.filter(fn score -> score.schueler.aktiv end)
+      |> Enum.map(fn score ->
+                    get_medal_points(score) / (klasse.schueler
+                                              |> Enum.filter(fn s -> s.aktiv end)
+                                              |> Enum.count())
+          end)
     |> Enum.sum()
-    |> Float.round(2)
+
+  team_points + aggregated_schueler_points
+  |> Float.round(2)
   end
 
   @doc """
