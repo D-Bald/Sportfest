@@ -223,6 +223,9 @@ defmodule Sportfest.Ergebnisse do
       iex> scaled_class_score(klasse)
       50
 
+      iex> scaled_class_score(klasse, station)
+      20
+
   """
   def scaled_class_score(klasse) do
     team_points = klasse.scores
@@ -245,6 +248,27 @@ defmodule Sportfest.Ergebnisse do
   |> Float.round(2)
   end
 
+  def scaled_class_score(klasse, station) do
+    scores =  klasse.scores
+              |> Enum.filter(fn score -> score.station_id == station.id end)
+
+    points = case station.team_challenge do
+      false -> scores
+              |> Enum.filter(fn score -> score.schueler.aktiv end)
+              |> Enum.map(fn score ->
+                            get_medal_points(score) / (klasse.schueler
+                                                      |> Enum.filter(fn s -> s.aktiv end)
+                                                      |> Enum.count())
+                  end)
+      _ -> scores
+          |> Enum.map(fn score -> get_medal_points(score) end)
+    end
+
+    points
+    |> Enum.sum()
+    #|> Float.round(2)
+  end
+
   @doc """
   Gibt die Anzahl der Bronze Medaillen eines Besitzers zurück.
 
@@ -253,9 +277,15 @@ defmodule Sportfest.Ergebnisse do
       iex> count_bronze_medaillen(owner)
       3
 
+      iex> count_bronze_medaillen(owner, station)
+      1
+
   """
   def count_bronze_medaillen(owner) do
     count_medaillen(owner, :bronze)
+  end
+  def count_bronze_medaillen(owner, station) do
+    count_medaillen(owner, station, :bronze)
   end
 
   @doc """
@@ -266,9 +296,15 @@ defmodule Sportfest.Ergebnisse do
       iex> count_silber_medaillen(owner)
       5
 
+      iex> count_silber_medaillen(owner, station)
+      2
+
   """
   def count_silber_medaillen(owner) do
     count_medaillen(owner, :silber)
+  end
+  def count_silber_medaillen(owner, station) do
+    count_medaillen(owner, station, :silber)
   end
 
   @doc """
@@ -277,18 +313,29 @@ defmodule Sportfest.Ergebnisse do
   ## Examples
 
       iex> count_gold_medaillen(owner)
+      2
+
+      iex> count_gold_medaillen(owner, station)
       1
 
   """
   def count_gold_medaillen(owner) do
     count_medaillen(owner, :gold)
   end
+  def count_gold_medaillen(owner, station) do
+    count_medaillen(owner, station, :gold)
+  end
 
 
   # Zählt Medaillen gegeben durch ein Atom aus [:bronze, :silber, :gold]
-  # von einem gegebenen Owner (%Klasse{} oder %Schueler{})
+  # von einem gegebenen Owner (%Klasse{} oder %Schueler{}) und optional gefiltert auf eine Station.
   defp count_medaillen(owner, medaille) do
     Enum.filter(owner.scores, fn score -> medaille == score.medaille end)
+    |> Enum.count()
+  end
+  defp count_medaillen(owner, station, medaille) do
+    Enum.filter(owner.scores, fn score -> score.station_id == station.id end)
+    |> Enum.filter(fn score -> medaille == score.medaille end)
     |> Enum.count()
   end
 
