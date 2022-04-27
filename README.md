@@ -5,7 +5,7 @@
 ### Athentifizierung und Authorisierung
 Registrierungs- und Login-Link werden angezeigt, aber die Funktionalität ist noch nicht implementiert!
 
-### Pfadegi
+### Pfade
 Jede Route beginnt mit dem festgelegten Host Namen durch `PHX_HOST` (s.u.).
 
 | Route | Beschreibung | Autorisierte Rolle(n) |
