@@ -252,7 +252,7 @@ defmodule Sportfest.Ergebnisse do
     scores =  klasse.scores
               |> Enum.filter(fn score -> score.station_id == station.id end)
 
-    points = case station.team_challenge do
+    case station.team_challenge do
       false -> scores
               |> Enum.filter(fn score -> score.schueler.aktiv end)
               |> Enum.map(fn score ->
@@ -260,13 +260,12 @@ defmodule Sportfest.Ergebnisse do
                                                       |> Enum.filter(fn s -> s.aktiv end)
                                                       |> Enum.count())
                   end)
+              |> Enum.sum()
+              |> Float.round(2)
       _ -> scores
           |> Enum.map(fn score -> get_medal_points(score) end)
+          |> Enum.sum()
     end
-
-    points
-    |> Enum.sum()
-    #|> Float.round(2)
   end
 
   @doc """

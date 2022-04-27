@@ -9,7 +9,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
     if connected?(socket), do: Ergebnisse.subscribe()
     klassen = Vorbereitung.list_klassen() |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
     schueler = Vorbereitung.list_schueler() |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc) |> Enum.take(20)
-    stationen = Vorbereitung.list_stationen() |> Enum.sort_by(fn s -> s.name end, :desc)
+    stationen = Vorbereitung.list_stationen() |> Enum.sort_by(fn s -> s.name end, :asc)
     socket = assign(socket, schueler: schueler, klassen: klassen, stationen: stationen)
 
     {:ok, socket}
