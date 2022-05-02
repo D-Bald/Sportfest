@@ -11,6 +11,10 @@ defmodule Sportfest.Vorbereitung.Station do
     field :beschreibung, :string
     field :image_uploads, {:array, :string}	# Pfade zu den hochgeladenen Bildern
     field :video_link, :string
+    field :einheit, :string
+    field :bronze_bedingung, :string
+    field :silber_bedingung, :string
+    field :gold_bedingung, :string
 
     has_many :scores, Sportfest.Ergebnisse.Score
 
@@ -20,7 +24,8 @@ defmodule Sportfest.Vorbereitung.Station do
   @doc false
   def changeset(station, attrs) do
     station
-    |> cast(attrs, [:name, :bronze, :silber, :gold, :team_challenge, :beschreibung, :image_uploads, :video_link])
+    |> cast(attrs, [:name, :bronze, :silber, :gold, :team_challenge,
+                    :beschreibung, :image_uploads, :video_link, :einheit, :bronze_bedingung, :silber_bedingung, :gold_bedingung])
     |> validate_required([:name, :bronze, :silber, :gold])
     |> unique_constraint(:name)
   end

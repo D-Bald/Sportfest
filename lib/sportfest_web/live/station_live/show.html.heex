@@ -42,6 +42,24 @@
   <% end %>
 </div>
 
+<h2> Bedingungen für Medaillen </h2>
+<strong>Einheit:</strong> <%= @station.einheit %>
+<div>
+  <img  src={Routes.static_path(@socket, "/images/bronze_medaille.png")}
+                        width="50" height="50" alt="Bronzemedaille"/>
+  <%= @station.bronze_bedingung %>
+</div>
+<div>
+  <img  src={Routes.static_path(@socket, "/images/silber_medaille.png")}
+                        width="50" height="50" alt="Silbermedaille"/>
+  <%= @station.silber_bedingung %>
+</div>
+<div>
+  <img  src={Routes.static_path(@socket, "/images/gold_medaille.png")}
+                      width="50" height="50" alt="Goldmedaille"/>
+  <%= @station.gold_bedingung %>
+</div>
+
 <span><%= live_patch "Bearbeiten", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span> |
 <span><%= live_redirect "Zurück", to: Routes.station_index_path(@socket, :index) %></span>
 
