@@ -59,7 +59,10 @@ CREATE DATABASE
 
 ### Code herunterladen
 ```console
-$ git clone https://github.com/D-Bald/Sportfest.git
+$ sudo git clone https://github.com/D-Bald/Sportfest.git
+$ cd Sportfest
+$ sudo mix deps.get
+$ sudo mix compile
 ```
 Zum Updaten (`git pull` läuft auf error, da `priv/static/cache_manifest.json` überschrieben wird):
 ```console

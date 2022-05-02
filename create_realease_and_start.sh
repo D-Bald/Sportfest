@@ -11,7 +11,7 @@ echo "Loading dependencies to compile code and assets"
 mix deps.get --only prod
 MIX_ENV=prod mix compile
 # compile assets
-$ MIX_ENV=prod mix assets.deploy
+MIX_ENV=prod mix assets.deploy
 
 echo "Building release"
 MIX_ENV=prod mix release

@@ -27,7 +27,7 @@
     <h2> Bilder </h2>
     <%= for img_path <- @station.image_uploads do %>
       <div class="column">
-        <img src={Routes.static_path(@socket, img_path)} width="200" height="200" alt="Station Bild"/>
+        <img src={IO.inspect(Routes.static_path(@socket, img_path))} width="200" height="200" alt="Station Bild"/>
       </div>
       <% end %>
   <% end %>
