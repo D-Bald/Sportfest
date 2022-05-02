@@ -1,0 +1,36 @@
+<h2>Klassen Ranglisten nach Stationen</h2>
+  <h3><%= @station.name %></h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rang</th>
+        <th>Klasse</th>
+        <th>Score</th>
+        <th> <img  src={Routes.static_path(@socket, "/images/bronze_medaille.png")}
+                        width="40" height="40" alt="Bronzemedaille"/></th>
+        <th> <img  src={Routes.static_path(@socket, "/images/silber_medaille.png")}
+                        width="50" height="50" alt="Silbermedaille"/></th>
+        <th> <img  src={Routes.static_path(@socket, "/images/gold_medaille.png")}
+                        width="60" height="60" alt="Goldmedaille"/></th>
+
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody id="team_scores">
+      <%= with klassen <- @klassen do %>
+        <%= for i <- 0..Enum.count(klassen) - 1 do %>
+          <tr id={"klasse-#{Enum.at(klassen,i).id}"}>
+            <td><%= i+1 %></td>
+            <td><%= Enum.at(klassen,i).name %></td>
+            <td><%= Sportfest.Ergebnisse.scaled_class_score(Enum.at(klassen,i), @station) %></td>
+            <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(klassen,i), @station) %></td>
+            <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(klassen,i), @station) %></td>
+            <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(klassen,i), @station) %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <span><%= live_redirect "Zurück", to: Routes.leaderboard_index_path(@socket, :index) %></span>

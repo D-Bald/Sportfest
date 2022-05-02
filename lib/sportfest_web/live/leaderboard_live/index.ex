@@ -18,11 +18,11 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   @impl true
   def handle_info({:score_created, score}, socket) do
     socket = klassen_liste_aktualisieren(Vorbereitung.get_klasse!(score.klasse_id), socket)
-    # socket = case score.station.team_challenge do
-    #     false ->
-    #       schueler_liste_aktualisieren(Vorbereitung.get_schueler!(score.schueler_id), socket)
-    #     _ -> socket
-    #   end
+    socket = case score.station.team_challenge do
+        false ->
+          schueler_liste_aktualisieren(Vorbereitung.get_schueler!(score.schueler_id), socket)
+        _ -> socket
+      end
 
     {:noreply, socket}
   end
@@ -40,11 +40,11 @@ defmodule SportfestWeb.LeaderboardLive.Index do
 
   def handle_info({:score_deleted, score}, socket) do
     socket = klassen_liste_aktualisieren(Vorbereitung.get_klasse!(score.klasse_id), socket)
-    # socket = case score.station.team_challenge do
-    #     false ->
-    #       schueler_liste_aktualisieren(Vorbereitung.get_schueler!(score.schueler_id), socket)
-    #     _ -> socket
-    #   end
+    socket = case score.station.team_challenge do
+        false ->
+          schueler_liste_aktualisieren(Vorbereitung.get_schueler!(score.schueler_id), socket)
+        _ -> socket
+      end
 
     {:noreply, socket}
   end
