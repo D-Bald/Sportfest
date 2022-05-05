@@ -8,7 +8,7 @@ defmodule SportfestWeb.StationLive.Show do
   def mount(_params, _session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
 
-    socket = assign(socket, klassen: list_klassen(), schueler: list_schueler())
+    socket = assign(socket, klassen: Vorbereitung.list_klassen(), schueler: Vorbereitung.list_schueler())
 
     {:ok, socket}
   end
@@ -17,14 +17,14 @@ defmodule SportfestWeb.StationLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     station = Vorbereitung.get_station!(id)
     #filter is set to All for each column
-    filter = %{"station_id" => station.id, "klasse_id" => "All"}
+    filter = %{"station_id" => station.id}
 
     socket =  socket
               |> assign(:page_title, page_title(socket.assigns.live_action))
               |> assign(:station, station)
               |> assign(:filter, filter)
 
-    socket = assign(socket, :scores, get_scores(socket))
+    socket = assign(socket, :scores, [])#get_scores(socket))
 
     {:noreply,  socket}
   end
@@ -32,9 +32,9 @@ defmodule SportfestWeb.StationLive.Show do
   @impl true
   # reset filters : each col filter is set to "All"
   def handle_event("reset", _, socket) do
-    scores = get_scores(socket)
-    filter =  %{"station_id" => socket.assigns.station.id, "klasse_id" => "All"}
-    {:noreply, assign(socket, scores: scores, filter: filter)}
+    # scores = get_scores(socket)
+    filter =  %{"station_id" => socket.assigns.station.id, "klasse_id" => "None"}
+    {:noreply, assign(socket, scores: [], filter: filter)}
   end
 
   # filter : add new filter to the socket
@@ -43,13 +43,13 @@ defmodule SportfestWeb.StationLive.Show do
     filter = Map.delete(filter, "_target") # Keine Ahnung, wo das her kommt, stört aber
     IO.inspect(filter)
     key = hd(Map.keys(filter))
-    val = filter[key]
-    new_filter = case val do
-      "All"     -> socket.assigns.filter |> Map.delete(key)
-        _       -> socket.assigns.filter |> Map.merge(filter)
+
+    new_filter = socket.assigns.filter |> Map.merge(filter)
+    filter_rows = case filter[key] do
+      "None" -> []
+      _ -> get_filter_rows(new_filter)
     end
 
-    filter_rows = get_filter_rows(new_filter)
     {:noreply, assign(socket, scores: filter_rows, filter: new_filter)}
   end
 
@@ -114,30 +114,22 @@ defmodule SportfestWeb.StationLive.Show do
     end
   end
 
-  defp list_klassen do
-    Vorbereitung.list_klassen()
-  end
+  # # Wrapper für create_or_skip_score/2
+  # defp get_scores(socket) do
+  #   station = socket.assigns.station
+  #   cond do
+  #     station.team_challenge ->
+  #       for klasse <- socket.assigns.klassen do
+  #         Ergebnisse.create_or_skip_score(station, klasse)
+  #       end
+  #     true ->
+  #       for schueler <- socket.assigns.schueler do
+  #         Ergebnisse.create_or_skip_score(station, schueler)
+  #       end
+  #   end
 
-  defp list_schueler do
-    Vorbereitung.list_schueler()
-  end
-
-  # Wrapper für create_or_skip_score/2
-  defp get_scores(socket) do
-    station = socket.assigns.station
-    cond do
-      station.team_challenge ->
-        for klasse <- socket.assigns.klassen do
-          Ergebnisse.create_or_skip_score(station, klasse)
-        end
-      true ->
-        for schueler <- socket.assigns.schueler do
-          Ergebnisse.create_or_skip_score(station, schueler)
-        end
-    end
-
-    get_filter_rows(%{"station_id" => station.id, "klasse_id" => "All"})
-  end
+  #   get_filter_rows(%{"station_id" => station.id, "klasse_id" => "All"})
+  # end
 
   # Datenbankergebnisse mit gegebenem Filter sortiert nach Schüler-Name, Klasse und Station
   defp get_filter_rows(filter) do

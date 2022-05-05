@@ -22,10 +22,12 @@ defmodule SportfestWeb.Endpoint do
   #   gzip: false,
   #   only: ~w(assets fonts images uploads favicon.ico robots.txt)
 
-  # Serve at "/" the static files from "priv/static" directory in production.
+  # Serve at "/" the static files from "priv/static" directory also in production.
+  # THAS MAY BE A DIRTY FIX!
   plug Plug.Static,
     at: "/",
-    from: "priv/static", gzip: false,
+    from: "priv/static",
+    gzip: false,
     only: ~w(assets fonts images uploads favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the

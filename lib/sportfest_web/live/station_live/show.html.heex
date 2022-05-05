@@ -27,7 +27,7 @@
     <h2> Bilder </h2>
     <%= for img_path <- @station.image_uploads do %>
       <div class="column">
-        <img src={IO.inspect(Routes.static_path(@socket, img_path))} width="200" height="200" alt="Station Bild"/>
+        <img src={Routes.static_path(@socket, img_path)} width="200" height="200" alt="Station Bild"/>
       </div>
       <% end %>
   <% end %>
@@ -81,7 +81,7 @@
       <td>
         <form phx-change="filter">
           <select name="klasse_id">
-              <option value="All" selected={selected_or_empty?(@filter, "klasse_id", "All")} > Alle </option>
+              <option value="None" selected={selected_or_empty?(@filter, "klasse_id", "None")} > Keine Eingabe </option>
               <%= for klasse <- @klassen do %>
                   <option value={klasse.id} selected={selected?(@filter, "klasse_id", klasse.id)} > <%= klasse.name %> </option>
                   <% end %>
