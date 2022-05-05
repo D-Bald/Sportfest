@@ -5,21 +5,24 @@
 
 <section class="row">
   <article class="column">
-    <h2>Vorbereitung</h2>
+    <h2>User Bereich</h2>
     <ul>
       <li>
-        <%= link "Schüler:innen bearbeiten", to: Routes.schueler_index_path(@conn, :index) %>
+        <%= link "Klassen und inaktive Schüler:innen bearbeiten", to: Routes.klasse_index_path(@conn, :index) %>
       </li>
       <li>
-        <%= link "Stationen bearbeiten", to: Routes.station_index_path(@conn, :index) %>
+        <%= link "Stationen und Scores bearbeiten", to: Routes.station_index_path(@conn, :index) %>
+      </li>
+      <li>
+        <%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %>
       </li>
     </ul>
   </article>
   <article class="column">
-    <h2>Ergebnisse</h2>
+    <h2>Admin Bereich</h2>
     <ul>
       <li>
-        <%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %>
+        <%= link "Schüler:innen bearbeiten", to: Routes.schueler_index_path(@conn, :index) %>
       </li>
       <li>
         <%= link "Scores bearbeiten", to: Routes.score_index_path(@conn, :index) %>

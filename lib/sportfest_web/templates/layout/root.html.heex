@@ -14,8 +14,9 @@
       <section class="container">
         <nav>
           <ul>
-            <li><%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %></li>
+            <li><%= link "Inaktive Schüler:innen", to: Routes.klasse_index_path(@conn, :index) %></li>
             <li><%= link "Stationen", to: Routes.station_index_path(@conn, :index) %></li>
+            <li><%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %></li>
           </ul>
           <%=# UNCOMMENT FOR REGISTER AND LOGIN LINKS: render "_user_menu.html", assigns %>
         </nav>
