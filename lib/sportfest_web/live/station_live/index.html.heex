@@ -19,10 +19,6 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Bronze</th>
-      <th>Silber</th>
-      <th>Gold</th>
-      <th>Team Challenge</th>
 
       <th></th>
     </tr>
@@ -31,10 +27,6 @@
     <%= for station <- @stationen do %>
       <tr id={"station-#{station.id}"}>
         <td><%= station.name %></td>
-        <td><%= station.bronze %></td>
-        <td><%= station.silber %></td>
-        <td><%= station.gold %></td>
-        <td><%= if station.team_challenge do "Ja" else "Nein" end%></td>
 
         <td>
           <span><%= live_redirect "Zeigen", to: Routes.station_show_path(@socket, :show, station) %></span>
