@@ -26,6 +26,38 @@ defmodule Sportfest.Vorbereitung do
   end
 
   @doc """
+  Gibt Stationen zurück, die KEINE Team-Challenge sind
+
+  ## Examples
+
+      iex> list_singe_challenge_stationen()
+      [%Station{}, ...]
+
+  """
+  def list_singe_challenge_stationen do
+    Station
+    |> where(team_challenge: false)
+    |> order_by(asc: :name)
+    |> Repo.all()
+  end
+
+  @doc """
+  Gibt Stationen zurück, die ein Team-Challenge sind
+
+  ## Examples
+
+      iex> list_team_challenge_stationen
+      [%Station{}, ...]
+
+  """
+  def list_team_challenge_stationen do
+    Station
+    |> where(team_challenge: true)
+    |> order_by(asc: :name)
+    |> Repo.all()
+  end
+
+  @doc """
   Gibt Name und ID für alle Stationen zurück.
   """
   def list_stationen_for_dropdown do
@@ -190,9 +222,15 @@ defmodule Sportfest.Vorbereitung do
 
   """
   def create_klasse(name) do
-    %Klasse{}
-    |> Klasse.changeset(%{name: name})
-    |> Repo.insert()
+    with {:ok, klasse} <-
+      %Klasse{}
+      |> Klasse.changeset(%{name: name})
+      |> Repo.insert() do
+        for station <- list_team_challenge_stationen() do
+          Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
+        end
+        {:ok, klasse}
+      end
   end
 
   @doc """
@@ -311,7 +349,7 @@ defmodule Sportfest.Vorbereitung do
   end
 
   @doc """
-  Creates a schueler.
+  Erstellt eine:n Schueler:in in gegebener Klasse und einen assoziierten Score.
 
   ## Examples
 
@@ -323,11 +361,19 @@ defmodule Sportfest.Vorbereitung do
 
   """
   def create_schueler(%Klasse{} = klasse, attrs \\ %{}) do
-    Ecto.build_assoc(klasse, :schueler)
-    |> change_schueler(attrs)
-    |> Repo.insert()
-    |> broadcast(:schueler_created)
+    with {:ok, schueler} <-
+      Ecto.build_assoc(klasse, :schueler)
+      |> change_schueler(attrs)
+      |> Repo.insert()
+      |> broadcast(:schueler_created) do
+        for station <- list_singe_challenge_stationen() do
+          Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id,
+                                              schueler_id: schueler.id, medaille: :keine})
+        end
+        {:ok, schueler}
+    end
   end
+
 
   @doc """
   Returns schueler with given name and klasse.
@@ -391,18 +437,14 @@ defmodule Sportfest.Vorbereitung do
 
   """
   def delete_schueler(%Schueler{} = schueler) do
-    Repo.delete(schueler)
-    |> broadcast(:schueler_deleted)
-    |> case do
-        {:ok, schueler} ->
+    with {:ok, schueler} <-
+      Repo.delete(schueler)
+      |> broadcast(:schueler_deleted) do
           for score <- schueler.scores do
             Sportfest.Ergebnisse.broadcast({:ok, score}, :score_deleted)
           end
           {:ok, schueler}
-        {:error, schueler} ->
-          {:error, schueler}
       end
-
   end
 
   @doc """

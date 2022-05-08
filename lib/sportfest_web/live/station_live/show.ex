@@ -114,23 +114,6 @@ defmodule SportfestWeb.StationLive.Show do
     end
   end
 
-  # # Wrapper für create_or_skip_score/2
-  # defp get_scores(socket) do
-  #   station = socket.assigns.station
-  #   cond do
-  #     station.team_challenge ->
-  #       for klasse <- socket.assigns.klassen do
-  #         Ergebnisse.create_or_skip_score(station, klasse)
-  #       end
-  #     true ->
-  #       for schueler <- socket.assigns.schueler do
-  #         Ergebnisse.create_or_skip_score(station, schueler)
-  #       end
-  #   end
-
-  #   get_filter_rows(%{"station_id" => station.id, "klasse_id" => "All"})
-  # end
-
   # Datenbankergebnisse mit gegebenem Filter sortiert nach Schüler-Name, Klasse und Station
   defp get_filter_rows(filter) do
     ergebnisse = Ergebnisse.query_table(filter)
