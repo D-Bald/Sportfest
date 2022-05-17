@@ -69,6 +69,25 @@ defmodule SportfestWeb.StationLive.Show do
   end
 
   @impl true
+  # Ändert den "aktiv" Status eines/einer Schueler:in, wenn die Checkbox geändert wird.
+  def handle_event("delete_img", %{"img_path" => img_path}, socket) do
+    station = socket.assigns.station
+    case Vorbereitung.update_station(station, %{"image_uploads" =>
+      case List.delete(station.image_uploads, img_path) do
+        [] -> nil
+        list -> list
+      end}) do
+      {:ok, _station} ->
+        {:noreply,
+          socket
+          |> put_flash(:info, "Bild erfolgreich gelöscht")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :changeset, changeset)}
+    end
+  end
+
+  @impl true
   def handle_info({:score_created, score}, socket) do
     {:noreply,
             socket

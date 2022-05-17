@@ -93,9 +93,24 @@ defmodule Sportfest.Vorbereitung do
 
   """
   def create_station(attrs \\ %{}) do
-    %Station{}
-    |> Station.changeset(attrs)
-    |> Repo.insert()
+    with {:ok, station} <-
+      %Station{}
+      |> Station.changeset(attrs)
+      |> Repo.insert() do
+        IO.inspect("TESTING")
+        case IO.inspect(station.team_challenge) do
+          false ->
+            for schueler <- list_schueler() do
+              Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: schueler.klasse.id,
+                                              schueler_id: schueler.id, medaille: :keine})
+            end
+          true ->
+            for klasse <- list_klassen() do
+              Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
+            end
+        end
+        {:ok, station}
+      end
   end
 
   @doc """

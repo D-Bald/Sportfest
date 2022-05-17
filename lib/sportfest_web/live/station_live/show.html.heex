@@ -28,6 +28,7 @@
     <%= for img_path <- @station.image_uploads do %>
       <div class="column">
         <img src={Routes.static_path(@socket, img_path)} width="200" height="200" alt="Station Bild"/>
+        <button phx-click="delete_img" phx-value-img_path={img_path}  name="delete_img">Bild löschen</button>
       </div>
       <% end %>
   <% end %>
