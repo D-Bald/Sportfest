@@ -11,6 +11,6 @@ erl_crash.dump
 .elixir_ls/
 
 ### Uploads ###
-/lib/priv/static/uploads/*
+/priv/static/uploads/*
 # Behalte den uploads-Ordner, indem eine Dummy-Datei enthalten bleibt
 !/lib/priv/static/uploads/.gitkeepfolder
