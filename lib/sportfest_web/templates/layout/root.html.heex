@@ -14,16 +14,20 @@
       <section class="container">
         <nav>
           <ul>
-            <li><%= link "Inaktive Schüler:innen", to: Routes.klasse_index_path(@conn, :index) %></li>
-            <li><%= link "Stationen", to: Routes.station_index_path(@conn, :index) %></li>
-            <li><%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %></li>
+            <%= if Sportfest.Accounts.is_moderator?(@current_user) || Sportfest.Accounts.is_admin?(@current_user) do %>
+              <li><%= link "Inaktive Schüler:innen", to: Routes.klasse_index_path(@conn, :index) %></li>
+              <li><%= link "Stationen", to: Routes.station_index_path(@conn, :index) %></li>
+            <% end %>
+            <%= if @current_user do %>
+              <li><%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %></li>
+            <% end %>
           </ul>
-          <%=# UNCOMMENT FOR REGISTER AND LOGIN LINKS: render "_user_menu.html", assigns %>
+          <%=render "_user_menu.html", assigns %>
         </nav>
         <a href={Routes.static_path(@conn, "/")}>
-          <img src={Routes.static_path(@conn, "/images/logo_wasseramsel.png")} width="145" height="205" alt="Logo der Gesamtschule Wasseramselweg"/>
+          <img src={Routes.static_path(@conn, "/images/logo_wasseramsel.png")} width="205" height="205" alt="Logo der Gesamtschule Wasseramselweg"/>
         </a>
-        <h1> Wasseramsel Sportfest </h1>
+        <h1> Amselympia </h1>
       </section>
     </header>
     <%= @inner_content %>

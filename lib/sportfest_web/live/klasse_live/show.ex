@@ -18,6 +18,7 @@ defmodule SportfestWeb.KlasseLive.Show do
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:klasse, klasse)
      |> assign(:schueler, Vorbereitung.list_schueler_by_klasse(klasse))
+     |> assign(:count_aktiv, Vorbereitung.count_aktive_schueler(klasse))
     }
   end
 
@@ -46,12 +47,16 @@ defmodule SportfestWeb.KlasseLive.Show do
 
   @impl true
   def handle_info({:schueler_updated, schueler}, socket) do
+    new_klasse = Vorbereitung.get_klasse!(socket.assigns.klasse.id)
     {:noreply,
-           socket
-           |> update(:schueler, fn schueler_list ->
+            socket
+            |> update(:schueler, fn schueler_list ->
                 List.replace_at(schueler_list, # Manual replacement, since schueler_list is somehow not tracked by liveview
                   Enum.find_index(schueler_list, fn s -> s.id == schueler.id end),
-                  schueler) end )}
+                  schueler) end )
+            |> update(:klasse, fn _ -> new_klasse end)
+            |> update(:count_aktiv, fn _ -> Vorbereitung.count_aktive_schueler(new_klasse) end)
+    }
   end
 
   @impl true

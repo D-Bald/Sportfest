@@ -13,14 +13,36 @@ defmodule SportfestWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :admin do
+    plug :ensure_role, "admin"
+  end
+
+  pipeline :moderator do
+    plug :ensure_role_or_admin, "moderator"
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  # Scope offen für alle
   scope "/", SportfestWeb do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
+
+  # Scope für eingeloggte User
+  scope "/", SportfestWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/leaderboard", LeaderboardLive.Index, :index
+    live "/leaderboard/station/:id", LeaderboardLive.Station, :index
+  end
+
+  # Scopes mit Zugang für bestimmte Rollen
+  scope "/", SportfestWeb do
+    pipe_through [:browser, :require_authenticated_user, :moderator]
 
     live "/stationen", StationLive.Index, :index
     live "/stationen/new", StationLive.Index, :new
@@ -35,6 +57,10 @@ defmodule SportfestWeb.Router do
 
     live "/klassen/:id", KlasseLive.Show, :show
     live "/klassen/:id/show/edit", KlasseLive.Show, :edit
+  end
+
+  scope "/", SportfestWeb do
+    pipe_through [:browser, :require_authenticated_user, :admin]
 
     live "/schueler", SchuelerLive.Index, :index
     live "/schueler/new", SchuelerLive.Index, :new
@@ -43,7 +69,6 @@ defmodule SportfestWeb.Router do
     live "/schueler/:id", SchuelerLive.Show, :show
     live "/schueler/:id/show/edit", SchuelerLive.Show, :edit
 
-
     live "/scores", ScoreLive.Index, :index
     live "/scores/new", ScoreLive.Index, :new
     live "/scores/:id/edit", ScoreLive.Index, :edit
@@ -51,8 +76,6 @@ defmodule SportfestWeb.Router do
     live "/scores/:id", ScoreLive.Show, :show
     live "/scores/:id/show/edit", ScoreLive.Show, :edit
 
-    live "/leaderboard", LeaderboardLive.Index, :index
-    live "/leaderboard/station/:id", LeaderboardLive.Station, :index
   end
 
   # Other scopes may use custom stacks.
@@ -90,7 +113,6 @@ defmodule SportfestWeb.Router do
   end
 
   ## Authentication routes
-
   scope "/", SportfestWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 

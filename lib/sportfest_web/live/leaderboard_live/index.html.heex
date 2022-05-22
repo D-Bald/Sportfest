@@ -18,15 +18,17 @@
   </thead>
 
   <tbody id="team_scores">
-    <%= for i <- 0..Enum.count(@klassen) - 1 do %>
-      <tr id={"klasse-#{Enum.at(@klassen,i).id}"}>
-        <td><%= i+1 %></td>
-        <td><%= Enum.at(@klassen,i).name %></td>
-        <td><%= Sportfest.Ergebnisse.scaled_class_score(Enum.at(@klassen,i)) %></td>
-        <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(@klassen,i)) %></td>
-        <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(@klassen,i)) %></td>
-        <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(@klassen,i)) %></td>
-      </tr>
+    <%= if Sportfest.Ergebnisse.exists_score? do %>
+      <%= for i <- 0..Enum.count(@klassen) - 1 do %>
+        <tr id={"klasse-#{Enum.at(@klassen,i).id}"}>
+          <td><%= i+1 %></td>
+          <td><%= Enum.at(@klassen,i).name %></td>
+          <td><%= Sportfest.Ergebnisse.scaled_class_score(Enum.at(@klassen,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(@klassen,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(@klassen,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(@klassen,i)) %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
@@ -52,16 +54,18 @@
   </thead>
 
   <tbody id="schueler_scores">
-    <%= for i <- 0..Enum.count(@schueler) - 1 do %>
-      <tr id={"schueler-#{Enum.at(@schueler,i).id}"}>
-        <td><%= i+1 %></td>
-        <td><%= Enum.at(@schueler, i).klasse.name %></td>
-        <td><%= Enum.at(@schueler,i).name %></td>
-        <td><%= Sportfest.Ergebnisse.get_score_sum(Enum.at(@schueler,i)) %></td>
-        <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(@schueler,i)) %></td>
-        <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(@schueler,i)) %></td>
-        <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(@schueler,i)) %></td>
-      </tr>
+    <%= if Sportfest.Ergebnisse.exists_score? do %>
+      <%= for i <- 0..Enum.count(@schueler) - 1 do %>
+        <tr id={"schueler-#{Enum.at(@schueler,i).id}"}>
+          <td><%= i+1 %></td>
+          <td><%= Enum.at(@schueler, i).klasse.name %></td>
+          <td><%= Enum.at(@schueler,i).name %></td>
+          <td><%= Sportfest.Ergebnisse.get_score_sum(Enum.at(@schueler,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(@schueler,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(@schueler,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(@schueler,i)) %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

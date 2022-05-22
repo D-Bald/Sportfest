@@ -48,6 +48,8 @@ defmodule SportfestWeb do
         layout: {SportfestWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
+
+      import SportfestWeb.LiveHelpers
     end
   end
 

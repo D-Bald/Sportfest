@@ -97,8 +97,7 @@ defmodule Sportfest.Vorbereitung do
       %Station{}
       |> Station.changeset(attrs)
       |> Repo.insert() do
-        IO.inspect("TESTING")
-        case IO.inspect(station.team_challenge) do
+        case station.team_challenge do
           false ->
             for schueler <- list_schueler() do
               Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: schueler.klasse.id,
@@ -295,6 +294,21 @@ defmodule Sportfest.Vorbereitung do
     klasse
     |> Repo.preload([scores: [:station, :schueler], schueler: []])
     |> Klasse.changeset(attrs)
+  end
+
+  @doc """
+  Gibt die Anzahl als aktiv markierter Schüler:innen der gegebenen Klasse zurück
+
+  ## Examples
+
+      iex> get_aktive_schueler(klasse)
+      25
+
+  """
+  def count_aktive_schueler(%Klasse{} = klasse) do
+    klasse.schueler
+    |> Enum.filter(fn s -> s.aktiv end)
+    |> Enum.count()
   end
 
   @doc """

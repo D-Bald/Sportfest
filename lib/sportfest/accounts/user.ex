@@ -143,9 +143,9 @@ defmodule Sportfest.Accounts.User do
   @doc """
   A user changeset for changing the role
   """
-  def changeset_role(user_or_changeset, attrs) do
+  def role_changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> Ecto.Changeset.cast(attrs, [:role])
-    |> Ecto.Changeset.validate_inclusion(:role, ~w(user admin)) # Ensures, that only the roles "user" and "admin" can be set
+    |> Ecto.Changeset.validate_inclusion(:role, ~w(user admin moderator)) # Ensures that only the roles "user", "admin" and "moderator" can be set
   end
 end

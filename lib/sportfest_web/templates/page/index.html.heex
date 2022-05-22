@@ -1,11 +1,11 @@
 <section class="phx-hero">
   <h1>Viel Spaß!</h1>
-  <p>Möge die beste Klasse gewinnen</p>
+  <p>Möge die <%= link "beste Klasse", to: Routes.leaderboard_index_path(@conn, :index) %> gewinnen</p>
 </section>
-
 <section class="row">
+<%= if Sportfest.Accounts.is_moderator?(@current_user) || Sportfest.Accounts.is_admin?(@current_user) do %>
   <article class="column">
-    <h2>User Bereich</h2>
+    <h2>Lehrer Bereich</h2>
     <ul>
       <li>
         <%= link "Klassen und inaktive Schüler:innen bearbeiten", to: Routes.klasse_index_path(@conn, :index) %>
@@ -18,6 +18,8 @@
       </li>
     </ul>
   </article>
+<% end %>
+<%= if Sportfest.Accounts.is_admin?(@current_user)do %>
   <article class="column">
     <h2>Admin Bereich</h2>
     <ul>
@@ -29,4 +31,5 @@
       </li>
     </ul>
   </article>
+<% end %>
 </section>

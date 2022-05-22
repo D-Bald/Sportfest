@@ -46,6 +46,19 @@ defmodule Sportfest.Ergebnisse do
   end
 
   @doc """
+  Checks if any score exists.
+
+  ## Examples
+
+      iex> exists_score()
+      true
+
+  """
+  def exists_score? do
+    Repo.exists?(Score)
+  end
+
+  @doc """
   Returns score with given station and owner (klasse if station is a team challenge, schueler else).
   Creates a score if no score with the given station and owner exists.
   Raises `Ecto.MultipleResultsError` if more than one score with the same station and owner already exists.
@@ -238,9 +251,7 @@ defmodule Sportfest.Ergebnisse do
       |> Enum.filter(fn score -> not score.station.team_challenge end)
       |> Enum.filter(fn score -> score.schueler.aktiv end)
       |> Enum.map(fn score ->
-                    get_medal_points(score) / (klasse.schueler
-                                              |> Enum.filter(fn s -> s.aktiv end)
-                                              |> Enum.count())
+                    get_medal_points(score) / Sportfest.Vorbereitung.count_aktive_schueler(klasse)
           end)
     |> Enum.sum()
 

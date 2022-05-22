@@ -352,7 +352,7 @@ defmodule Sportfest.Accounts do
   end
 
   @doc """
-  Creates a user with role "admin
+  Creates a user with role "admin"
 
   ## Examples
 
@@ -366,25 +366,66 @@ defmodule Sportfest.Accounts do
   def create_admin(params) do
     %User{}
     |> User.registration_changeset(params)
-    |> User.changeset_role(%{role: "admin"})
+    |> User.role_changeset(%{role: "admin"})
     |> Repo.insert()
   end
 
   @doc """
-  Creates a user with role "admin
+  Sets the users role to "admin"
 
   ## Examples
 
-      iex> create_admin(user)
+      iex> set_admin_role(user)
       {:ok, %User{}}
 
-      iex> create_admin(%User{field: bad_value})
+      iex> set_admin_role(%User{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def set_admin_role(user) do
     user
-    |> User.changeset_role(%{role: "admin"})
+    |> User.role_changeset(%{role: "admin"})
     |> Repo.update()
+  end
+
+  def is_admin?(%User{role: "admin"}), do: true
+  def is_admin?(_any), do: false
+
+  @doc """
+  Sets the users role to "moderator"
+
+  ## Examples
+
+      iex> set_moderator_role(user)
+      {:ok, %User{}}
+
+      iex> set_moderator_role(%User{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def set_moderator_role(user) do
+    user
+    |> User.role_changeset(%{role: "moderator"})
+    |> Repo.update()
+  end
+
+  def is_moderator?(%User{role: "moderator"}), do: true
+  def is_moderator?(_any), do: false
+
+  @doc """
+  Checks if a user with the given role exists
+
+  ## Examples
+
+      iex> exists_user_with_role("user")
+      true
+
+      iex> exists_user_with_role("bad_role")
+      false
+
+  """
+  def exists_user_with_role?(role) do
+    query = from u in User, where: u.role == ^role
+    Repo.exists?(query)
   end
 end

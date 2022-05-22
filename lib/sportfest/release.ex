@@ -18,6 +18,28 @@ defmodule Sportfest.Release do
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
   end
 
+  def maybe_create_accounts do
+    load_app()
+    Application.ensure_all_started(@app)
+
+    for role <- ["admin", "moderator", "user"] do
+      if not Sportfest.Accounts.exists_user_with_role?(role) do
+        # IO.write("Gib ein Passwort für den Standard benutzer an.")
+        email = IO.gets("Gib eine Email-Adresse für den Benutzer mit der Rolle \"#{role}\" ein:\n") |> String.trim()
+        password = IO.gets("Setze ein Password für diesen Benutzer (mindestens 12 Zeichen):\n") |> String.trim()
+
+        {:ok, user} = Sportfest.Accounts.register_user(%{email: email, password: password})
+        case role do
+          "admin" ->
+            Sportfest.Accounts.set_admin_role(user)
+          "moderator" ->
+            Sportfest.Accounts.set_moderator_role(user)
+          _ -> {:ok, user}
+        end
+      end
+    end
+  end
+
   defp repos do
     Application.fetch_env!(@app, :ecto_repos)
   end

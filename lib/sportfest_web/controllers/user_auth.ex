@@ -146,4 +146,60 @@ defmodule SportfestWeb.UserAuth do
   defp maybe_store_return_to(conn), do: conn
 
   defp signed_in_path(_conn), do: "/"
+
+  @doc """
+  This plug ensures that a user has a particular role.
+  Must be invoked after `require_authenticated_user` and requires that a current user exists and is authenticated
+
+  ## Example
+
+      plug :ensure_role, [:user, :admin]
+
+      plug :ensure_role, :admin
+
+      plug :ensure_role, ~w(user admin)a
+  """
+  def ensure_role(conn, roles) do
+    conn.assigns[:current_user]
+    |> has_role?(roles)
+    |> maybe_halt(conn)
+  end
+
+  defp has_role?(nil, _roles), do: false
+  defp has_role?(user, roles) when is_list(roles), do: Enum.any?(roles, &has_role?(user, &1))
+  defp has_role?(user, role) when is_atom(role), do: has_role?(user, Atom.to_string(role))
+  defp has_role?(%{role: role}, role), do: true
+  defp has_role?(_user, _role), do: false
+
+  defp maybe_halt(true, conn), do: conn
+  defp maybe_halt(_any, conn) do
+    conn
+    |> put_flash(:error, "Unauthorized access")
+    |> redirect(to: Routes.page_path(conn, :index))
+    |> halt()
+  end
+
+  @doc """
+  This plug ensures that a user has a particular role or is admin user.
+  Must be invoked after `require_authenticated_user` and requires that a current user exists and is authenticated
+
+  ## Example
+
+      plug :ensure_role_or_admin, [:user, :admin]
+
+      plug :ensure_role_or_admin, :admin
+
+      plug :ensure_role_or_admin, ~w(user admin)a
+  """
+  def ensure_role_or_admin(conn, roles) do
+    current_user = conn.assigns[:current_user]
+    if has_role?(current_user, roles) || has_role?(current_user, "admin") do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Unauthorized access")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
+  end
 end

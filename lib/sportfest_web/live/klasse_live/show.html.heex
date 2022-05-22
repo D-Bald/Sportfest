@@ -14,19 +14,21 @@
 <% end %>
 
 <ul>
-
-  <li>
+  <li id="count_aktiv">
+    <strong>Anzahl aktiver Schüler:innen</strong>
+    <%= @count_aktiv %>
+  </li>
+  <li id="gesamtpunkte_klasse">
     <strong>Gesamtpunkte:</strong>
     <%= Sportfest.Ergebnisse.get_score_sum(@klasse) %>
   </li>
-
 </ul>
 
 <table>
   <thead>
     <tr>
       <th>Schüler:in</th>
-      <th>Gesamtpunkte</th>
+      <th>Persönliche Gesamtpunkte</th>
       <th>Aktiv</th>
 
     </tr>

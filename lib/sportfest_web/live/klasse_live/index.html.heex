@@ -13,7 +13,9 @@
   </.modal>
 <% end %>
 
-<span><%= live_patch "Klasse hinzufügen", to: Routes.klasse_index_path(@socket, :new) %></span>
+<%= if Sportfest.Accounts.is_admin?(@current_user)do %>
+  <span><%= live_patch "Klasse hinzufügen", to: Routes.klasse_index_path(@socket, :new) %></span>
+<% end %>
 
 <table>
   <thead>
@@ -26,12 +28,13 @@
   <tbody id="klassen">
     <%= for klasse <- @klassen do %>
       <tr id={"klasse-#{klasse.id}"}>
-        <td><%= klasse.name %></td>
+        <td><%= live_redirect "#{klasse.name}", to: Routes.klasse_show_path(@socket, :show, klasse) %></td>
 
         <td>
-          <span><%= live_redirect "Zeigen", to: Routes.klasse_show_path(@socket, :show, klasse) %></span>
-          <span><%= live_patch "Bearbeiten", to: Routes.klasse_index_path(@socket, :edit, klasse) %></span>
-          <span><%= link "Löschen", to: "#", phx_click: "delete", phx_value_id: klasse.id, data: [confirm: "Sicher fortfahren?"] %></span>
+          <%= if Sportfest.Accounts.is_admin?(@current_user)do %>
+            <span><%= live_patch "Bearbeiten", to: Routes.klasse_index_path(@socket, :edit, klasse) %></span>
+            <span><%= link "Löschen", to: "#", phx_click: "delete", phx_value_id: klasse.id, data: [confirm: "Sicher fortfahren?"] %></span>
+          <% end %>
         </td>
       </tr>
     <% end %>
