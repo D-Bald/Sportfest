@@ -127,7 +127,7 @@ defmodule SportfestWeb.Router do
   end
 
   scope "/", SportfestWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_authenticated_user, :admin]
 
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
