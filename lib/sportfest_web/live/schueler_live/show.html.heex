@@ -39,4 +39,4 @@
 </ul>
 
 <span><%= live_patch "Bearbeiten", to: Routes.schueler_show_path(@socket, :edit, @schueler), class: "button" %></span> |
-<span><%= live_redirect "Zurück", to: Routes.schueler_index_path(@socket, :index) %></span>
+<span><%= live_redirect "Zurück", to: Routes.schueler_index_path(@socket, :index), class: "button" %></span>

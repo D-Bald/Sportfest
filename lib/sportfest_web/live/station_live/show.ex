@@ -5,9 +5,10 @@ defmodule SportfestWeb.StationLive.Show do
   alias Sportfest.Vorbereitung
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
 
+    socket = assign_defaults(session, socket)
     socket = assign(socket, klassen: Vorbereitung.list_klassen(), schueler: Vorbereitung.list_schueler())
 
     {:ok, socket}
@@ -20,7 +21,7 @@ defmodule SportfestWeb.StationLive.Show do
     filter = %{"station_id" => station.id}
 
     socket =  socket
-              |> assign(:page_title, page_title(socket.assigns.live_action))
+              |> assign(:page_title, page_title(socket.assigns.live_action, station))
               |> assign(:station, station)
               |> assign(:filter, filter)
 
@@ -148,6 +149,6 @@ defmodule SportfestWeb.StationLive.Show do
     |> Enum.sort_by(fn score -> score.station.name end, :asc)
   end
 
-  defp page_title(:show), do: "Station zeigen"
-  defp page_title(:edit), do: "Station bearbeiten"
+  defp page_title(:show, station), do: "#{station.name}"
+  defp page_title(:edit, station), do: "Bearbeite #{station.name}"
 end

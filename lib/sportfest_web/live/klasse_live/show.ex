@@ -4,8 +4,10 @@ defmodule SportfestWeb.KlasseLive.Show do
   alias Sportfest.Vorbereitung
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     if connected?(socket), do: Vorbereitung.subscribe()
+
+    socket = assign_defaults(session, socket)
 
     {:ok, socket}
   end
@@ -15,7 +17,7 @@ defmodule SportfestWeb.KlasseLive.Show do
     klasse = Vorbereitung.get_klasse!(id)
     {:noreply,
      socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
+     |> assign(:page_title, page_title(socket.assigns.live_action, klasse))
      |> assign(:klasse, klasse)
      |> assign(:schueler, Vorbereitung.list_schueler_by_klasse(klasse))
      |> assign(:count_aktiv, Vorbereitung.count_aktive_schueler(klasse))
@@ -67,6 +69,6 @@ defmodule SportfestWeb.KlasseLive.Show do
                 List.delete(schueler_list, schueler) end)}
   end
 
-  defp page_title(:show), do: "Klasse zeigen"
-  defp page_title(:edit), do: "Klasse bearbeiten"
+  defp page_title(:show, klasse), do: "Klasse #{klasse.name}"
+  defp page_title(:edit, klasse), do: "Bearbeite Klasse #{klasse.name}"
 end

@@ -16,6 +16,11 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   end
 
   @impl true
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  @impl true
   def handle_info({:score_created, score}, socket) do
     socket = klassen_liste_aktualisieren(Vorbereitung.get_klasse!(score.klasse_id), socket)
     socket = case score.station.team_challenge do
@@ -47,6 +52,11 @@ defmodule SportfestWeb.LeaderboardLive.Index do
       end
 
     {:noreply, socket}
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Leaderboard")
   end
 
   defp klassen_liste_aktualisieren(klasse, socket) do

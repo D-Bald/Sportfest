@@ -61,8 +61,10 @@
   <%= @station.gold_bedingung %>
 </div>
 
-<span><%= live_patch "Bearbeiten", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span> |
-<span><%= live_redirect "Zurück", to: Routes.station_index_path(@socket, :index) %></span>
+<%= if Sportfest.Accounts.is_admin?(@current_user)do %>
+  <span><%= live_patch "Bearbeiten", to: Routes.station_show_path(@socket, :edit, @station), class: "button" %></span>
+<% end %>
+<span><%= live_redirect "Zurück", to: Routes.station_index_path(@socket, :index), class: "button" %></span>
 
 <h2> Medaillen bearbeiten </h2>
 <table>
