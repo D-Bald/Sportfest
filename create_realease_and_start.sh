@@ -2,7 +2,7 @@
 
 echo "Setting environment variables"
 export SECRET_KEY_BASE=SICHERES_PASSWORT
-export DATABASE_URL=ecto://postgres:postgres@localhost/sportfest_dev
+export DATABASE_URL=ecto://postgres:postgres@localhost/sportfest_prod
 export PHX_HOST=HOSTNAME_ODER_LOCALHOST
 export PORT=4001
 
@@ -23,4 +23,4 @@ _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.migrate"
 _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.maybe_create_accounts"
 
 # echo "Running app as daemon"
-# _build/prod/rel/sportfest/bin/sportfest daemon
+_build/prod/rel/sportfest/bin/sportfest daemon
