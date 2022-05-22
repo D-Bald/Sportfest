@@ -10,12 +10,12 @@ Jede Route beginnt mit dem festgelegten Host Namen durch `PHX_HOST` (s.u.).
 
 | Route | Beschreibung | Autorisierte Rolle(n) |
 |:------|:-------------|:---------------------:|
-| `/` | Homepage | `admin`, `lehrer`, `schueler` |
-| `/klassen` | Auflistung zum Anzeigen und Bearbeiten der Klassen | `admin`, `lehrer` |
-| `/klassen/:id` | Bearbeiten von inaktiven Schüler:innen einer Klasse | `admin`, `lehrer` |
-| `/stationen` | Auflistung zum Anzeigen und Bearbeiten der Stationen | `admin`, `lehrer` |
-| `/stationen/:id` | Erklärung der Station und Bearbeiten von Medaillen für aktive Schüler:innen für diese Station |`admin`, `lehrer` |
-| `/leaderboard` | Anzeigen der Rangliste | `admin`, `lehrer`, `schueler` |
+| `/` | Homepage | `admin`, `moderator`, `user` |
+| `/klassen` | Auflistung zum Anzeigen und Bearbeiten der Klassen | `admin`, `moderator` |
+| `/klassen/:id` | Bearbeiten von inaktiven Schüler:innen einer Klasse | `admin`, `moderator` |
+| `/stationen` | Auflistung zum Anzeigen und Bearbeiten der Stationen | `admin`, `moderator` |
+| `/stationen/:id` | Erklärung der Station und Bearbeiten von Medaillen für aktive Schüler:innen für diese Station |`admin`, `moderator` |
+| `/leaderboard` | Anzeigen der Ranglisten | `admin`, `moderator`, `user` |
 | `/schueler` | Auflistung zum Bearbeiten der Schüler:innen | `admin` |
 | `/scores` | Bearbeiten aller Medaillen | `admin` |
 
@@ -27,7 +27,7 @@ Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen v
 - Die Klassenbezeichnung muss am Anfang den Jahrgang als Zahl stehen haben: `5 b)` oder `5.1.1`
 
 ### Videoeinbettung für Stationen
-Es werden nur Links zu Youtube Videos unterstützt.
+Es werden nur Links zu Vimeo Videos unterstützt.
 
 ## Deployment
 
