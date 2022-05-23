@@ -97,13 +97,6 @@ defmodule SportfestWeb.ScoreLive.Index do
       end
   end
 
-  def img_size(score, medaille) do
-    case score.medaille == medaille do
-      true  -> 70
-      false -> 40
-    end
-  end
-
   # Datenbankergebnisse mit gegebenem Filter sortiert nach Schüler-Name, Klasse und Station
   defp get_filter_rows(filter) do
     ergebnisse = Ergebnisse.query_table(filter)

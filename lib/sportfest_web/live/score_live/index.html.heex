@@ -57,19 +57,22 @@
             <div class="column">
               <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="bronze">
                 <img  src={Routes.static_path(@socket, "/images/bronze_medaille.png")}
-                      width={"#{img_size(score, :bronze)}"} height={"#{img_size(score, :bronze)}"} alt="Bronzemedaille"/>
+                      class={"medaille-img-#{if score.medaille != :bronze do "not-" end}selected"}
+                      alt="Bronzemedaille"/>
               </a>
             </div>
             <div class="column">
               <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="silber">
                 <img  src={Routes.static_path(@socket, "/images/silber_medaille.png")}
-                      width={"#{img_size(score, :silber)}"} height={"#{img_size(score, :silber)}"} alt="Silbermedaille"/>
+                      class={"medaille-img-#{if score.medaille != :silber do "not-" end}selected"}
+                      alt="Silbermedaille"/>
               </a>
             </div>
             <div class="column">
               <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="gold">
                 <img  src={Routes.static_path(@socket, "/images/gold_medaille.png")}
-                      width={"#{img_size(score, :gold)}"} height={"#{img_size(score, :gold)}"} alt="Goldmedaille"/>
+                      class={"medaille-img-#{if score.medaille != :gold do "not-" end}selected"}
+                      alt="Goldmedaille"/>
               </a>
             </div>
           </div>
