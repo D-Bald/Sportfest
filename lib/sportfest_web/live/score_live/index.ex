@@ -5,34 +5,27 @@ defmodule SportfestWeb.ScoreLive.Index do
   alias Sportfest.Vorbereitung
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
 
-    #filter is set to All for each column
-    filter = %{"station_id" => "All", "klasse_id" => "All"}
+    # Filter für Stationen und Klassen wird auf None gesetzt
+    filter = %{"station_id" => "None", "klasse_id" => "None"}
 
-    socket = assign(socket, page_title: "Scores", stationen: list_stationen(),
-                            klassen: list_klassen(), schueler: list_schueler(),
-                            filter: filter)
+    socket = assign_defaults(session, socket)
+              |> assign(:page_title, "Scores")
+              |> assign(klassen: Vorbereitung.list_klassen(), schueler: Vorbereitung.list_schueler(),
+                        stationen: Vorbereitung.list_stationen(), filter: filter, scores: [])
 
-    socket = assign(socket, scores: get_scores(socket))
+
 
     {:ok, socket}
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    score = Ergebnisse.get_score!(id)
-    {:ok, _} = Ergebnisse.delete_score(score)
-
-    {:noreply, assign(socket, :scores, get_scores(socket))}
-  end
-
   # reset filters : each col filter is set to "All"
   def handle_event("reset", _, socket) do
-    scores = get_scores(socket)
-    filter =  %{station_id: "All", klasse_id: "All"}
-    {:noreply, assign(socket, scores: scores, filter: filter)}
+    filter =  %{"station_id" => "None", "klasse_id" => "None"}
+    {:noreply, assign(socket, scores: [], filter: filter)}
   end
 
   # filter : add new filter to the socket
@@ -40,14 +33,13 @@ defmodule SportfestWeb.ScoreLive.Index do
   def handle_event("filter", filter, socket) do
     filter = Map.delete(filter, "_target") # Keine Ahnung, wo das her kommt, stört aber
     IO.inspect(filter)
-    key = hd(Map.keys(filter))
-    val = filter[key]
-    new_filter = case val do
-      "All"     -> socket.assigns.filter |> Map.delete(key)
-        _       -> socket.assigns.filter |> Map.merge(filter)
+
+    new_filter = socket.assigns.filter |> Map.merge(filter)
+    filter_rows = cond do
+      IO.inspect(Enum.any?(IO.inspect(Map.values(new_filter)), &match?("None", &1))) -> []
+      true -> get_filter_rows(new_filter)
     end
 
-    filter_rows = get_filter_rows(new_filter)
     {:noreply, assign(socket, scores: filter_rows, filter: new_filter)}
   end
 
@@ -86,8 +78,8 @@ defmodule SportfestWeb.ScoreLive.Index do
   @impl true
   def handle_info({:score_deleted, score}, socket) do
     {:noreply,
-           socket
-           |> update(:scores, fn scores ->
+            socket
+            |> update(:scores, fn scores ->
                 List.delete(scores, score) end)}
   end
 
@@ -112,41 +104,13 @@ defmodule SportfestWeb.ScoreLive.Index do
     end
   end
 
-  defp list_stationen do
-    Vorbereitung.list_stationen()
-  end
-
-  defp list_klassen do
-    Vorbereitung.list_klassen()
-  end
-
-  defp list_schueler do
-    Vorbereitung.list_schueler()
-  end
-
-  # Wrapper für create_or_skip_score/2
-  defp get_scores(socket) do
-    single_challenges = Enum.filter(socket.assigns.stationen, fn s -> not s.team_challenge end)
-    for station <- single_challenges,
-        schueler <- socket.assigns.schueler do
-          Ergebnisse.create_or_skip_score(station, schueler)
-    end
-
-    team_challenges = Enum.filter(socket.assigns.stationen, fn s -> s.team_challenge end)
-    for station <- team_challenges,
-        klasse <- socket.assigns.klassen do
-          Ergebnisse.create_or_skip_score(station, klasse)
-    end
-
-    get_filter_rows(%{station_id: "All", klasse_id: "All"})
-  end
-
   # Datenbankergebnisse mit gegebenem Filter sortiert nach Schüler-Name, Klasse und Station
   defp get_filter_rows(filter) do
     ergebnisse = Ergebnisse.query_table(filter)
     ergebnisse_single_sorted =
       ergebnisse
       |> Enum.filter(fn score -> not score.station.team_challenge end)
+      |> Enum.filter(fn score -> score.schueler.aktiv end)
       |> Enum.sort_by(fn score -> score.schueler.name end, :asc)
     ergebnisse_team = Enum.filter(ergebnisse, fn score -> score.station.team_challenge end)
 

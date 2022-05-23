@@ -17,15 +17,14 @@ defmodule SportfestWeb.StationLive.Show do
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
     station = Vorbereitung.get_station!(id)
-    #filter is set to All for each column
-    filter = %{"station_id" => station.id}
+    # Der filter wird auf die aktuelle station ohne ausgewählte Klasse gesetzt
+    filter = %{"station_id" => station.id, "klasse_id" => "None"}
 
     socket =  socket
               |> assign(:page_title, page_title(socket.assigns.live_action, station))
               |> assign(:station, station)
               |> assign(:filter, filter)
-
-    socket = assign(socket, :scores, [])#get_scores(socket))
+              |> assign(:scores, [])
 
     {:noreply,  socket}
   end
@@ -33,7 +32,6 @@ defmodule SportfestWeb.StationLive.Show do
   @impl true
   # reset filters : each col filter is set to "All"
   def handle_event("reset", _, socket) do
-    # scores = get_scores(socket)
     filter =  %{"station_id" => socket.assigns.station.id, "klasse_id" => "None"}
     {:noreply, assign(socket, scores: [], filter: filter)}
   end

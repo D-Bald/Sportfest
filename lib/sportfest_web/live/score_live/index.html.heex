@@ -18,7 +18,7 @@
       <td>
         <form phx-change="filter">
           <select name="station_id">
-              <option value="All" selected={selected_or_empty?(@filter, "station_id", "All")} > Alle </option>
+              <option value="None" selected={selected_or_empty?(@filter, "station_id", "None")} > Keine Eingabe </option>
               <%= for station <- @stationen do %>
                   <option value={station.id} selected={selected?(@filter, "station_id", station.id)} > <%= station.name %> </option>
                   <% end %>
@@ -28,7 +28,7 @@
       <td>
         <form phx-change="filter">
           <select name="klasse_id">
-              <option value="All" selected={selected_or_empty?(@filter, "klasse_id", "All")} > Alle </option>
+              <option value="None" selected={selected_or_empty?(@filter, "klasse_id", "None")} > Keine Eingabe </option>
               <%= for klasse <- @klassen do %>
                   <option value={klasse.id} selected={selected?(@filter, "klasse_id", klasse.id)} > <%= klasse.name %> </option>
                   <% end %>
