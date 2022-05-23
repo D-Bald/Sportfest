@@ -10,14 +10,14 @@ Jede Route beginnt mit dem festgelegten Host Namen durch `PHX_HOST` (s.u.).
 
 | Route | Beschreibung | Autorisierte Rolle(n) |
 |:------|:-------------|:---------------------:|
-| `/` | Homepage | `admin`, `moderator`, `user` |
+| `/` | Startseite | `admin`, `moderator`, `user` |
+| `/stationen` | Auflistung zum Anzeigen und Bearbeiten der Stationen | `admin`, `moderator`, `user` |
+| `/stationen/:id` | Erklärung der Station |`admin`, `moderator`, `user` |
+| `/leaderboard` | Anzeigen der Ranglisten | `admin`, `moderator`, `user` |
+| `/scores` | Bearbeiten von Medaillen für aktive Schüler:innen für alle Stationen und Klassen | `admin`, `moderator` |
 | `/klassen` | Auflistung zum Anzeigen und Bearbeiten der Klassen | `admin`, `moderator` |
 | `/klassen/:id` | Bearbeiten von inaktiven Schüler:innen einer Klasse | `admin`, `moderator` |
-| `/stationen` | Auflistung zum Anzeigen und Bearbeiten der Stationen | `admin`, `moderator` |
-| `/stationen/:id` | Erklärung der Station und Bearbeiten von Medaillen für aktive Schüler:innen für diese Station |`admin`, `moderator` |
-| `/leaderboard` | Anzeigen der Ranglisten | `admin`, `moderator`, `user` |
 | `/schueler` | Auflistung zum Bearbeiten der Schüler:innen | `admin` |
-| `/scores` | Bearbeiten aller Medaillen | `admin` |
 
 
 ### Import von Schüler:innen
@@ -88,6 +88,8 @@ Vgl. auch Hinweis aus der [Phoenix Dokumentation](https://hexdocs.pm/phoenix/1.6
 ```console
 $ sudo sh create_realease_and_start.sh
 ```
+
+Falls noch keine Accounts angelegt wurden, wird hier durch Ausführen der Funktion `Sportfest.Release.maybe_create_accounts/0` die Eingabe einer E-Mail Adresse und eines Passworts für jeweils einen `"admin"`, `"moderator"` und `"user"` Account gefordert. Die E-Mail Adresse muss ein `@` enthalten und das Passwort mindestens 12 Zeichen lang sein.
 
 #### Um die so gestartete App zu stoppen
 ```console
