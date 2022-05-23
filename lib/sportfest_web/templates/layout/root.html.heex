@@ -14,12 +14,13 @@
       <section class="container">
         <nav>
           <ul>
-            <%= if Sportfest.Accounts.is_moderator?(@current_user) || Sportfest.Accounts.is_admin?(@current_user) do %>
-              <li><%= link "Inaktive Schüler:innen", to: Routes.klasse_index_path(@conn, :index) %></li>
-              <li><%= link "Stationen", to: Routes.station_index_path(@conn, :index) %></li>
-            <% end %>
             <%= if @current_user do %>
-              <li><%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %></li>
+              <li><%= link "Stationen", to: Routes.station_index_path(@conn, :index) %></li>
+              <li><%= link "Leaderboards", to: Routes.leaderboard_index_path(@conn, :index) %></li>
+            <% end %>
+            <%= if Sportfest.Accounts.is_moderator?(@current_user) || Sportfest.Accounts.is_admin?(@current_user) do %>
+              <li><%= link "Medaillen-Eingabe", to: Routes.score_index_path(@conn, :index) %></li>
+              <li><%= link "Inaktive Schüler:innen", to: Routes.klasse_index_path(@conn, :index) %></li>
             <% end %>
           </ul>
           <%=render "_user_menu.html", assigns %>

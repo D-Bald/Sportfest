@@ -38,23 +38,24 @@ defmodule SportfestWeb.Router do
 
     live "/leaderboard", LeaderboardLive.Index, :index
     live "/leaderboard/station/:id", LeaderboardLive.Station, :index
+
+    live "/stationen", StationLive.Index, :index
+    live "/stationen/:id", StationLive.Show, :show
   end
 
   # Scopes mit Zugang für bestimmte Rollen
   scope "/", SportfestWeb do
     pipe_through [:browser, :require_authenticated_user, :moderator]
 
-    live "/stationen", StationLive.Index, :index
+    live "/scores", ScoreLive.Index, :index
+
     live "/stationen/new", StationLive.Index, :new
     live "/stationen/:id/edit", StationLive.Index, :edit
-
-    live "/stationen/:id", StationLive.Show, :show
     live "/stationen/:id/show/edit", StationLive.Show, :edit
 
     live "/klassen", KlasseLive.Index, :index
     live "/klassen/new", KlasseLive.Index, :new
     live "/klassen/:id/edit", KlasseLive.Index, :edit
-
     live "/klassen/:id", KlasseLive.Show, :show
     live "/klassen/:id/show/edit", KlasseLive.Show, :edit
   end
@@ -65,17 +66,8 @@ defmodule SportfestWeb.Router do
     live "/schueler", SchuelerLive.Index, :index
     live "/schueler/new", SchuelerLive.Index, :new
     live "/schueler/:id/edit", SchuelerLive.Index, :edit
-
     live "/schueler/:id", SchuelerLive.Show, :show
     live "/schueler/:id/show/edit", SchuelerLive.Show, :edit
-
-    live "/scores", ScoreLive.Index, :index
-    live "/scores/new", ScoreLive.Index, :new
-    live "/scores/:id/edit", ScoreLive.Index, :edit
-
-    live "/scores/:id", ScoreLive.Show, :show
-    live "/scores/:id/show/edit", ScoreLive.Show, :edit
-
   end
 
   # Other scopes may use custom stacks.

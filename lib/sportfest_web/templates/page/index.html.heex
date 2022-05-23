@@ -1,20 +1,31 @@
 <section class="phx-hero">
   <h1>Viel Spaß!</h1>
-  <p>Möge die <%= link "beste Klasse", to: Routes.leaderboard_index_path(@conn, :index) %> gewinnen</p>
+  <p>Möge die beste Klasse gewinnen</p>
 </section>
 <section class="row">
-<%= if Sportfest.Accounts.is_moderator?(@current_user) || Sportfest.Accounts.is_admin?(@current_user) do %>
+<%= if @current_user do %>
   <article class="column">
-    <h2>Lehrer Bereich</h2>
+  <h2>Schüler:innen Bereich</h2>
     <ul>
       <li>
+        <%= link "Stationen anzeigen#{if Sportfest.Accounts.is_admin?(@current_user) do " und bearbeiten" end}",
+            to: Routes.station_index_path(@conn, :index) %>
+      </li>
+      <li>
+        <%= link "Leaderboards anzeigen", to: Routes.leaderboard_index_path(@conn, :index) %>
+      </li>
+    </ul>
+  </article>
+<% end %>
+<%= if Sportfest.Accounts.is_moderator?(@current_user) || Sportfest.Accounts.is_admin?(@current_user) do %>
+  <article class="column">
+    <h2>Lehrer:innen Bereich</h2>
+    <ul>
+      <li>
+        <%= link "Medaillen bearbeiten", to: Routes.score_index_path(@conn, :index) %>
+      </li>
+      <li>
         <%= link "Klassen und inaktive Schüler:innen bearbeiten", to: Routes.klasse_index_path(@conn, :index) %>
-      </li>
-      <li>
-        <%= link "Stationen und Scores bearbeiten", to: Routes.station_index_path(@conn, :index) %>
-      </li>
-      <li>
-        <%= link "Leaderboard", to: Routes.leaderboard_index_path(@conn, :index) %>
       </li>
     </ul>
   </article>
@@ -25,9 +36,6 @@
     <ul>
       <li>
         <%= link "Schüler:innen bearbeiten", to: Routes.schueler_index_path(@conn, :index) %>
-      </li>
-      <li>
-        <%= link "Scores bearbeiten", to: Routes.score_index_path(@conn, :index) %>
       </li>
     </ul>
   </article>
