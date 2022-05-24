@@ -64,15 +64,13 @@ $ cd Sportfest
 $ sudo mix deps.get
 $ sudo mix compile
 ```
-Zum Updaten (`git pull` läuft auf error, da `priv/static/cache_manifest.json` überschrieben wird):
-```console
-$ git fetch
-$ git reset --hard HEAD
-$ git merge origin/main
-```
 
 ### Deployment mit Releases
-#### Bearbeiten der Umgebungsvariablen im Skript `create_realease_and_start.sh`
+#### Vorbereiten des Skripts
+Benenne das Startskript um:
+```console
+$ sudo mv setup_and_run.sh.sample setup_and_run.sh
+```
 Generiere eine sicheres Passwort für `SECRET_KEY_BASE` durch Ausführen folgender Zeile im Projektordner ([Phoenix Installation](https://hexdocs.pm/phoenix/1.6.6/installation.html) vorausgesetzt):
 ```console
 $ mix phx.gen.secret
@@ -86,7 +84,7 @@ Vgl. auch Hinweis aus der [Phoenix Dokumentation](https://hexdocs.pm/phoenix/1.6
 
 #### Ausführen des Skripts
 ```console
-$ sudo sh create_realease_and_start.sh
+$ sudo sh setup_and_run.sh
 ```
 
 Falls noch keine Accounts angelegt wurden, wird hier durch Ausführen der Funktion `Sportfest.Release.maybe_create_accounts/0` die Eingabe einer E-Mail Adresse und eines Passworts für jeweils einen Account mit den Rollen `"admin"`, `"moderator"` und `"user"` gefordert. Die E-Mail Adresse muss ein @ enthalten und das Passwort mindestens 12 Zeichen lang sein.
@@ -96,7 +94,7 @@ Falls noch keine Accounts angelegt wurden, wird hier durch Ausführen der Funkti
 $ _build/prod/rel/sportfest/bin/sportfest stop
 ```
 
-#### Andere Option zum Starten der App
+#### Option zum Starten der App im Vordergrund
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest start
 ```
