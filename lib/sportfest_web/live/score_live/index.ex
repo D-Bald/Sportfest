@@ -14,9 +14,8 @@ defmodule SportfestWeb.ScoreLive.Index do
     socket = assign_defaults(session, socket)
               |> assign(:page_title, "Scores")
               |> assign(klassen: Vorbereitung.list_klassen(), schueler: Vorbereitung.list_schueler(),
-                        stationen: Vorbereitung.list_stationen(), filter: filter, scores: [])
-
-
+                        stationen: Vorbereitung.list_stationen(), filter: filter, scores: [],
+                        ausgewählte_station: nil) # Assign aktuelle station, damit die Bedingungen für Medaillen gelesen werden können
 
     {:ok, socket}
   end
@@ -25,7 +24,7 @@ defmodule SportfestWeb.ScoreLive.Index do
   # reset filters : each col filter is set to "All"
   def handle_event("reset", _, socket) do
     filter =  %{"station_id" => "None", "klasse_id" => "None"}
-    {:noreply, assign(socket, scores: [], filter: filter)}
+    {:noreply, assign(socket, scores: [], filter: filter, ausgewählte_station: nil)}
   end
 
   # filter : add new filter to the socket
@@ -36,11 +35,12 @@ defmodule SportfestWeb.ScoreLive.Index do
 
     new_filter = socket.assigns.filter |> Map.merge(filter)
     filter_rows = cond do
-      IO.inspect(Enum.any?(IO.inspect(Map.values(new_filter)), &match?("None", &1))) -> []
+      Enum.any?(Map.values(new_filter), &match?("None", &1)) -> []
       true -> get_filter_rows(new_filter)
     end
 
-    {:noreply, assign(socket, scores: filter_rows, filter: new_filter)}
+    {:noreply, assign(socket, scores: filter_rows, filter: new_filter,
+                      ausgewählte_station: get_selected_station_from_filter(new_filter))}
   end
 
   # handles clicks on different medals
@@ -83,6 +83,7 @@ defmodule SportfestWeb.ScoreLive.Index do
                 List.delete(scores, score) end)}
   end
 
+  # Gibt zurück, ob im gegebenen `filter` der gegebene `key` mit dem erwarteten `value` verknüpft ist.
   def selected?(filter,key,value) do
     case Map.has_key?(filter, key) do
       true -> filter[key]==value
@@ -90,11 +91,30 @@ defmodule SportfestWeb.ScoreLive.Index do
       end
     end
 
+  # Gibt zurück, ob im gegebenen `filter` der gegebene `key` mit dem erwarteten `value` verknüpft ist oder leer ist.
   def selected_or_empty?(filter, key, value) do
     case Map.has_key?(filter, key) do
       true -> filter[key]==value
       false -> true
       end
+  end
+
+  @doc """
+  Holt die im gegebenen `filter` unter `station_id` angegebene Station aus der Datenbank.
+  Gibt `nil` zurück, falls `station_id` nicht im Filter enthalten oder `"None"`
+
+  ## Examples
+      iex> get_selected_station_from_filter(%{"station_id" => "1"})
+      %Station{}
+
+      iex> get_selected_station_from_filter(%{"station_id" => "None"})
+      nil
+  """
+  def get_selected_station_from_filter(filter) do
+    case Map.has_key?(filter, "station_id") and filter["station_id"] != "None" do
+      true -> Vorbereitung.get_station!(filter["station_id"])
+      false -> nil
+    end
   end
 
   # Datenbankergebnisse mit gegebenem Filter sortiert nach Schüler-Name, Klasse und Station
