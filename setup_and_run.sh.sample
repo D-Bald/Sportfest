@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo "Stop running daemon"
+_build/prod/rel/sportfest/bin/sportfest stop || echo "No running instance"
+
 echo "Refreshing code base"
 sudo git fetch
 sudo git reset --hard HEAD
