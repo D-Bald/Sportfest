@@ -30,5 +30,5 @@ _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.migrate"
 # helper function to create admin, moderator and user account if needed
 _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.maybe_create_accounts"
 
-# echo "Running app as daemon"
+echo "Running app as daemon"
 _build/prod/rel/sportfest/bin/sportfest daemon
