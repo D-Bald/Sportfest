@@ -76,7 +76,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
                       Enum.find_index(klassen_map[jahrgang], fn k -> k.id == klasse.id end),
                       klasse)
           |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
-      }end)
+      } end)
   end
 
   defp schueler_liste_aktualisieren(schueler, socket) do
@@ -85,7 +85,6 @@ defmodule SportfestWeb.LeaderboardLive.Index do
                       Enum.find_index(schueler_list, fn s -> s.id == schueler.id end),
                       schueler)
       |> Enum.sort_by(fn schueler -> Ergebnisse.get_score_sum(schueler) end, :desc)
-      |> Enum.take(20)
     end)
   end
 end
