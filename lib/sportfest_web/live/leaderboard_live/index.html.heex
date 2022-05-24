@@ -1,5 +1,7 @@
 <h1>Leaderboards</h1>
-<h2>Klassen Rangliste</h2>
+
+<%= for {jahrgang, klassen_liste} <- @klassen_map do %>
+<h2>Klassen Rangliste für Jahrgang <%= jahrgang %></h2>
 <table>
   <thead>
     <tr>
@@ -19,19 +21,22 @@
 
   <tbody id="team_scores">
     <%= if Sportfest.Ergebnisse.exists_score? do %>
-      <%= for i <- 0..Enum.count(@klassen) - 1 do %>
-        <tr id={"klasse-#{Enum.at(@klassen,i).id}"}>
+      <%= for i <- 0..Enum.count(klassen_liste) - 1 do %>
+        <tr id={"klasse-#{Enum.at(klassen_liste,i).id}"}>
           <td><%= i+1 %></td>
-          <td><%= Enum.at(@klassen,i).name %></td>
-          <td><%= Sportfest.Ergebnisse.scaled_class_score(Enum.at(@klassen,i)) %></td>
-          <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(@klassen,i)) %></td>
-          <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(@klassen,i)) %></td>
-          <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(@klassen,i)) %></td>
+          <td><%= Enum.at(klassen_liste,i).name %></td>
+          <td><%= Sportfest.Ergebnisse.scaled_class_score(Enum.at(klassen_liste,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(klassen_liste,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(klassen_liste,i)) %></td>
+          <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(klassen_liste,i)) %></td>
         </tr>
       <% end %>
     <% end %>
   </tbody>
 </table>
+
+<% end %>
+
 
 <h2>Schüler:innen Rangliste</h2>
 

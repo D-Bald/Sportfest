@@ -7,10 +7,17 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
-    klassen = Vorbereitung.list_klassen() |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
+    klassen_map = Vorbereitung.list_klassen()
+              |> Enum.group_by(fn klasse -> String.first(klasse.name) end) # Workaround, da Jahrgang aus Versehen in schueler schema statt in klasse
+              |> Enum.map(fn {jahrgang, klassen_liste} ->
+                              {jahrgang, Enum.sort_by(klassen_liste, fn klasse -> Ergebnisse.scaled_class_score(klasse)
+                                                                      end, :desc)}
+                          end)
+              |> Enum.into(%{})
+
     schueler = Vorbereitung.list_schueler() |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc) |> Enum.take(20)
     stationen = Vorbereitung.list_stationen() |> Enum.sort_by(fn s -> s.name end, :asc)
-    socket = assign(socket, schueler: schueler, klassen: klassen, stationen: stationen)
+    socket = assign(socket, schueler: schueler, klassen_map: klassen_map, stationen: stationen)
 
     {:ok, socket}
   end
@@ -60,12 +67,16 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   end
 
   defp klassen_liste_aktualisieren(klasse, socket) do
-    update(socket, :klassen, fn klassen ->
-      List.replace_at(klassen, # Manual replacement because klassen is not tracked
-                      Enum.find_index(klassen, fn k -> k.id == klasse.id end),
+    jahrgang = String.first(klasse.name)
+    update(socket, :klassen_map,
+      fn klassen_map ->
+        %{klassen_map | jahrgang =>
+        klassen_map[jahrgang]
+          |> List.replace_at(# Manual replacement because klassen is not tracked
+                      Enum.find_index(klassen_map[jahrgang], fn k -> k.id == klasse.id end),
                       klasse)
-      |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
-    end)
+          |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
+      }end)
   end
 
   defp schueler_liste_aktualisieren(schueler, socket) do
