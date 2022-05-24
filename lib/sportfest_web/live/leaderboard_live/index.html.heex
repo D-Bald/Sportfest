@@ -60,7 +60,7 @@
 
   <tbody id="schueler_scores">
     <%= if Sportfest.Ergebnisse.exists_score? do %>
-      <%= for i <- 0..Enum.count(@schueler) - 1 do %>
+      <%= for i <- 0..min(Enum.count(@schueler) - 1, 19) do %>
         <tr id={"schueler-#{Enum.at(@schueler,i).id}"}>
           <td><%= i+1 %></td>
           <td><%= Enum.at(@schueler, i).klasse.name %></td>

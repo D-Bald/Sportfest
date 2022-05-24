@@ -15,7 +15,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
                           end)
               |> Enum.into(%{})
 
-    schueler = Vorbereitung.list_schueler() |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc) |> Enum.take(20)
+    schueler = Vorbereitung.list_schueler() |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
     stationen = Vorbereitung.list_stationen() |> Enum.sort_by(fn s -> s.name end, :asc)
     socket = assign(socket, schueler: schueler, klassen_map: klassen_map, stationen: stationen)
 
