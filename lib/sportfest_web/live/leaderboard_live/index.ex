@@ -7,17 +7,22 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
-    klassen_map = Vorbereitung.list_klassen()
-              |> Enum.group_by(fn klasse -> String.first(klasse.name) end) # Workaround, da Jahrgang aus Versehen in schueler schema statt in klasse
-              |> Enum.map(fn {jahrgang, klassen_liste} ->
-                              {jahrgang, Enum.sort_by(klassen_liste, fn klasse -> Ergebnisse.scaled_class_score(klasse)
-                                                                      end, :desc)}
-                          end)
-              |> Enum.into(%{})
+    jhg_klassen_map = Vorbereitung.list_klassen()
+                      |> Enum.group_by(fn klasse -> String.first(klasse.name) end) # Workaround, da Jahrgang aus Versehen in schueler schema statt in klasse
+                      |> Enum.map(fn {jahrgang, klassen_liste} ->
+                          {jahrgang, Enum.sort_by(klassen_liste,  fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)}
+                        end)
+                      |> Enum.into(%{})
 
-    schueler = Vorbereitung.list_schueler() |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
+    jhg_schueler_map = Vorbereitung.list_schueler()
+                        |> Enum.group_by(fn schueler -> schueler.jahrgang end)
+                        |> Enum.map(fn {jahrgang, schueler_liste} ->
+                            {jahrgang, Enum.sort_by(schueler_liste, fn s -> Ergebnisse.get_score_sum(s) end, :desc)}
+                          end)
+                        |> Enum.into(%{})
+
     stationen = Vorbereitung.list_stationen() |> Enum.sort_by(fn s -> s.name end, :asc)
-    socket = assign(socket, schueler: schueler, klassen_map: klassen_map, stationen: stationen)
+    socket = assign(socket, jhg_schueler_map: jhg_schueler_map, jhg_klassen_map: jhg_klassen_map, stationen: stationen)
 
     {:ok, socket}
   end
@@ -68,23 +73,29 @@ defmodule SportfestWeb.LeaderboardLive.Index do
 
   defp klassen_liste_aktualisieren(klasse, socket) do
     jahrgang = String.first(klasse.name)
-    update(socket, :klassen_map,
-      fn klassen_map ->
-        %{klassen_map | jahrgang =>
-        klassen_map[jahrgang]
+    update(socket, :jhg_klassen_map,
+      fn jhg_klassen_map ->
+        %{jhg_klassen_map | jahrgang =>
+          jhg_klassen_map[jahrgang]
           |> List.replace_at(# Manual replacement because klassen is not tracked
-                      Enum.find_index(klassen_map[jahrgang], fn k -> k.id == klasse.id end),
+                      Enum.find_index(jhg_klassen_map[jahrgang], fn k -> k.id == klasse.id end),
                       klasse)
           |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
-      } end)
+          }
+      end)
   end
 
   defp schueler_liste_aktualisieren(schueler, socket) do
-    update(socket, :schueler, fn schueler_list ->
-      List.replace_at(schueler_list, # Manual replacement because klassen is not tracked
-                      Enum.find_index(schueler_list, fn s -> s.id == schueler.id end),
+    jahrgang = schueler.jahrgang
+    update(socket, :jhg_schueler_map,
+      fn jhg_schueler_map ->
+        %{jhg_schueler_map | jahrgang =>
+        jhg_schueler_map[jahrgang]
+          |> List.replace_at(# Manual replacement because klassen is not tracked
+                      Enum.find_index(jhg_schueler_map[jahrgang], fn s -> s.id == schueler.id end),
                       schueler)
-      |> Enum.sort_by(fn schueler -> Ergebnisse.get_score_sum(schueler) end, :desc)
-    end)
+          |> Enum.sort_by(fn schueler -> Ergebnisse.get_score_sum(schueler) end, :desc)
+          }
+      end)
   end
 end

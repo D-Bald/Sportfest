@@ -297,6 +297,19 @@ defmodule Sportfest.Vorbereitung do
   end
 
   @doc """
+  Checks if any klasse exists.
+
+  ## Examples
+
+      iex> exists_klasse?()
+      true
+
+  """
+  def exists_klasse? do
+    Repo.exists?(Klasse)
+  end
+
+  @doc """
   Gibt die Anzahl als aktiv markierter Schüler:innen der gegebenen Klasse zurück
 
   ## Examples
@@ -497,6 +510,19 @@ defmodule Sportfest.Vorbereitung do
     # end
 
     changeset
+  end
+
+  @doc """
+  Checks if any schueler exists.
+
+  ## Examples
+
+      iex> exists_schueler?()
+      true
+
+  """
+  def exists_schueler? do
+    Repo.exists?(Schueler)
   end
 
   @doc """

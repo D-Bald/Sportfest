@@ -50,7 +50,7 @@ defmodule Sportfest.Ergebnisse do
 
   ## Examples
 
-      iex> exists_score()
+      iex> exists_score?()
       true
 
   """
@@ -255,8 +255,12 @@ defmodule Sportfest.Ergebnisse do
           end)
     |> Enum.sum()
 
-  team_points + aggregated_schueler_points
-  |> Float.round(2)
+    (team_points + aggregated_schueler_points)
+    |> IO.inspect()
+    |> case do
+      0 -> 0
+      points -> Float.round(points / 1, 2) # Division durch 1 castet Integers zu Float
+    end
   end
 
   def scaled_class_score(klasse, station) do
@@ -272,7 +276,10 @@ defmodule Sportfest.Ergebnisse do
                                                       |> Enum.count())
                   end)
               |> Enum.sum()
-              |> Float.round(2)
+              |> case do
+                0 -> 0
+                points -> Float.round(points / 1, 2)
+              end
       _ -> scores
           |> Enum.map(fn score -> get_medal_points(score) end)
           |> Enum.sum()
