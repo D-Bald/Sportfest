@@ -256,7 +256,6 @@ defmodule Sportfest.Ergebnisse do
     |> Enum.sum()
 
     (team_points + aggregated_schueler_points)
-    |> IO.inspect()
     |> case do
       0 -> 0
       points -> Float.round(points / 1, 2) # Division durch 1 castet Integers zu Float
