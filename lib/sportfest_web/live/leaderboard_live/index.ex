@@ -17,7 +17,9 @@ defmodule SportfestWeb.LeaderboardLive.Index do
     jhg_schueler_map = Vorbereitung.list_schueler()
                         |> Enum.group_by(fn schueler -> schueler.jahrgang end)
                         |> Enum.map(fn {jahrgang, schueler_liste} ->
-                            {jahrgang, Enum.sort_by(schueler_liste, fn s -> Ergebnisse.get_score_sum(s) end, :desc)}
+                            {jahrgang,
+                              Enum.filter(schueler_liste, fn s -> s.aktiv end)
+                              |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)}
                           end)
                         |> Enum.into(%{})
 
