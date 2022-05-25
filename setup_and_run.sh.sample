@@ -22,7 +22,7 @@ MIX_ENV=prod mix compile
 MIX_ENV=prod mix assets.deploy
 
 echo "Building release"
-MIX_ENV=prod mix release
+MIX_ENV=prod mix release --overwrite
 
 echo "Running migrations"
 _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.migrate"
