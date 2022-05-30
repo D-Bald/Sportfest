@@ -13,7 +13,9 @@ erl_crash.dump
 ### Uploads ###
 /priv/static/uploads/*
 # Behalte den uploads-Ordner, indem eine Dummy-Datei enthalten bleibt
-!/lib/priv/static/uploads/.gitkeepfolder
+!/priv/static/uploads/.gitkeepfolder
 
 ### Backups ###
-/backups
+/backups/*
+# Behalte den backup-Ordner, indem eine Dummy-Datei enthalten bleibt
+!/backups/.gitkeepfolder
