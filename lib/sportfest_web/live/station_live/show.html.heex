@@ -17,7 +17,7 @@
   <%= if @station.beschreibung != nil do %>
     <h2> Beschreibung </h2>
     <p>
-      <%= @station.beschreibung %>
+      <%= raw @station.beschreibung %> <!-- https://hexdocs.pm/phoenix_html/Phoenix.HTML.html#raw/1 -->
     </p>
   <% end %>
 </div>

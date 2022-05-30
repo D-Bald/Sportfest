@@ -3,7 +3,7 @@ defmodule Sportfest.Repo.Migrations.AddDescriptionImageAndVideoLinkToStation do
 
   def change do
     alter table(:stationen) do
-      add :beschreibung, :string
+      add :beschreibung, :text
       add :image_uploads, {:array, :string}
       add :video_link, :string
       add :einheit, :string

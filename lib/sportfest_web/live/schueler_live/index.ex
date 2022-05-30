@@ -60,7 +60,7 @@ defmodule SportfestWeb.SchuelerLive.Index do
     with {[_|_] = entries, []} <- uploaded_entries(socket, :schueler_data) do
       for entry <- entries do
         consume_uploaded_entry(socket, entry, fn %{path: path} ->
-          {:ok, Sportfest.Utils.CSVDataImports.add_schueler_from_csv(path)}
+          {:ok, Sportfest.Utils.CSVData.import_schueler_from_csv(path)}
         end)
       end
     end
