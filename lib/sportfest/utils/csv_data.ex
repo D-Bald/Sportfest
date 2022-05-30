@@ -15,7 +15,7 @@ defmodule Sportfest.Utils.CSVData do
   end
 
   def export_stationen_to_csv do
-    path = "../../../backups/stationen.csv" |> Path.expand(__DIR__)
+    path = "../../../backups/stationen.csv"
     data = [build_station_headers() | Vorbereitung.list_stationen()
                                       |> Enum.map(&build_station_row(&1))]
             |> CSV.encode()
