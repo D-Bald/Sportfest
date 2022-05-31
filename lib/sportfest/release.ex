@@ -43,7 +43,7 @@ defmodule Sportfest.Release do
     load_app()
     Application.ensure_all_started(@app)
 
-    IO.puts(Sportfest.Utils.CSVData.export_stationen_to_csv())
+    Sportfest.Utils.CSVData.export_stationen_to_csv()
   end
 
   defp repos do
