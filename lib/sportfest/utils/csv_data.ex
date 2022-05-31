@@ -2,7 +2,7 @@ defmodule Sportfest.Utils.CSVData do
 @moduledoc """
     Utility Modul zum Einlesen von Schüler:innen-Daten aus CSV Dateien und Erstellen von Backups als CSV
   """
-
+  require Logger
   alias Sportfest.Vorbereitung
 
   def import_schueler_from_csv(file) do
@@ -15,12 +15,16 @@ defmodule Sportfest.Utils.CSVData do
   end
 
   def export_stationen_to_csv do
-    path = "../../../backups/stationen.csv"
+    path = "../../../backups/stationen.csv" |> Path.expand(__DIR__)
     data = [build_station_headers() | Vorbereitung.list_stationen()
                                       |> Enum.map(&build_station_row(&1))]
             |> CSV.encode()
             |> Enum.to_list()
-    File.write(path, data)
+    case File.write(path, data) do
+      :ok -> Logger.info("Backup erfolgreich erstellt")
+      {:error, reason} -> Logger.info([File_write: "Backup nicht erfolgreich", reason: reason])
+    end
+
   end
 
   defp build_schueler_attributes(line) do

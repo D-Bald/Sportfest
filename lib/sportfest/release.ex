@@ -24,7 +24,6 @@ defmodule Sportfest.Release do
 
     for role <- ["admin", "moderator", "user"] do
       if not Sportfest.Accounts.exists_user_with_role?(role) do
-        # IO.write("Gib ein Passwort für den Standard benutzer an.")
         email = IO.gets("Gib eine Email-Adresse für den Benutzer mit der Rolle \"#{role}\" ein:\n") |> String.trim()
         password = IO.gets("Setze ein Password für diesen Benutzer (mindestens 12 Zeichen):\n") |> String.trim()
 
@@ -44,7 +43,7 @@ defmodule Sportfest.Release do
     load_app()
     Application.ensure_all_started(@app)
 
-    Sportfest.Utils.CSVData.export_stationen_to_csv()
+    IO.puts(Sportfest.Utils.CSVData.export_stationen_to_csv())
   end
 
   defp repos do
