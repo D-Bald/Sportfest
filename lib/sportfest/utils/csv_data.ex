@@ -22,7 +22,7 @@ defmodule Sportfest.Utils.CSVData do
             |> Enum.to_list()
     case File.write(path, data) do
       :ok -> Logger.info("Backup erfolgreich erstellt")
-      {:error, reason} -> Logger.info([File_write: "Backup nicht erfolgreich", reason: reason])
+      {:error, reason} -> Logger.info([File_write: "Backup nicht erfolgreich", reason: reason, path: path])
     end
 
   end
