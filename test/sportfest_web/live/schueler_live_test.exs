@@ -4,9 +4,9 @@ defmodule SportfestWeb.SchuelerLiveTest do
   import Phoenix.LiveViewTest
   import Sportfest.VorbereitungFixtures
 
-  @create_attrs %{jahrgang: "some jahrgang", klasse: "some klasse", name: "some name", scores: "some scores"}
-  @update_attrs %{jahrgang: "some updated jahrgang", klasse: "some updated klasse", name: "some updated name", scores: "some updated scores"}
-  @invalid_attrs %{jahrgang: nil, klasse: nil, name: nil, scores: nil}
+  @create_attrs %{klasse: "some klasse", name: "some name", scores: "some scores"}
+  @update_attrs %{klasse: "some updated klasse", name: "some updated name", scores: "some updated scores"}
+  @invalid_attrs %{name: nil, scores: nil}
 
   defp create_schueler(_) do
     schueler = schueler_fixture()
@@ -20,7 +20,6 @@ defmodule SportfestWeb.SchuelerLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.schueler_index_path(conn, :index))
 
       assert html =~ "Listing Schueler"
-      assert html =~ schueler.jahrgang
     end
 
     test "saves new schueler", %{conn: conn} do
@@ -42,7 +41,6 @@ defmodule SportfestWeb.SchuelerLiveTest do
         |> follow_redirect(conn, Routes.schueler_index_path(conn, :index))
 
       assert html =~ "Schueler created successfully"
-      assert html =~ "some jahrgang"
     end
 
     test "updates schueler in listing", %{conn: conn, schueler: schueler} do
@@ -64,7 +62,6 @@ defmodule SportfestWeb.SchuelerLiveTest do
         |> follow_redirect(conn, Routes.schueler_index_path(conn, :index))
 
       assert html =~ "Schueler updated successfully"
-      assert html =~ "some updated jahrgang"
     end
 
     test "deletes schueler in listing", %{conn: conn, schueler: schueler} do
@@ -82,7 +79,6 @@ defmodule SportfestWeb.SchuelerLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.schueler_show_path(conn, :show, schueler))
 
       assert html =~ "Show Schueler"
-      assert html =~ schueler.jahrgang
     end
 
     test "updates schueler within modal", %{conn: conn, schueler: schueler} do
@@ -104,7 +100,6 @@ defmodule SportfestWeb.SchuelerLiveTest do
         |> follow_redirect(conn, Routes.schueler_show_path(conn, :show, schueler))
 
       assert html =~ "Schueler updated successfully"
-      assert html =~ "some updated jahrgang"
     end
   end
 end

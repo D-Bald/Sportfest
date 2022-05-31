@@ -3,6 +3,7 @@ defmodule Sportfest.Vorbereitung.Klasse do
   import Ecto.Changeset
 
   schema "klassen" do
+    field :jahrgang, :integer
     field :name, :string
 
     has_many :schueler, Sportfest.Vorbereitung.Schueler
@@ -14,8 +15,8 @@ defmodule Sportfest.Vorbereitung.Klasse do
   @doc false
   def changeset(klasse, attrs) do
     klasse
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :jahrgang])
+    |> validate_required([:name, :jahrgang])
     |> unique_constraint(:name)
   end
 end

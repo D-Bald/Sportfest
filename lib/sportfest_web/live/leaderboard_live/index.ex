@@ -8,14 +8,14 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   def mount(_params, _session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
     jhg_klassen_map = Vorbereitung.list_klassen()
-                      |> Enum.group_by(fn klasse -> String.first(klasse.name) end) # Workaround, da Jahrgang aus Versehen in schueler schema statt in klasse
+                      |> Enum.group_by(fn klasse -> klasse.jahrgang end) # Workaround, da Jahrgang aus Versehen in schueler schema statt in klasse
                       |> Enum.map(fn {jahrgang, klassen_liste} ->
                           {jahrgang, Enum.sort_by(klassen_liste,  fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)}
                         end)
                       |> Enum.into(%{})
 
     jhg_schueler_map = Vorbereitung.list_schueler()
-                        |> Enum.group_by(fn schueler -> schueler.jahrgang end)
+                        |> Enum.group_by(fn schueler -> schueler.klasse.jahrgang end)
                         |> Enum.map(fn {jahrgang, schueler_liste} ->
                             {jahrgang,
                               Enum.filter(schueler_liste, fn s -> s.aktiv end)
@@ -74,13 +74,12 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   end
 
   defp klassen_liste_aktualisieren(klasse, socket) do
-    jahrgang = String.first(klasse.name)
     update(socket, :jhg_klassen_map,
       fn jhg_klassen_map ->
-        %{jhg_klassen_map | jahrgang =>
-          jhg_klassen_map[jahrgang]
+        %{jhg_klassen_map | klasse.jahrgang =>
+          jhg_klassen_map[klasse.jahrgang]
           |> List.replace_at(# Manual replacement because klassen is not tracked
-                      Enum.find_index(jhg_klassen_map[jahrgang], fn k -> k.id == klasse.id end),
+                      Enum.find_index(jhg_klassen_map[klasse.jahrgang], fn k -> k.id == klasse.id end),
                       klasse)
           |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
           }
@@ -88,7 +87,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   end
 
   defp schueler_liste_aktualisieren(schueler, socket) do
-    jahrgang = schueler.jahrgang
+    jahrgang = schueler.klasse.jahrgang
     update(socket, :jhg_schueler_map,
       fn jhg_schueler_map ->
         %{jhg_schueler_map | jahrgang =>

@@ -31,13 +31,12 @@ defmodule Sportfest.Utils.CSVData do
     {jahrgang, _} = Integer.parse(line["Klasse"])
     %{name: line["Vorname"] <> " " <> line["Nachname"],
       klasse: case Vorbereitung.get_klasse_by_name(line["Klasse"])do
-        nil -> case Vorbereitung.create_klasse(line["Klasse"]) do
+        nil -> case Vorbereitung.create_klasse(line["Klasse"], jahrgang) do
           {:ok, klasse} -> klasse
           {:error, _} -> raise("Klasse konnte nicht erstellt werden.")
         end
         klasse -> klasse
-      end,
-      jahrgang: jahrgang
+      end
     }
   end
 

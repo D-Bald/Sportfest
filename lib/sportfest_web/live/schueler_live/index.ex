@@ -76,6 +76,6 @@ defmodule SportfestWeb.SchuelerLive.Index do
     Vorbereitung.list_schueler()
     |> Enum.sort_by(fn s -> s.name end, :asc)
     |> Enum.sort_by(fn s -> s.klasse end, :asc)
-    |> Enum.sort_by(fn s -> s.jahrgang end, :asc)
+    |> Enum.sort_by(fn s -> s.klasse.jahrgang end, :asc)
   end
 end

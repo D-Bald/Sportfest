@@ -58,15 +58,15 @@
 
       <tbody id="schueler_scores">
         <%= if Sportfest.Ergebnisse.exists_score? do %>
-          <%= for i <- 0..min(Enum.count(@jhg_schueler_map[String.to_integer(jahrgang)]) - 1, 9) do %>
-            <tr id={"schueler-#{Enum.at(@jhg_schueler_map[String.to_integer(jahrgang)],i).id}"}>
+          <%= for i <- 0..min(Enum.count(@jhg_schueler_map[jahrgang]) - 1, 9) do %>
+            <tr id={"schueler-#{Enum.at(@jhg_schueler_map[jahrgang],i).id}"}>
               <td><%= i+1 %></td>
-              <td><%= Enum.at(@jhg_schueler_map[String.to_integer(jahrgang)], i).klasse.name %></td>
-              <td><%= Enum.at(@jhg_schueler_map[String.to_integer(jahrgang)],i).name %></td>
-              <td><%= Sportfest.Ergebnisse.get_score_sum(Enum.at(@jhg_schueler_map[String.to_integer(jahrgang)],i)) %></td>
-              <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(@jhg_schueler_map[String.to_integer(jahrgang)],i)) %></td>
-              <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(@jhg_schueler_map[String.to_integer(jahrgang)],i)) %></td>
-              <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(@jhg_schueler_map[String.to_integer(jahrgang)],i)) %></td>
+              <td><%= Enum.at(@jhg_schueler_map[jahrgang], i).klasse.name %></td>
+              <td><%= Enum.at(@jhg_schueler_map[jahrgang],i).name %></td>
+              <td><%= Sportfest.Ergebnisse.get_score_sum(Enum.at(@jhg_schueler_map[jahrgang],i)) %></td>
+              <td><%= Sportfest.Ergebnisse.count_bronze_medaillen(Enum.at(@jhg_schueler_map[jahrgang],i)) %></td>
+              <td><%= Sportfest.Ergebnisse.count_silber_medaillen(Enum.at(@jhg_schueler_map[jahrgang],i)) %></td>
+              <td><%= Sportfest.Ergebnisse.count_gold_medaillen(Enum.at(@jhg_schueler_map[jahrgang],i)) %></td>
             </tr>
           <% end %>
         <% end %>

@@ -55,7 +55,6 @@
 <table>
   <thead>
     <tr>
-      <th>Jahrgang</th>
       <th>Klasse</th>
       <th>Name</th>
       <th>Persönliche Gesamtpunkte</th>
@@ -66,7 +65,6 @@
   <tbody id="schueler">
     <%= for schueler <- @schueler_collection do %>
       <tr id={"schueler-#{schueler.id}"}>
-        <td><%= schueler.jahrgang %></td>
         <td><%= schueler.klasse.name %></td>
         <td><%= schueler.name %></td>
         <td><%= if schueler.aktiv do

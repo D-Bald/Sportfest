@@ -68,7 +68,7 @@ defmodule Sportfest.VorbereitungTest do
 
     import Sportfest.VorbereitungFixtures
 
-    @invalid_attrs %{scores: nil, name: nil, schueler: nil, summe: nil}
+    @invalid_attrs %{jahrgang: nil, scores: nil, name: nil, schueler: nil, summe: nil}
 
     test "list_klassen/0 returns all klassen" do
       klasse = klasse_fixture()
@@ -81,9 +81,10 @@ defmodule Sportfest.VorbereitungTest do
     end
 
     test "create_klasse/1 with valid data creates a klasse" do
-      valid_attrs = %{scores: "some scores", name: "some name", schueler: "some schueler", summe: 42}
+      valid_attrs = %{jahrgang: "some jahrgang", scores: "some scores", name: "some name", schueler: "some schueler", summe: 42}
 
       assert {:ok, %Klasse{} = klasse} = Vorbereitung.create_klasse(valid_attrs)
+      assert klasse.jahrgang == "some jahrgang"
       assert klasse.scores == "some scores"
       assert klasse.name == "some name"
       assert klasse.schueler == "some schueler"
@@ -96,9 +97,10 @@ defmodule Sportfest.VorbereitungTest do
 
     test "update_klasse/2 with valid data updates the klasse" do
       klasse = klasse_fixture()
-      update_attrs = %{scores: "some updated scores", name: "some updated name", schueler: "some updated schueler", summe: 43}
+      update_attrs = %{jahrgang: "some updated jahrgang", scores: "some updated scores", name: "some updated name", schueler: "some updated schueler", summe: 43}
 
       assert {:ok, %Klasse{} = klasse} = Vorbereitung.update_klasse(klasse, update_attrs)
+      assert klasse.jahrgang == "some updated jahrgang"
       assert klasse.scores == "some updated scores"
       assert klasse.name == "some updated name"
       assert klasse.schueler == "some updated schueler"
@@ -128,7 +130,7 @@ defmodule Sportfest.VorbereitungTest do
 
     import Sportfest.VorbereitungFixtures
 
-    @invalid_attrs %{jahrgang: nil, klasse: nil, name: nil, scores: nil}
+    @invalid_attrs %{klasse: nil, name: nil, scores: nil}
 
     test "list_schueler/0 returns all schueler" do
       schueler = schueler_fixture()
@@ -141,10 +143,9 @@ defmodule Sportfest.VorbereitungTest do
     end
 
     test "create_schueler/1 with valid data creates a schueler" do
-      valid_attrs = %{jahrgang: "some jahrgang", klasse: "some klasse", name: "some name", scores: "some scores"}
+      valid_attrs = %{klasse: "some klasse", name: "some name", scores: "some scores"}
 
       assert {:ok, %Schueler{} = schueler} = Vorbereitung.create_schueler(valid_attrs)
-      assert schueler.jahrgang == "some jahrgang"
       assert schueler.klasse == "some klasse"
       assert schueler.name == "some name"
       assert schueler.scores == "some scores"
@@ -156,10 +157,9 @@ defmodule Sportfest.VorbereitungTest do
 
     test "update_schueler/2 with valid data updates the schueler" do
       schueler = schueler_fixture()
-      update_attrs = %{jahrgang: "some updated jahrgang", klasse: "some updated klasse", name: "some updated name", scores: "some updated scores"}
+      update_attrs = %{klasse: "some updated klasse", name: "some updated name", scores: "some updated scores"}
 
       assert {:ok, %Schueler{} = schueler} = Vorbereitung.update_schueler(schueler, update_attrs)
-      assert schueler.jahrgang == "some updated jahrgang"
       assert schueler.klasse == "some updated klasse"
       assert schueler.name == "some updated name"
       assert schueler.scores == "some updated scores"

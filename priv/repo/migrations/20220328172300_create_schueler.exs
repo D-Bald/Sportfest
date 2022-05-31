@@ -4,7 +4,6 @@ defmodule Sportfest.Repo.Migrations.CreateSchueler do
   def change do
     create table(:schueler) do
       add :name, :string
-      add :jahrgang, :integer
       add :aktiv, :boolean
 
       add :klasse_id, references(:klassen, on_delete: :delete_all)

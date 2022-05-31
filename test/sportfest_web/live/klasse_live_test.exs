@@ -4,9 +4,9 @@ defmodule SportfestWeb.KlasseLiveTest do
   import Phoenix.LiveViewTest
   import Sportfest.VorbereitungFixtures
 
-  @create_attrs %{scores: "some scores", name: "some name", schueler: "some schueler", summe: 42}
-  @update_attrs %{scores: "some updated scores", name: "some updated name", schueler: "some updated schueler", summe: 43}
-  @invalid_attrs %{scores: nil, name: nil, schueler: nil, summe: nil}
+  @create_attrs %{jahrgang: "some jahrgang", scores: "some scores", name: "some name", schueler: "some schueler", summe: 42}
+  @update_attrs %{jahrgang: "some updated jahrgang", scores: "some updated scores", name: "some updated name", schueler: "some updated schueler", summe: 43}
+  @invalid_attrs %{klasse: nil, scores: nil, name: nil, schueler: nil, summe: nil}
 
   defp create_klasse(_) do
     klasse = klasse_fixture()
@@ -20,7 +20,7 @@ defmodule SportfestWeb.KlasseLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.klasse_index_path(conn, :index))
 
       assert html =~ "Listing Klassen"
-      assert html =~ klasse.scores
+      assert html =~ klasse.jahrgang
     end
 
     test "saves new klasse", %{conn: conn} do
@@ -42,7 +42,7 @@ defmodule SportfestWeb.KlasseLiveTest do
         |> follow_redirect(conn, Routes.klasse_index_path(conn, :index))
 
       assert html =~ "Klasse created successfully"
-      assert html =~ "some scores"
+      assert html =~ "some jahrgang"
     end
 
     test "updates klasse in listing", %{conn: conn, klasse: klasse} do
@@ -64,7 +64,7 @@ defmodule SportfestWeb.KlasseLiveTest do
         |> follow_redirect(conn, Routes.klasse_index_path(conn, :index))
 
       assert html =~ "Klasse updated successfully"
-      assert html =~ "some updated scores"
+      assert html =~ "some updated jahrgang"
     end
 
     test "deletes klasse in listing", %{conn: conn, klasse: klasse} do
@@ -82,7 +82,7 @@ defmodule SportfestWeb.KlasseLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.klasse_show_path(conn, :show, klasse))
 
       assert html =~ "Show Klasse"
-      assert html =~ klasse.scores
+      assert html =~ schueler.jahrgang
     end
 
     test "updates klasse within modal", %{conn: conn, klasse: klasse} do
@@ -104,7 +104,7 @@ defmodule SportfestWeb.KlasseLiveTest do
         |> follow_redirect(conn, Routes.klasse_show_path(conn, :show, klasse))
 
       assert html =~ "Klasse updated successfully"
-      assert html =~ "some updated scores"
+      assert html =~ "some updated jahrgang"
     end
   end
 end

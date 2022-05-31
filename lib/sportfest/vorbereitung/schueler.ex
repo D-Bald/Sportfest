@@ -3,7 +3,6 @@ defmodule Sportfest.Vorbereitung.Schueler do
   import Ecto.Changeset
 
   schema "schueler" do
-    field :jahrgang, :integer
     field :name, :string
     field :aktiv, :boolean, default: true
 
@@ -16,7 +15,7 @@ defmodule Sportfest.Vorbereitung.Schueler do
   @doc false
   def changeset(schueler, attrs) do
     schueler
-    |> cast(attrs, [:name, :aktiv, :jahrgang, :klasse_id])
-    |> validate_required([:name, :jahrgang, :klasse_id])
+    |> cast(attrs, [:name, :aktiv, :klasse_id])
+    |> validate_required([:name, :klasse_id])
   end
 end

@@ -4,6 +4,7 @@ defmodule Sportfest.Repo.Migrations.CreateKlassen do
   def change do
     create table(:klassen) do
       add :name, :string
+      add :jahrgang, :integer
       add :schueler, :string
 
       timestamps()

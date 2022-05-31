@@ -228,17 +228,17 @@ defmodule Sportfest.Vorbereitung do
 
   ## Examples
 
-      iex> create_klasse(name)
+      iex> create_klasse(%{name: "5b", jahrgang: 5)
       {:ok, %Klasse{}}
 
-      iex> create_klasse(bad_input)
+      iex> create_klasse(%{name: bad_name, , jahrgang: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_klasse(name) do
+  def create_klasse(name, jahrgang) do
     with {:ok, klasse} <-
       %Klasse{}
-      |> Klasse.changeset(%{name: name})
+      |> Klasse.changeset(%{name: name, jahrgang: jahrgang})
       |> Repo.insert() do
         for station <- list_team_challenge_stationen() do
           Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
@@ -252,10 +252,10 @@ defmodule Sportfest.Vorbereitung do
 
   ## Examples
 
-      iex> update_klasse(klasse, %{field: new_value})
+      iex> update_klasse(klasse, %{name: "6b"})
       {:ok, %Klasse{}}
 
-      iex> update_klasse(klasse, %{field: bad_value})
+      iex> update_klasse(klasse, %{name: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
@@ -424,16 +424,16 @@ defmodule Sportfest.Vorbereitung do
 
   ## Examples
 
-      iex> create_or_skip_schueler(%{name: name, klasse: klasse, jahrgang: 5})
+      iex> create_or_skip_schueler(%{name: name, klasse: klasse})
       {:ok, %Schueler{}}
 
-      iex> create_or_skip_schueler(%{name: vergebener_name, klasse: klasse, jahrgang: 5})
+      iex> create_or_skip_schueler(%{name: vergebener_name, klasse: klasse})
       {:ok, %Schueler{}}
 
-      iex> create_or_skip_schueler(%{name: bad_value, klasse: bad_value, jahrgang: bad_value})
+      iex> create_or_skip_schueler(%{name: bad_value, klasse: bad_value})
       {:error, %Ecto.Changeset{}}
 
-      iex> create_or_skip_schueler(%{name: name_mehrfach, klasse: klasse_mehrfach, jahrgang: 5})
+      iex> create_or_skip_schueler(%{name: name_mehrfach, klasse: klasse_mehrfach})
       ** (Ecto.MultipleResultsError)
   """
   def create_or_skip_schueler(%{name: name, klasse: klasse} = attrs) do
@@ -503,11 +503,6 @@ defmodule Sportfest.Vorbereitung do
       schueler
       |> Repo.preload([scores: [:station], klasse: []])
       |> Schueler.changeset(attrs)
-
-    # if Map.has_key?(attrs, "klasse_id") do
-    #   klasse = get_klasse!(attrs["klasse_id"])
-    #   ^changeset = Ecto.Changeset.put_assoc(changeset, :klasse, klasse)
-    # end
 
     changeset
   end

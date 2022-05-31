@@ -34,17 +34,8 @@ defmodule Sportfest.VorbereitungFixtures do
   @doc """
   Generate a klasse.
   """
-  def klasse_fixture(attrs \\ %{}) do
-    {:ok, klasse} =
-      attrs
-      |> Enum.into(%{
-        scores: "some scores",
-        name: unique_klasse_name(),
-        schueler: "some schueler",
-        summe: 42
-      })
-      |> Sportfest.Vorbereitung.create_klasse()
-
+  def klasse_fixture(name \\ unique_klasse_name(), jahrgang \\ 5) do
+    {:ok, klasse} = Sportfest.Vorbereitung.create_klasse(name, jahrgang)
     klasse
   end
 
@@ -55,7 +46,6 @@ defmodule Sportfest.VorbereitungFixtures do
     {:ok, schueler} =
       attrs
       |> Enum.into(%{
-        jahrgang: "some jahrgang",
         klasse: "some klasse",
         name: "some name",
         scores: "some scores"
