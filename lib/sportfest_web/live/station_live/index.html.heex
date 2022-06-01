@@ -12,7 +12,8 @@
     />
   </.modal>
 <% end %>
-<%= if Sportfest.Accounts.is_admin?(@current_user)do %>
+
+<%= if Sportfest.Accounts.is_admin?(@current_user) do %>
   <span><%= live_patch "Station hinzufügen", to: Routes.station_index_path(@socket, :new) %></span>
 <% end %>
 

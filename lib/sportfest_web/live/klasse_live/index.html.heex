@@ -13,7 +13,7 @@
   </.modal>
 <% end %>
 
-<%= if Sportfest.Accounts.is_admin?(@current_user)do %>
+<%= if Sportfest.Accounts.is_admin?(@current_user) do %>
   <span><%= live_patch "Klasse hinzufügen", to: Routes.klasse_index_path(@socket, :new) %></span>
 <% end %>
 

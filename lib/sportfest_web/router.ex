@@ -25,6 +25,33 @@ defmodule SportfestWeb.Router do
     plug :accepts, ["json"]
   end
 
+  # Scopes mit Zugang für bestimmte Rollen
+  scope "/", SportfestWeb do
+    pipe_through [:browser, :require_authenticated_user, :admin]
+    live "/klassen/new", KlasseLive.Index, :new
+    live "/klassen/:id/edit", KlasseLive.Index, :edit
+    live "/klassen/:id/show/edit", KlasseLive.Show, :edit
+
+    live "/schueler", SchuelerLive.Index, :index
+    live "/schueler/new", SchuelerLive.Index, :new
+    live "/schueler/:id/edit", SchuelerLive.Index, :edit
+    live "/schueler/:id", SchuelerLive.Show, :show
+    live "/schueler/:id/show/edit", SchuelerLive.Show, :edit
+
+    live "/stationen/new", StationLive.Index, :new
+    live "/stationen/:id/edit", StationLive.Index, :edit
+    live "/stationen/:id/show/edit", StationLive.Show, :edit
+  end
+
+  scope "/", SportfestWeb do
+    pipe_through [:browser, :require_authenticated_user, :moderator]
+
+    live "/klassen", KlasseLive.Index, :index
+    live "/klassen/:id", KlasseLive.Show, :show
+
+    live "/scores", ScoreLive.Index, :index
+  end
+
   # Scope offen für alle
   scope "/", SportfestWeb do
     pipe_through :browser
@@ -43,32 +70,6 @@ defmodule SportfestWeb.Router do
     live "/stationen/:id", StationLive.Show, :show
   end
 
-  # Scopes mit Zugang für bestimmte Rollen
-  scope "/", SportfestWeb do
-    pipe_through [:browser, :require_authenticated_user, :moderator]
-
-    live "/scores", ScoreLive.Index, :index
-
-    live "/stationen/new", StationLive.Index, :new
-    live "/stationen/:id/edit", StationLive.Index, :edit
-    live "/stationen/:id/show/edit", StationLive.Show, :edit
-
-    live "/klassen", KlasseLive.Index, :index
-    live "/klassen/new", KlasseLive.Index, :new
-    live "/klassen/:id/edit", KlasseLive.Index, :edit
-    live "/klassen/:id", KlasseLive.Show, :show
-    live "/klassen/:id/show/edit", KlasseLive.Show, :edit
-  end
-
-  scope "/", SportfestWeb do
-    pipe_through [:browser, :require_authenticated_user, :admin]
-
-    live "/schueler", SchuelerLive.Index, :index
-    live "/schueler/new", SchuelerLive.Index, :new
-    live "/schueler/:id/edit", SchuelerLive.Index, :edit
-    live "/schueler/:id", SchuelerLive.Show, :show
-    live "/schueler/:id/show/edit", SchuelerLive.Show, :edit
-  end
 
   # Other scopes may use custom stacks.
   # scope "/api", SportfestWeb do
