@@ -7,6 +7,9 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
+    klassen_liste = Vorbereitung.list_klassen() |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
+    schueler_liste = Vorbereitung.list_schueler() |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
+
     jhg_klassen_map = Vorbereitung.list_klassen()
                       |> Enum.group_by(fn klasse -> klasse.jahrgang end) # Workaround, da Jahrgang aus Versehen in schueler schema statt in klasse
                       |> Enum.map(fn {jahrgang, klassen_liste} ->
@@ -24,7 +27,8 @@ defmodule SportfestWeb.LeaderboardLive.Index do
                         |> Enum.into(%{})
 
     stationen = Vorbereitung.list_stationen() |> Enum.sort_by(fn s -> s.name end, :asc)
-    socket = assign(socket, jhg_schueler_map: jhg_schueler_map, jhg_klassen_map: jhg_klassen_map, stationen: stationen)
+    socket = assign(socket, klassen_liste: klassen_liste, schueler_liste: schueler_liste,
+                      jhg_schueler_map: jhg_schueler_map, jhg_klassen_map: jhg_klassen_map, stationen: stationen)
 
     {:ok, socket}
   end
@@ -36,36 +40,15 @@ defmodule SportfestWeb.LeaderboardLive.Index do
 
   @impl true
   def handle_info({:score_created, score}, socket) do
-    socket = klassen_liste_aktualisieren(Vorbereitung.get_klasse!(score.klasse_id), socket)
-    socket = case score.station.team_challenge do
-        false ->
-          schueler_liste_aktualisieren(Vorbereitung.get_schueler!(score.schueler_id), socket)
-        _ -> socket
-      end
-
-    {:noreply, socket}
+    {:noreply, refresh_scores(socket, score)}
   end
 
   def handle_info({:score_updated, score}, socket) do
-    socket = klassen_liste_aktualisieren(Vorbereitung.get_klasse!(score.klasse_id), socket)
-    socket = case score.station.team_challenge do
-        false ->
-          schueler_liste_aktualisieren(Vorbereitung.get_schueler!(score.schueler_id), socket)
-        _ -> socket
-      end
-
-    {:noreply, socket}
+    {:noreply, refresh_scores(socket, score)}
   end
 
   def handle_info({:score_deleted, score}, socket) do
-    socket = klassen_liste_aktualisieren(Vorbereitung.get_klasse!(score.klasse_id), socket)
-    socket = case score.station.team_challenge do
-        false ->
-          schueler_liste_aktualisieren(Vorbereitung.get_schueler!(score.schueler_id), socket)
-        _ -> socket
-      end
-
-    {:noreply, socket}
+    {:noreply, refresh_scores(socket, score)}
   end
 
   defp apply_action(socket, :index, _params) do
@@ -73,30 +56,64 @@ defmodule SportfestWeb.LeaderboardLive.Index do
     |> assign(:page_title, "Leaderboard")
   end
 
-  defp klassen_liste_aktualisieren(klasse, socket) do
+  # Liste für alle Jahrgänge
+  defp klassen_liste_aktualisieren(socket, klasse) do
+    update(socket, :klassen_liste, fn klassen ->
+      replace_item(klassen, klasse)
+      |> Enum.sort_by(fn k -> Ergebnisse.scaled_class_score(k) end, :desc)
+    end)
+  end
+
+  # Für jahrgangsweise Filter
+  defp jhg_klassen_map_aktualisieren(socket, klasse) do
     update(socket, :jhg_klassen_map,
       fn jhg_klassen_map ->
         %{jhg_klassen_map | klasse.jahrgang =>
           jhg_klassen_map[klasse.jahrgang]
-          |> List.replace_at(# Manual replacement because klassen is not tracked
-                      Enum.find_index(jhg_klassen_map[klasse.jahrgang], fn k -> k.id == klasse.id end),
-                      klasse)
-          |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
+          |> replace_item(klasse)
+          |> Enum.sort_by(fn k -> Ergebnisse.scaled_class_score(k) end, :desc)
           }
       end)
   end
 
-  defp schueler_liste_aktualisieren(schueler, socket) do
+  # Liste für alle Jahrgänge
+  defp schueler_liste_aktualisieren(socket, schueler) do
+    update(socket, :schueler_liste, fn schueler_list ->
+      replace_item(schueler_list, schueler)
+      |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
+    end)
+  end
+
+  # Für jahrgangsweise Filter
+  defp jhg_schueler_map_aktualisieren(socket, schueler) do
     jahrgang = schueler.klasse.jahrgang
     update(socket, :jhg_schueler_map,
       fn jhg_schueler_map ->
         %{jhg_schueler_map | jahrgang =>
         jhg_schueler_map[jahrgang]
-          |> List.replace_at(# Manual replacement because klassen is not tracked
-                      Enum.find_index(jhg_schueler_map[jahrgang], fn s -> s.id == schueler.id end),
-                      schueler)
-          |> Enum.sort_by(fn schueler -> Ergebnisse.get_score_sum(schueler) end, :desc)
+          |> replace_item(schueler)
+          |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
           }
       end)
+  end
+
+  defp refresh_scores(socket, score) do
+    klasse = Vorbereitung.get_klasse!(score.klasse_id)
+    socket = klassen_liste_aktualisieren(socket, klasse)
+              |> jhg_klassen_map_aktualisieren(klasse)
+    if not score.station.team_challenge do
+      schueler = Vorbereitung.get_schueler!(score.schueler_id)
+        schueler_liste_aktualisieren(socket, schueler)
+        |> jhg_schueler_map_aktualisieren(schueler)
+    else
+      socket
+    end
+  end
+
+  # Für manuellen Austausch der Schueler und Klassen in den entsprechenden Listen
+  defp replace_item(list, item) do
+    List.replace_at(list,
+                    Enum.find_index(list, fn i -> i.id == item.id end),
+                    item)
   end
 end
