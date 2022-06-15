@@ -29,7 +29,7 @@ Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen v
 ### Videoeinbettung für Stationen
 Es werden nur Links zu Vimeo Videos unterstützt.
 
-## Deployment
+## Installation
 
 ### Datenbank
 #### Installiere Postgres SQL
@@ -37,6 +37,7 @@ https://www.postgresql.org/
 #### Konfiguration
 Aus der [Dokumentation des Phoenix Frameworks](https://hexdocs.pm/phoenix/up_and_running.html):
 > "Phoenix assumes that our PostgreSQL database will have a postgres user account with the correct permissions and a password of "postgres"."
+
 Falls das Password noch nicht stimmt:
 ```console
 $ psql -U postgres
@@ -98,3 +99,6 @@ $ _build/prod/rel/sportfest/bin/sportfest stop
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest start
 ```
+
+## Lizenz
+MIT License. Copyright (c) 2022 David Baldauf.
