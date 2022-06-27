@@ -3,6 +3,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
 
   alias Sportfest.Ergebnisse
   alias Sportfest.Vorbereitung
+  alias Sportfest.Utils.ListItems
 
   @impl true
   def mount(_params, _session, socket) do
@@ -59,7 +60,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   # Liste für alle Jahrgänge
   defp klassen_liste_aktualisieren(socket, klasse) do
     update(socket, :klassen_liste, fn klassen ->
-      replace_item(klassen, klasse)
+      ListItems.replace_item_by_id_or_add(klassen, klasse)
       |> Enum.sort_by(fn k -> Ergebnisse.scaled_class_score(k) end, :desc)
     end)
   end
@@ -70,7 +71,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
       fn jhg_klassen_map ->
         %{jhg_klassen_map | klasse.jahrgang =>
           jhg_klassen_map[klasse.jahrgang]
-          |> replace_item(klasse)
+          |> ListItems.replace_item_by_id_or_add(klasse)
           |> Enum.sort_by(fn k -> Ergebnisse.scaled_class_score(k) end, :desc)
           }
       end)
@@ -79,7 +80,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   # Liste für alle Jahrgänge
   defp schueler_liste_aktualisieren(socket, schueler) do
     update(socket, :schueler_liste, fn schueler_list ->
-      replace_item(schueler_list, schueler)
+      ListItems.replace_item_by_id_or_add(schueler_list, schueler)
       |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
     end)
   end
@@ -91,7 +92,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
       fn jhg_schueler_map ->
         %{jhg_schueler_map | jahrgang =>
         jhg_schueler_map[jahrgang]
-          |> replace_item(schueler)
+          |> ListItems.replace_item_by_id_or_add(schueler)
           |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
           }
       end)
@@ -108,12 +109,5 @@ defmodule SportfestWeb.LeaderboardLive.Index do
     else
       socket
     end
-  end
-
-  # Für manuellen Austausch der Schueler und Klassen in den entsprechenden Listen
-  defp replace_item(list, item) do
-    List.replace_at(list,
-                    Enum.find_index(list, fn i -> i.id == item.id end),
-                    item)
   end
 end

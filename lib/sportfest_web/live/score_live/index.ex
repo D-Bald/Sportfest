@@ -3,6 +3,7 @@ defmodule SportfestWeb.ScoreLive.Index do
 
   alias Sportfest.Ergebnisse
   alias Sportfest.Vorbereitung
+  alias Sportfest.Utils.ListItems
 
   @impl true
   def mount(_params, session, socket) do
@@ -69,9 +70,8 @@ defmodule SportfestWeb.ScoreLive.Index do
     {:noreply,
            socket
            |> update(:scores, fn scores ->
-                List.replace_at(scores, # Manual replacement, since the scores cannot be tracked by liveview due to filters
-                  Enum.find_index(scores, fn s -> s.id == score.id end),
-                  score) end )}
+                ListItems.replace_item_by_id_or_add(scores, score)
+                end )}
   end
 
   @impl true

@@ -3,6 +3,7 @@ defmodule SportfestWeb.LeaderboardLive.Station do
 
   alias Sportfest.Vorbereitung
   alias Sportfest.Ergebnisse
+  alias Sportfest.Utils.ListItems
 
   @impl true
   def mount(_params, _session, socket) do
@@ -48,9 +49,7 @@ defmodule SportfestWeb.LeaderboardLive.Station do
 
   defp klassen_liste_aktualisieren(klasse, socket) do
     update(socket, :klassen, fn klassen ->
-      List.replace_at(klassen, # Manual replacement because klassen is not tracked
-                      Enum.find_index(klassen, fn k -> k.id == klasse.id end),
-                      klasse)
+      ListItems.replace_item_by_id_or_add(klassen, klasse)
       |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse, socket.assigns.station) end, :desc)
     end)
   end
