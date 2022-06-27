@@ -31,7 +31,6 @@ defmodule SportfestWeb.ScoreLive.Index do
   # unless the filter is All, in this case previous filter for this column is deleted
   def handle_event("filter", filter, socket) do
     filter = Map.delete(filter, "_target") # Keine Ahnung, wo das her kommt, stört aber
-    IO.inspect(filter)
 
     new_filter = socket.assigns.filter |> Map.merge(filter)
     filter_rows = cond do

@@ -198,7 +198,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def get_klasse!(id) do
     Klasse
-    |> Ecto.Query.preload([scores: [:station, :schueler], schueler: []])
+    |> preload([scores: [:station, :schueler], schueler: []])
     |> Repo.get!(id)
   end
 
@@ -219,7 +219,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def get_klasse_by_name(name) do
     Klasse
-    |> Ecto.Query.preload([scores: [:station, :schueler], schueler: []])
+    |> preload([scores: [:station, :schueler], schueler: []])
     |> Repo.get_by(name: name)
   end
 
@@ -335,7 +335,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def list_schueler do
     Schueler
-    |> Ecto.Query.preload([scores: [:station], klasse: []])
+    |> preload([scores: [:station], klasse: []])
     |> order_by(asc: :name)
     |> Repo.all()
   end
@@ -357,7 +357,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def list_schueler_by_klasse(%Klasse{} = klasse) do
     Schueler
-    |> Ecto.Query.preload([scores: [:station], klasse: []])
+    |> preload([scores: [:station], klasse: []])
     |> where(klasse_id: ^klasse.id)
     |> order_by(asc: :name)
     |> Repo.all()
@@ -386,7 +386,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def get_schueler!(id) do
     Schueler
-    |> Ecto.Query.preload([scores: [:station], klasse: []])
+    |> preload([scores: [:station], klasse: []])
     |> Repo.get!(id)
   end
 
@@ -439,7 +439,7 @@ defmodule Sportfest.Vorbereitung do
   def create_or_skip_schueler(%{name: name, klasse: klasse} = attrs) do
     case Schueler |> where(name: ^name)
                   |> where(klasse_id: ^klasse.id)
-                  |> Ecto.Query.preload([scores: [:station], klasse: []])
+                  |> preload([scores: [:station], klasse: []])
                   |> Repo.one()
                   do
       nil -> create_schueler(klasse, attrs)

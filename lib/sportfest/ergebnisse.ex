@@ -20,8 +20,8 @@ defmodule Sportfest.Ergebnisse do
   """
   def list_scores do
     Score
-    |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
-    |> Ecto.Query.order_by([s], desc: s.id)
+    |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+    |> order_by([s], desc: s.id)
     |> Repo.all()
   end
 
@@ -41,7 +41,7 @@ defmodule Sportfest.Ergebnisse do
   """
   def get_score!(id) do
     Score
-    |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+    |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> Repo.get!(id)
   end
 
@@ -77,7 +77,7 @@ defmodule Sportfest.Ergebnisse do
   def create_or_skip_score(%Station{team_challenge: false} = station, %Schueler{} = schueler) do
     case  Score |> where(station_id: ^station.id)
                 |> where(schueler_id: ^schueler.id)
-                |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+                |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
                 |> Repo.one() do
                   nil   ->  create_score( %{station_id: station.id, klasse_id: schueler.klasse_id, schueler_id: schueler.id, medaille: :keine})
                   score ->  {:ok, score}
@@ -87,7 +87,7 @@ defmodule Sportfest.Ergebnisse do
   def create_or_skip_score(%Station{team_challenge: true} = station, %Klasse{} = klasse) do
     case  Score |> where(station_id: ^station.id)
                 |> where(klasse_id: ^klasse.id)
-                |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+                |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
                 |> Repo.one() do
                   nil   ->  create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
                   score ->  {:ok, score}
@@ -363,7 +363,7 @@ defmodule Sportfest.Ergebnisse do
   def query_table(criteria) do
     base_query()
     |> build_query(criteria)
-    |> Ecto.Query.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+    |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> Repo.all()
   end
 
