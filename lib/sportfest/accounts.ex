@@ -363,15 +363,15 @@ defmodule Sportfest.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_admin(params) do
+  def create_admin(attrs) do
     %User{}
-    |> User.registration_changeset(params)
+    |> User.registration_changeset(attrs)
     |> User.role_changeset(%{role: "admin"})
     |> Repo.insert()
   end
 
   @doc """
-  Sets the users role to "admin"
+  Sets the users role to "admin".
 
   ## Examples
 
@@ -387,9 +387,6 @@ defmodule Sportfest.Accounts do
     |> User.role_changeset(%{role: "admin"})
     |> Repo.update()
   end
-
-  def is_admin?(%User{role: "admin"}), do: true
-  def is_admin?(_any), do: false
 
   @doc """
   Sets the users role to "moderator"
@@ -409,6 +406,52 @@ defmodule Sportfest.Accounts do
     |> Repo.update()
   end
 
+  @doc """
+  Sets the users role to "user"
+
+  ## Examples
+
+      iex> set_moderator_role(user)
+      {:ok, %User{}}
+
+      iex> set_moderator_role(%User{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def set_user_role(user) do
+    user
+    |> User.role_changeset(%{role: "user"})
+    |> Repo.update()
+  end
+
+
+  @doc """
+  Checks the users role for "admin" value.
+
+  ## Examples
+
+      iex> is_admin?(%User{role: "admin"})
+      true
+
+      iex> is_admin?(%User{role: "user"})
+      false
+
+  """
+  def is_admin?(%User{role: "admin"}), do: true
+  def is_admin?(_any), do: false
+
+  @doc """
+  Checks the users role for "moderator" value.
+
+  ## Examples
+
+      iex> is_admin?(%User{role: "moderator"})
+      true
+
+      iex> is_admin?(%User{role: "user"})
+      false
+
+  """
   def is_moderator?(%User{role: "moderator"}), do: true
   def is_moderator?(_any), do: false
 

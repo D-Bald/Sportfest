@@ -17,5 +17,6 @@ defmodule Sportfest.Vorbereitung.Schueler do
     schueler
     |> cast(attrs, [:name, :aktiv, :klasse_id])
     |> validate_required([:name, :klasse_id])
+    |> foreign_key_constraint(:klasse_id)
   end
 end

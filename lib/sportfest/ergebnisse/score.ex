@@ -17,5 +17,8 @@ defmodule Sportfest.Ergebnisse.Score do
     score
     |> cast(attrs, [:medaille, :klasse_id, :schueler_id, :station_id])
     |> validate_required([:medaille, :klasse_id, :station_id])
+    |> foreign_key_constraint(:schueler_id)
+    |> foreign_key_constraint(:klasse_id)
+    |> foreign_key_constraint(:station_id)
   end
 end

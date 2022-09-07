@@ -82,7 +82,6 @@ defmodule SportfestWeb.KlasseLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.klasse_show_path(conn, :show, klasse))
 
       assert html =~ "Show Klasse"
-      assert html =~ schueler.jahrgang
     end
 
     test "updates klasse within modal", %{conn: conn, klasse: klasse} do

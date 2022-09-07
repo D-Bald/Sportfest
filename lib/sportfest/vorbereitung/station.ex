@@ -26,7 +26,7 @@ defmodule Sportfest.Vorbereitung.Station do
     station
     |> cast(attrs, [:name, :bronze, :silber, :gold, :team_challenge,
                     :beschreibung, :image_uploads, :video_link, :einheit, :bronze_bedingung, :silber_bedingung, :gold_bedingung])
-    |> validate_required([:name, :bronze, :silber, :gold])
+    |> validate_required([:name, :bronze, :silber, :gold, :team_challenge])
     |> unique_constraint(:name)
   end
 end

@@ -9,7 +9,7 @@ defmodule SportfestWeb.SchuelerLiveTest do
   @invalid_attrs %{name: nil, scores: nil}
 
   defp create_schueler(_) do
-    schueler = schueler_fixture()
+    schueler = schueler_fixture(klasse_fixture())
     %{schueler: schueler}
   end
 
@@ -20,6 +20,7 @@ defmodule SportfestWeb.SchuelerLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.schueler_index_path(conn, :index))
 
       assert html =~ "Listing Schueler"
+      IO.inspect(html)
     end
 
     test "saves new schueler", %{conn: conn} do

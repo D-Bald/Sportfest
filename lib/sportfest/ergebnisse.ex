@@ -7,7 +7,6 @@ defmodule Sportfest.Ergebnisse do
   alias Sportfest.Repo
 
   alias Sportfest.Ergebnisse.Score
-  alias Sportfest.Vorbereitung.{Station, Klasse, Schueler}
 
   @doc """
   Returns the list of scores.
@@ -58,41 +57,6 @@ defmodule Sportfest.Ergebnisse do
     Repo.exists?(Score)
   end
 
-  @doc """
-  Returns score with given station and owner (klasse if station is a team challenge, schueler else).
-  Creates a score if no score with the given station and owner exists.
-  Raises `Ecto.MultipleResultsError` if more than one score with the same station and owner already exists.
-
-  ## Examples
-
-      iex> create_or_skip_score(station, besitzer)
-      {:ok, %Score{}}
-
-      iex> create_or_skip_score(bad_station, bad_besitzer)
-      {:error, %Ecto.Changeset{}}
-
-      iex> create_or_skip_score(station_mehrfach, besitzer_mehrfach)
-      ** (Ecto.MultipleResultsError)
-  """
-  def create_or_skip_score(%Station{team_challenge: false} = station, %Schueler{} = schueler) do
-    case  Score |> where(station_id: ^station.id)
-                |> where(schueler_id: ^schueler.id)
-                |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
-                |> Repo.one() do
-                  nil   ->  create_score( %{station_id: station.id, klasse_id: schueler.klasse_id, schueler_id: schueler.id, medaille: :keine})
-                  score ->  {:ok, score}
-                end
-  end
-
-  def create_or_skip_score(%Station{team_challenge: true} = station, %Klasse{} = klasse) do
-    case  Score |> where(station_id: ^station.id)
-                |> where(klasse_id: ^klasse.id)
-                |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
-                |> Repo.one() do
-                  nil   ->  create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
-                  score ->  {:ok, score}
-                end
-  end
 
   @doc """
   Creates a score.
@@ -355,16 +319,23 @@ defmodule Sportfest.Ergebnisse do
     |> Enum.count()
   end
 
-  # Functions to filter the output for the score list
-  defp base_query do
-    from s in Score
-  end
+  @doc """
+  Gibt alle Scores zurück, die den gegebenen Kriterien entsprechen
 
+  ## Examples
+
+      iex> query_table(%{"station_id" => station.id, "klasse_id" => "All"})
+  """
   def query_table(criteria) do
     base_query()
     |> build_query(criteria)
     |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> Repo.all()
+  end
+
+  # Functions to filter the output for the score list
+  defp base_query do
+    from s in Score
   end
 
   defp build_query(query, criteria) do

@@ -44,8 +44,9 @@ defmodule SportfestWeb.SchuelerLive.FormComponent do
 
   defp save_schueler(socket, :new, %{"klasse_id" => klasse_id} = schueler_params) do
     klasse = Sportfest.Vorbereitung.get_klasse!(klasse_id)
+    attrs = schueler_params |> Map.drop(["klasse_id"])
 
-    case Vorbereitung.create_schueler(klasse, schueler_params) do
+    case Vorbereitung.create_schueler(klasse, attrs) do
       {:ok, _schueler} ->
         {:noreply,
          socket

@@ -9,6 +9,7 @@ defmodule Sportfest.Vorbereitung do
   alias Sportfest.Vorbereitung.Station
   alias Sportfest.Vorbereitung.Klasse
   alias Sportfest.Vorbereitung.Schueler
+  alias Sportfest.Ergebnisse
 
   @doc """
   Returns the list of stationen.
@@ -97,17 +98,7 @@ defmodule Sportfest.Vorbereitung do
       %Station{}
       |> Station.changeset(attrs)
       |> Repo.insert() do
-        case station.team_challenge do
-          false ->
-            for schueler <- list_schueler() do
-              Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: schueler.klasse.id,
-                                              schueler_id: schueler.id, medaille: :keine})
-            end
-          true ->
-            for klasse <- list_klassen() do
-              Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
-            end
-        end
+        create_score_assocs(station)
         {:ok, station}
       end
   end
@@ -158,6 +149,7 @@ defmodule Sportfest.Vorbereitung do
   def change_station(%Station{} = station, attrs \\ %{}) do
     Station.changeset(station, attrs)
   end
+
 
   @doc """
   Returns the list of klassen.
@@ -235,14 +227,12 @@ defmodule Sportfest.Vorbereitung do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_klasse(name, jahrgang) do
+  def create_klasse(attrs \\ %{}) do
     with {:ok, klasse} <-
       %Klasse{}
-      |> Klasse.changeset(%{name: name, jahrgang: jahrgang})
+      |> Klasse.changeset(attrs)
       |> Repo.insert() do
-        for station <- list_team_challenge_stationen() do
-          Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
-        end
+        create_score_assocs(klasse)
         {:ok, klasse}
       end
   end
@@ -395,23 +385,20 @@ defmodule Sportfest.Vorbereitung do
 
   ## Examples
 
-      iex> create_schueler(klasse, %{field: value})
+      iex> create_schueler(%Klasse{}, %{name: "some name"})
       {:ok, %Schueler{}}
 
-      iex> create_schueler(klasse, %{field: bad_value})
+      iex> create_schueler(bad_value, %{name: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_schueler(%Klasse{} = klasse, attrs \\ %{}) do
+  def create_schueler(klasse, attrs) do
     with {:ok, schueler} <-
       Ecto.build_assoc(klasse, :schueler)
       |> change_schueler(attrs)
       |> Repo.insert()
       |> broadcast(:schueler_created) do
-        for station <- list_singe_challenge_stationen() do
-          Sportfest.Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id,
-                                              schueler_id: schueler.id, medaille: :keine})
-        end
+        create_score_assocs(schueler)
         {:ok, schueler}
     end
   end
@@ -442,7 +429,7 @@ defmodule Sportfest.Vorbereitung do
                   |> preload([scores: [:station], klasse: []])
                   |> Repo.one()
                   do
-      nil -> create_schueler(klasse, attrs)
+      nil -> create_schueler(klasse, attrs |> Map.drop([:klasse]))
       schueler -> {:ok, schueler}
     end
   end
@@ -549,4 +536,39 @@ defmodule Sportfest.Vorbereitung do
     Phoenix.PubSub.broadcast!(Sportfest.PubSub, "schueler", {event, schueler})
     {:ok, schueler}
   end
+
+  @doc """
+  Erstellt Scores mit Assoziationen zum gegebenen struct und allen in der DB vorhandenen "Nachbarn".
+
+  TODO: Error handling for create_score/1
+  TODO: Simplification with DRY?
+
+  """
+  defp create_score_assocs(new_station_klasse_or_schueler)
+  defp create_score_assocs(%Station{team_challenge: true} = station) do
+    for klasse <- list_klassen() do
+      Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
+    end
+  end
+
+  defp create_score_assocs(%Station{team_challenge: false} = station) do
+    for schueler <- list_schueler() do
+      Ergebnisse.create_score(%{station_id: station.id, klasse_id: schueler.klasse.id,
+                     schueler_id: schueler.id, medaille: :keine})
+    end
+  end
+
+  defp create_score_assocs(%Klasse{} = klasse) do
+    for station <- list_team_challenge_stationen() do
+      Ergebnisse.create_score(%{station_id: station.id, klasse_id: klasse.id, medaille: :keine})
+    end
+  end
+
+  defp create_score_assocs(%Schueler{} = schueler) do
+    for station <- list_singe_challenge_stationen() do
+      Ergebnisse.create_score(%{station_id: station.id, klasse_id: schueler.klasse_id,
+                                          schueler_id: schueler.id, medaille: :keine})
+    end
+  end
+
 end

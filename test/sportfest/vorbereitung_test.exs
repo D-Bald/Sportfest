@@ -30,8 +30,23 @@ defmodule Sportfest.VorbereitungTest do
       assert station.silber == 42
     end
 
+    test "create_station/1 with existing schueler or klasse creates associated scores" do
+      valid_attrs = %{bronze: 42, gold: 42, name: "some name", silber: 42}
+      with  schueler <- schueler_fixture(klasse_fixture()),
+            {:ok, %Station{} = station} <- Vorbereitung.create_station(valid_attrs) do
+              assert Sportfest.Ergebnisse.query_table(%{"station_id" => station.id, "schueler_id" => schueler.id}) != []
+            end
+    end
+
     test "create_station/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Vorbereitung.create_station(@invalid_attrs)
+    end
+
+    test "create_station/1 with already existing name attribute returns error changeset" do
+      valid_attrs = %{bronze: 42, gold: 42, name: "some name", silber: 42}
+      Vorbereitung.create_station(valid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} = Vorbereitung.create_station(valid_attrs)
     end
 
     test "update_station/2 with valid data updates the station" do
@@ -68,27 +83,31 @@ defmodule Sportfest.VorbereitungTest do
 
     import Sportfest.VorbereitungFixtures
 
-    @invalid_attrs %{jahrgang: nil, scores: nil, name: nil, schueler: nil, summe: nil}
+    @invalid_attrs %{jahrgang: "nil", scores: nil, name: nil, schueler: nil}
 
     test "list_klassen/0 returns all klassen" do
       klasse = klasse_fixture()
-      assert Vorbereitung.list_klassen() == [klasse]
+      assert Vorbereitung.list_klassen()  |> Enum.map(fn score -> score.id end)
+          == [klasse]                     |> Enum.map(fn score -> score.id end)
     end
 
     test "get_klasse!/1 returns the klasse with given id" do
       klasse = klasse_fixture()
-      assert Vorbereitung.get_klasse!(klasse.id) == klasse
+      klasse_aus_db = Vorbereitung.get_klasse!(klasse.id)
+      assert klasse_aus_db.name == klasse.name
+      assert klasse_aus_db.jahrgang == klasse.jahrgang
     end
 
     test "create_klasse/1 with valid data creates a klasse" do
-      valid_attrs = %{jahrgang: "some jahrgang", scores: "some scores", name: "some name", schueler: "some schueler", summe: 42}
-
+      valid_attrs = %{jahrgang: 5, name: "some name"}
       assert {:ok, %Klasse{} = klasse} = Vorbereitung.create_klasse(valid_attrs)
-      assert klasse.jahrgang == "some jahrgang"
-      assert klasse.scores == "some scores"
+
+      klasse = Vorbereitung.get_klasse!(klasse.id)
+
+      assert klasse.jahrgang == 5
       assert klasse.name == "some name"
-      assert klasse.schueler == "some schueler"
-      assert klasse.summe == 42
+      assert klasse.schueler == []
+      assert klasse.scores == []
     end
 
     test "create_klasse/1 with invalid data returns error changeset" do
@@ -97,18 +116,15 @@ defmodule Sportfest.VorbereitungTest do
 
     test "update_klasse/2 with valid data updates the klasse" do
       klasse = klasse_fixture()
-      update_attrs = %{jahrgang: "some updated jahrgang", scores: "some updated scores", name: "some updated name", schueler: "some updated schueler", summe: 43}
+      update_attrs = %{jahrgang: 6, name: "some updated name"}
 
       assert {:ok, %Klasse{} = klasse} = Vorbereitung.update_klasse(klasse, update_attrs)
-      assert klasse.jahrgang == "some updated jahrgang"
-      assert klasse.scores == "some updated scores"
+      assert klasse.jahrgang == 6
       assert klasse.name == "some updated name"
-      assert klasse.schueler == "some updated schueler"
-      assert klasse.summe == 43
     end
 
     test "update_klasse/2 with invalid data returns error changeset" do
-      klasse = klasse_fixture()
+      klasse = Vorbereitung.get_klasse!(klasse_fixture().id)
       assert {:error, %Ecto.Changeset{}} = Vorbereitung.update_klasse(klasse, @invalid_attrs)
       assert klasse == Vorbereitung.get_klasse!(klasse.id)
     end
@@ -132,53 +148,61 @@ defmodule Sportfest.VorbereitungTest do
 
     @invalid_attrs %{klasse: nil, name: nil, scores: nil}
 
+
     test "list_schueler/0 returns all schueler" do
-      schueler = schueler_fixture()
+      schueler = schueler_fixture(klasse_fixture())
       assert Vorbereitung.list_schueler() == [schueler]
     end
 
     test "get_schueler!/1 returns the schueler with given id" do
-      schueler = schueler_fixture()
+      schueler = schueler_fixture(klasse_fixture())
       assert Vorbereitung.get_schueler!(schueler.id) == schueler
     end
 
     test "create_schueler/1 with valid data creates a schueler" do
-      valid_attrs = %{klasse: "some klasse", name: "some name", scores: "some scores"}
+      klasse = klasse_fixture()
+      valid_attrs = %{name: "some name"}
 
-      assert {:ok, %Schueler{} = schueler} = Vorbereitung.create_schueler(valid_attrs)
-      assert schueler.klasse == "some klasse"
+      assert {:ok, %Schueler{} = schueler} = Vorbereitung.create_schueler(klasse, valid_attrs)
+
+      schueler = Vorbereitung.get_schueler!(schueler.id)
+
+      assert schueler.klasse == klasse
       assert schueler.name == "some name"
-      assert schueler.scores == "some scores"
+      assert schueler.scores == []
     end
 
     test "create_schueler/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Vorbereitung.create_schueler(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Vorbereitung.create_schueler(klasse_fixture(), @invalid_attrs)
     end
 
     test "update_schueler/2 with valid data updates the schueler" do
-      schueler = schueler_fixture()
-      update_attrs = %{klasse: "some updated klasse", name: "some updated name", scores: "some updated scores"}
+      schueler = schueler_fixture(klasse_fixture())
+      neue_klasse = klasse_fixture()
+      update_attrs = %{klasse_id: neue_klasse.id, name: "some updated name"}
 
-      assert {:ok, %Schueler{} = schueler} = Vorbereitung.update_schueler(schueler, update_attrs)
-      assert schueler.klasse == "some updated klasse"
-      assert schueler.name == "some updated name"
-      assert schueler.scores == "some updated scores"
+      assert {:ok, %Schueler{} = update} = Vorbereitung.update_schueler(schueler, update_attrs)
+
+      geänderter_schueler = Vorbereitung.get_schueler!(update.id)
+
+      assert geänderter_schueler.name == "some updated name"
+      assert geänderter_schueler.klasse == neue_klasse
     end
 
     test "update_schueler/2 with invalid data returns error changeset" do
-      schueler = schueler_fixture()
+      schueler = schueler_fixture(klasse_fixture())
       assert {:error, %Ecto.Changeset{}} = Vorbereitung.update_schueler(schueler, @invalid_attrs)
       assert schueler == Vorbereitung.get_schueler!(schueler.id)
     end
 
     test "delete_schueler/1 deletes the schueler" do
-      schueler = schueler_fixture()
+      schueler = schueler_fixture(klasse_fixture())
       assert {:ok, %Schueler{}} = Vorbereitung.delete_schueler(schueler)
       assert_raise Ecto.NoResultsError, fn -> Vorbereitung.get_schueler!(schueler.id) end
     end
 
     test "change_schueler/1 returns a schueler changeset" do
-      schueler = schueler_fixture()
+      schueler = schueler_fixture(klasse_fixture())
       assert %Ecto.Changeset{} = Vorbereitung.change_schueler(schueler)
     end
   end

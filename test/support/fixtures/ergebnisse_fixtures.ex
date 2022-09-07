@@ -7,15 +7,8 @@ defmodule Sportfest.ErgebnisseFixtures do
   @doc """
   Generate a score.
   """
-  def score_fixture(attrs \\ %{}) do
-    {:ok, score} =
-      attrs
-      |> Enum.into(%{
-        medaille: "some medaille",
-        scoreboard: "some scoreboard",
-        station: "some station"
-      })
-      |> Sportfest.Ergebnisse.create_score()
+  def score_fixture(attrs) do
+    {:ok, score} = Sportfest.Ergebnisse.create_score(attrs)
 
     score
   end

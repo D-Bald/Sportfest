@@ -92,6 +92,11 @@ defmodule Sportfest.AccountsTest do
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
     end
+
+    test "registers user with default role \"user\"" do
+      %{role: role} = user_fixture()
+      assert "user" = role
+    end
   end
 
   describe "change_user_registration/2" do
@@ -503,6 +508,75 @@ defmodule Sportfest.AccountsTest do
   describe "inspect/2" do
     test "does not include password" do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
+    end
+  end
+
+  describe "create_admin/1" do
+    test "registers a user with role \"admin\"" do
+      assert {:ok, %{role: "admin"}} = Accounts.create_admin(valid_user_attributes())
+    end
+  end
+
+  describe "set_[role]_role/1" do
+    test "set_admin_role/1 sets the role to a given user to \"admin\"" do
+      assert %{role: "user"} = user = user_fixture()
+      assert {:ok, %{role: "admin"}} = Accounts.set_admin_role(user)
+    end
+
+    test "set_moderator_role/1 sets the role to a given user to \"moderator\"" do
+      assert %{role: "user"} = user = user_fixture()
+      assert {:ok, %{role: "moderator"}} = Accounts.set_moderator_role(user)
+    end
+
+    test "set_user_role/1 sets the role to a given user to \"user\"" do
+      {:ok, user} = Accounts.create_admin(valid_user_attributes())
+      assert %{role: "admin"} = user
+      assert {:ok, %{role: "user"}} = Accounts.set_user_role(user)
+    end
+  end
+
+  describe "is_admin?/1" do
+    test "returns true for a user with \"admin\" role" do
+      {:ok, user} = Accounts.create_admin(valid_user_attributes())
+      assert Accounts.is_admin?(user)
+    end
+
+    test "returns false for a user without \"admin\" role" do
+      user = user_fixture()
+      refute Accounts.is_admin?(user)
+    end
+  end
+
+  describe "is_moderator?/1" do
+    test "returns true if a user with the given role exists" do
+      %{role: "user"} = user = user_fixture()
+      assert Accounts.exists_user_with_role?("user")
+
+      {:ok, %{role: "moderator"}} = Accounts.set_moderator_role(user)
+      assert Accounts.exists_user_with_role?("moderator")
+
+      {:ok, %{role: "admin"}} = Accounts.create_admin(valid_user_attributes())
+      assert Accounts.exists_user_with_role?("admin")
+    end
+
+    test "returns false if no user with the given role exists" do
+      refute Accounts.exists_user_with_role?("user")
+
+      %{role: "user"} = user_fixture()
+      refute Accounts.exists_user_with_role?("admin")
+
+    end
+  end
+
+  describe "exists_user_with_role?/1" do
+    test "returns true for a user with \"moderator\" role" do
+      {:ok, user} = Accounts.set_moderator_role(user_fixture())
+      assert Accounts.is_moderator?(user)
+    end
+
+    test "returns false for a user without \"moderator\" role" do
+      user = user_fixture()
+      refute Accounts.is_moderator?(user)
     end
   end
 end
