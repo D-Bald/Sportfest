@@ -101,4 +101,4 @@ $ _build/prod/rel/sportfest/bin/sportfest start
 ```
 
 ## Lizenz
-MIT License. Copyright (c) 2022 David Baldauf.
+MIT License. Copyright (c) 2022 David Potschka.

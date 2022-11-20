@@ -231,10 +231,11 @@ defmodule Sportfest.Vorbereitung do
     with {:ok, klasse} <-
       %Klasse{}
       |> Klasse.changeset(attrs)
-      |> Repo.insert() do
+      |> Repo.insert()
+      |> Repo.preload_on_result_tuple([scores: [:station, :schueler], schueler: []]) do
         create_score_assocs(klasse)
-        {:ok, klasse}
-      end
+        {:ok, klasse }
+    end
   end
 
   @doc """
@@ -253,6 +254,7 @@ defmodule Sportfest.Vorbereitung do
     klasse
     |> change_klasse(attrs)
     |> Repo.update()
+    |> Repo.preload_on_result_tuple([scores: [:station, :schueler], schueler: []])
   end
 
   @doc """
@@ -282,7 +284,7 @@ defmodule Sportfest.Vorbereitung do
   """
   def change_klasse(%Klasse{} = klasse, attrs \\ %{}) do
     klasse
-    |> Repo.preload([scores: [:station, :schueler], schueler: []])
+    # |> Repo.preload([scores: [:station, :schueler], schueler: []])
     |> Klasse.changeset(attrs)
   end
 
@@ -397,9 +399,10 @@ defmodule Sportfest.Vorbereitung do
       Ecto.build_assoc(klasse, :schueler)
       |> change_schueler(attrs)
       |> Repo.insert()
+      |> Repo.preload_on_result_tuple([scores: [:station], klasse: []])
       |> broadcast(:schueler_created) do
         create_score_assocs(schueler)
-        {:ok, schueler}
+        {:ok, schueler }
     end
   end
 
@@ -450,6 +453,7 @@ defmodule Sportfest.Vorbereitung do
     schueler
     |> change_schueler(attrs)
     |> Repo.update()
+    |> Repo.preload_on_result_tuple([scores: [:station], klasse: []])
     |> broadcast(:schueler_updated)
   end
 
@@ -486,12 +490,9 @@ defmodule Sportfest.Vorbereitung do
 
   """
   def change_schueler(%Schueler{} = schueler, attrs \\ %{}) do
-    changeset =
-      schueler
-      |> Repo.preload([scores: [:station], klasse: []])
-      |> Schueler.changeset(attrs)
-
-    changeset
+    schueler
+    # |> Repo.preload([scores: [:station], klasse: []])
+    |> Schueler.changeset(attrs)
   end
 
   @doc """

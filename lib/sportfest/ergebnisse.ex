@@ -74,6 +74,7 @@ defmodule Sportfest.Ergebnisse do
     %Score{}
     |> change_score(attrs)
     |> Repo.insert()
+    |> Repo.preload_on_result_tuple([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> broadcast(:score_created)
   end
 
@@ -93,6 +94,7 @@ defmodule Sportfest.Ergebnisse do
     score
     |> change_score(attrs)
     |> Repo.update()
+    |> Repo.preload_on_result_tuple([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> broadcast(:score_updated)
   end
 
@@ -124,7 +126,7 @@ defmodule Sportfest.Ergebnisse do
   """
   def change_score(%Score{} = score, attrs \\ %{}) do
     score
-    |> Repo.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+    # |> Repo.preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
     |> Score.changeset(attrs)
   end
 

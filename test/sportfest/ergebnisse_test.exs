@@ -14,25 +14,18 @@ defmodule Sportfest.ErgebnisseTest do
     test "list_scores/0 returns all scores", %{valid_attrs: valid_attrs} do
       score = score_fixture(valid_attrs)
 
-      # Compares list of score ids, because `list_scores` does preload the associations in contrast to the freshly built score
-      assert Ergebnisse.list_scores() |> Enum.map(fn score -> score.id end)
-          == [score]                  |> Enum.map(fn score -> score.id end)
+      assert Ergebnisse.list_scores() == [score]
     end
 
     test "get_score!/1 returns the score with given id", %{valid_attrs: valid_attrs} do
 
       score = score_fixture(valid_attrs)
-      # Compares score ids, because `get_score!` does preload the associations in contrast to the freshly built score
-      assert Ergebnisse.get_score!(score.id).id == score.id
+      assert Ergebnisse.get_score!(score.id) == score
     end
 
     test "create_score/1 with valid data creates a score", %{valid_attrs: valid_attrs} do
-
       assert {:ok, %Score{} = score} = Ergebnisse.create_score(valid_attrs)
       assert score.medaille == :keine # Default value
-
-      # Get score from db, so that associations to klasse and station have been established
-      score = Ergebnisse.get_score!(score.id)
       assert score.klasse.id == valid_attrs[:klasse_id]
       assert score.station.id == valid_attrs[:station_id]
     end
@@ -53,7 +46,7 @@ defmodule Sportfest.ErgebnisseTest do
     test "update_score/2 with invalid data returns error changeset", %{valid_attrs: valid_attrs} do
       score = score_fixture(valid_attrs)
       assert {:error, %Ecto.Changeset{}} = Ergebnisse.update_score(score, @invalid_attrs)
-      assert Ergebnisse.get_score!(score.id).medaille == score.medaille
+      assert Ergebnisse.get_score!(score.id) == score
     end
 
     test "delete_score/1 deletes the score", %{valid_attrs: valid_attrs} do
