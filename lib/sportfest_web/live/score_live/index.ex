@@ -14,7 +14,7 @@ defmodule SportfestWeb.ScoreLive.Index do
 
     socket = assign_defaults(session, socket)
               |> assign(:page_title, "Scores")
-              |> assign(klassen: Vorbereitung.list_klassen(), schueler: Vorbereitung.list_schueler(),
+              |> assign(klassen: Vorbereitung.list_klassen(),
                         stationen: Vorbereitung.list_stationen(), filter: filter, scores: [],
                         ausgewählte_station: nil) # Assign aktuelle station, damit die Bedingungen für Medaillen gelesen werden können
 
@@ -85,7 +85,7 @@ defmodule SportfestWeb.ScoreLive.Index do
   # Gibt zurück, ob im gegebenen `filter` der gegebene `key` mit dem erwarteten `value` verknüpft ist.
   def selected?(filter,key,value) do
     case Map.has_key?(filter, key) do
-      true -> filter[key]==value
+      true  -> filter[key]==value
       false -> false
       end
     end
@@ -93,7 +93,7 @@ defmodule SportfestWeb.ScoreLive.Index do
   # Gibt zurück, ob im gegebenen `filter` der gegebene `key` mit dem erwarteten `value` verknüpft ist oder leer ist.
   def selected_or_empty?(filter, key, value) do
     case Map.has_key?(filter, key) do
-      true -> filter[key]==value
+      true  -> filter[key]==value
       false -> true
       end
   end

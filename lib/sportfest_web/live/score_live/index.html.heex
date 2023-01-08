@@ -1,5 +1,5 @@
 <%= if @ausgewählte_station == nil do%>
-<h1>Station auswählen</h1>
+  <h1>Station auswählen</h1>
 <% else %>
   <h1><%= @ausgewählte_station.name %></h1>
   <h2>Bedingungen für Medaillen</h2>
@@ -26,7 +26,7 @@
 <table>
   <thead>
     <tr>
-      
+
       <th>Station</th>
       <th>Klasse</th>
       <th>Schüler:in</th>
@@ -39,9 +39,9 @@
       <td>
         <form phx-change="filter">
           <select name="station_id">
-              <option value="None" selected={selected_or_empty?(@filter, "station_id", "None")} > Keine Eingabe </option>
+              <option value="None" selected={selected_or_empty?(@filter, "station_id", "None")}> Keine Eingabe </option>
               <%= for station <- @stationen do %>
-                  <option value={station.id} selected={selected?(@filter, "station_id", station.id)} > <%= station.name %> </option>
+                  <option value={station.id} selected={selected?(@filter, "station_id", to_string(station.id))} > <%= station.name %> </option>
               <% end %>
               </select>
         </form>
@@ -51,7 +51,7 @@
           <select name="klasse_id">
               <option value="None" selected={selected_or_empty?(@filter, "klasse_id", "None")} > Keine Eingabe </option>
               <%= for klasse <- @klassen do %>
-                  <option value={klasse.id} selected={selected?(@filter, "klasse_id", klasse.id)} > <%= klasse.name %> </option>
+                  <option value={klasse.id} selected={selected?(@filter, "klasse_id", to_string(klasse.id))}> <%= klasse.name %> </option>
               <% end %>
               </select>
         </form>
@@ -98,7 +98,7 @@
             </div>
           </div>
         </td>
-        
+
       </tr>
     <% end %>
   </tbody>
