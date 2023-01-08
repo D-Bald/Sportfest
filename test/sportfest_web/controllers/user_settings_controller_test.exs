@@ -4,9 +4,8 @@ defmodule SportfestWeb.UserSettingsControllerTest do
   alias Sportfest.Accounts
   import Sportfest.AccountsFixtures
 
-  setup :register_and_log_in_user
-
   describe "GET /users/settings" do
+    setup :register_and_log_in_admin
     test "renders settings page", %{conn: conn} do
       conn = get(conn, Routes.user_settings_path(conn, :edit))
       response = html_response(conn, 200)
@@ -21,6 +20,7 @@ defmodule SportfestWeb.UserSettingsControllerTest do
   end
 
   describe "PUT /users/settings (change password form)" do
+    setup :register_and_log_in_admin
     test "updates the user password and resets tokens", %{conn: conn, user: user} do
       new_password_conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
@@ -61,6 +61,7 @@ defmodule SportfestWeb.UserSettingsControllerTest do
 
   describe "PUT /users/settings (change email form)" do
     @tag :capture_log
+    setup :register_and_log_in_admin
     test "updates the user email", %{conn: conn, user: user} do
       conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
