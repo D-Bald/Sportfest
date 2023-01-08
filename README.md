@@ -2,15 +2,16 @@
 
 ## Nutzungshinweise
 
-### Athentifizierung und Authorisierung
-Registrierungs- und Login-Link werden angezeigt, aber die Funktionalität ist noch nicht implementiert!
+### Login
+Es gibt noch keine personalisierten Accounts. Zurzeit wird jeweils ein Account mit der Rolle `admin`, `moderator` und `user` angelegt.
 
 ### Routen
 Jede Route beginnt mit dem festgelegten Host Namen durch `PHX_HOST` (s.u.).
 
 | Route | Beschreibung | Autorisierte Rolle(n) |
 |:------|:-------------|:---------------------:|
-| `/` | Startseite | `admin`, `moderator`, `user` |
+| `/` | Startseite | `admin`, `moderator`, `user`, anonyme:r Nutzer:in |
+| `/users/log_in` | Login um Zugang zu den anderen Seiten zu erhalten. | anonyme:r Nutzer:in |
 | `/stationen` | Auflistung zum Anzeigen und Bearbeiten der Stationen | `admin`, `moderator`, `user` |
 | `/stationen/:id` | Erklärung der Station |`admin`, `moderator`, `user` |
 | `/leaderboard` | Anzeigen der Ranglisten | `admin`, `moderator`, `user` |
@@ -27,7 +28,7 @@ Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen v
 - Die Klassenbezeichnung muss am Anfang den Jahrgang als Zahl stehen haben: `5 b)` oder `5.1.1`
 
 ### Videoeinbettung für Stationen
-Es werden nur Links zu Vimeo Videos unterstützt.
+Es werden nur Links Videos auf [Vimeo](https://vimeo.com/) unterstützt.
 
 ## Installation
 
@@ -99,6 +100,34 @@ $ _build/prod/rel/sportfest/bin/sportfest stop
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest start
 ```
+## TODO
+### Bug-fixes
+- Fehler beim Öffnen des Leaderboards, wenn in einem Jahrgang kein:e Schüler:in eingetragen ist: https://github.com/D-Bald/Sportfest/blob/f27d2f235060540c03a95979fd0bb7e56853c240/lib/sportfest_web/live/leaderboard_live/index.html.heex#L133
+- Tests fixen und vervollständigen (insb. Integration Tests für LiveViews)
+
+### Dokumentation
+- Examples in Dokumentationen checken: würden sie so durch doc-test gehen?
+- Module doc bearbeiten/hinzufügen
+- Beschreibung der Anwendung in application in mix.ex ändern/angeben
+
+### Inhalt
+- Impressum hinzufügen
+- Export von Daten in CSV (in einen angegebenen Ordner) (https://fullstackphoenix.com/tutorials/csv-export)
+  - Scores
+  - Stationen (funktioniert noch nicht in produktion)
+- Übersetzung der Validierungs-Errors
+- Anzeigebild für Stationen
+  - Feld in Schema und Migration hinzufügen
+  - Upload ermöglichen
+  - Anzeige neben Namen in Auflistung aller Stationen
+- View für Accountverwaltung für Admins (Hinzufügen neuer Accounts; Bearbeiten und Löschen anderer Accounts)
+
+### Maintenance
+- Zu [NimbleCSV](https://hexdocs.pm/nimble_csv/NimbleCSV.html)  wechseln
+- Deployment mit Docker
+
+### Performance
+- Repo.preload nur falls nötig durchführen, um die ausgetauschte Datenmenge und die Anzahl an Datenbank Queries zu reduzieren.
 
 ## Lizenz
 MIT License. Copyright (c) 2022 David Potschka.
