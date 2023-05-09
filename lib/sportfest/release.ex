@@ -3,6 +3,7 @@ defmodule Sportfest.Release do
   Used for executing DB release tasks when run in production without Mix
   installed.
   """
+  alias Hex.API.User
   @app :sportfest
 
   def migrate do
@@ -35,6 +36,27 @@ defmodule Sportfest.Release do
             Sportfest.Accounts.set_moderator_role(user)
           _ -> {:ok, user}
         end
+      end
+    end
+  end
+
+  def renew_accounts do
+    load_app()
+    Application.ensure_all_started(@app)
+
+    Sportfest.Repo.delete_all(User)
+
+    for role <- ["admin", "moderator", "user"] do
+      email = IO.gets("Gib eine Email-Adresse für den Benutzer mit der Rolle \"#{role}\" ein:\n") |> String.trim()
+      password = IO.gets("Setze ein Password für diesen Benutzer (mindestens 12 Zeichen):\n") |> String.trim()
+
+      {:ok, user} = Sportfest.Accounts.register_user(%{email: email, password: password})
+      case role do
+        "admin" ->
+          Sportfest.Accounts.set_admin_role(user)
+        "moderator" ->
+          Sportfest.Accounts.set_moderator_role(user)
+        _ -> {:ok, user}
       end
     end
   end
