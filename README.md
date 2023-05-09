@@ -28,7 +28,7 @@ Auf der Seite `HOSTNAME/schueler` können Schüler:innen-Daten durch Hochladen v
 - Die Klassenbezeichnung muss am Anfang den Jahrgang als Zahl stehen haben: `5 b)` oder `5.1.1`
 
 ### Videoeinbettung für Stationen
-Es werden nur Links Videos auf [Vimeo](https://vimeo.com/) unterstützt.
+Es werden aktuell nur Links zu Videos auf [Vimeo](https://vimeo.com/) unterstützt.
 
 ## Installation
 
