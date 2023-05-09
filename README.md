@@ -102,6 +102,7 @@ $ _build/prod/rel/sportfest/bin/sportfest start
 ```
 ## TODO
 ### Bug-fixes
+- Fehler: Ändern der Klasse eines Schülers ändert nicht den foreign key für `klasse` des zum Schüler gehörenden Scores. Dadurch wird der Score in der Medaillenbearbeitung in der falschen (vorherigen) Klasse angezeigt.
 - Fehler beim Öffnen des Leaderboards, wenn in einem Jahrgang kein:e Schüler:in eingetragen ist: https://github.com/D-Bald/Sportfest/blob/f27d2f235060540c03a95979fd0bb7e56853c240/lib/sportfest_web/live/leaderboard_live/index.html.heex#L133
 - Tests fixen und vervollständigen (insb. Integration Tests für LiveViews)
 
