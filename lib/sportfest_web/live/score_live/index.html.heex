@@ -62,7 +62,7 @@
     </tr>
   </thead>
 
-  <tbody id="scores">
+  <tbody id={"scores-#{@reload_id}"} phx-update="prepend">
     <%= for score <- @scores do %>
       <tr id={"score-#{score.id}"}>
         <td><%= score.station.name %></td>
