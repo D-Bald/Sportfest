@@ -331,7 +331,7 @@ defmodule Sportfest.Ergebnisse do
   def query_table(criteria) do
     base_query()
     |> build_query(criteria)
-    |> preload([klasse: [scores: [:station]], schueler: [scores: [:station]], station: []])
+    |> preload([:klasse, :schueler, :station])
     |> Repo.all()
   end
 

@@ -13,12 +13,12 @@ defmodule SportfestWeb.ScoreLive.Index do
 
     socket = assign_defaults(session, socket)
               |> assign(:page_title, "Scores")
-              |> assign(klassen: Vorbereitung.list_klassen(),
+              |> assign(klassen: Vorbereitung.list_klassen(%{preloads: false}),
                         stationen: Vorbereitung.list_stationen(),
                         ausgewählte_station: nil, # Assign aktuelle station, damit die Bedingungen für Medaillen gelesen werden können
                         filter: filter,
                         scores: [])
-              |> assign(:reload_id, station_klasse_id_sum(filter))
+              |> assign(:reload_id, station_klasse_id_sum(filter)) # Id, um bei Änderung des Filters alle Scores neu zu holen.
 
     {:ok, socket, temporary_assigns: [scores: []]}
   end
@@ -36,9 +36,12 @@ defmodule SportfestWeb.ScoreLive.Index do
     filter = Map.delete(filter, "_target") # Keine Ahnung, wo das her kommt, stört aber
 
     new_filter = socket.assigns.filter |> Map.merge(filter)
-    {filter_rows, ausgewaehlte_station} = cond do
-      Enum.any?(Map.values(new_filter), &match?("None", &1)) -> {[], nil}
-      true -> {get_filter_rows(new_filter), get_selected_station_from_filter(new_filter)}
+
+    ausgewaehlte_station = get_selected_station_from_filter(new_filter)
+
+    filter_rows = cond do
+      Enum.any?(Map.values(new_filter), &match?("None", &1)) -> []
+      true -> get_filter_rows(new_filter)
     end
 
     {:noreply, assign(socket, scores: filter_rows, filter: new_filter,
@@ -100,6 +103,9 @@ defmodule SportfestWeb.ScoreLive.Index do
       end
   end
 
+  # Berechnet eine ID anhand der ausgewählten Station und Klasse im Filter.
+  # Die ID verwendet live view, um bei Änderung das Element, das damit dekoriert wird, neu zu laden.
+  # So kann bei einem Filter Event die ganze Score Liste neu geladen werden, obwohl der `phx-update` Wert `prepend` ist.
   def station_klasse_id_sum(%{"station_id" => "None", "klasse_id" => "None"}) do
     0
   end

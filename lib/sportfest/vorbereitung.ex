@@ -154,18 +154,32 @@ defmodule Sportfest.Vorbereitung do
   @doc """
   Returns the list of klassen.
 
+  The `preloads` option controls, if associated fields are preloaded. The default value is `true`
+  and preloads this list of fields `[scores: [:station, :schueler], schueler: []]`.
+  Pass `%{preloads: false}` as options for a smaller footprint.
+
   ## Examples
 
       iex> list_klassen()
       [%Klasse{}, ...]
 
+      iex> list_klassen(%{preloads: false})
+      [%Klasse{}, ...]
+
   """
-  def list_klassen do
+  def list_klassen(opts \\ %{preloads: true})
+  def list_klassen(%{preloads: true}) do
     Klasse
     |> preload([scores: [:station, :schueler], schueler: []])
     |> order_by(asc: :name)
     |> Repo.all()
   end
+  def list_klassen(%{preloads: false}) do
+    Klasse
+    |> order_by(asc: :name)
+    |> Repo.all()
+  end
+
 
   @doc """
   Gibt Klassen mit gegebenen IDs und Namen zurück.
