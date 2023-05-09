@@ -27,8 +27,11 @@ MIX_ENV=prod mix release --overwrite
 echo "Running migrations"
 _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.migrate"
 
-# helper function to create admin, moderator and user account if needed
+# helper function to create admin, moderator and user accounts if needed
 _build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.maybe_create_accounts"
+
+# helper function to reset admin, moderator and user accounts
+#_build/prod/rel/sportfest/bin/sportfest eval "Sportfest.Release.reset_accounts"
 
 echo "Running app as daemon"
 _build/prod/rel/sportfest/bin/sportfest daemon

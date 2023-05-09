@@ -40,11 +40,11 @@ defmodule Sportfest.Release do
     end
   end
 
-  def renew_accounts do
+  def reset_accounts do
     load_app()
     Application.ensure_all_started(@app)
 
-    Sportfest.Repo.delete_all(User)
+    Sportfest.Repo.delete_all(Sportfest.Accounts.User)
 
     for role <- ["admin", "moderator", "user"] do
       email = IO.gets("Gib eine Email-Adresse für den Benutzer mit der Rolle \"#{role}\" ein:\n") |> String.trim()
