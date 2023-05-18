@@ -44,7 +44,7 @@ defmodule SportfestWeb.ExportController do
       station.gold,
       station.team_challenge,
       station.beschreibung,
-      station.image_uploads,
+      # station.image_uploads, # noch nicht implementiert
       station.video_link,
       station.einheit,
       station.bronze_bedingung,
