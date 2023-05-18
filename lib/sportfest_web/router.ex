@@ -122,8 +122,9 @@ defmodule SportfestWeb.Router do
 
     get "/users/register", UserRegistrationController, :new
     post "/users/register", UserRegistrationController, :create
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
+    get "/users/settings", UserSettingsController, :index
+    get "/users/:id/settings", UserSettingsController, :edit
+    put "/users/:id/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
   end
 

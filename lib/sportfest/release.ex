@@ -3,7 +3,6 @@ defmodule Sportfest.Release do
   Used for executing DB release tasks when run in production without Mix
   installed.
   """
-  alias Hex.API.User
   @app :sportfest
 
   def migrate do

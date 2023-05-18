@@ -11,6 +11,20 @@ defmodule Sportfest.Accounts do
   ## Database getters
 
   @doc """
+  Returns the list of users.
+
+  ## Examples
+
+      iex> list_users()
+      [%User{}, ...]
+
+  """
+  def list_users do
+    User
+    |> Repo.all()
+  end
+
+  @doc """
   Gets a user by email.
 
   ## Examples
@@ -172,6 +186,23 @@ defmodule Sportfest.Accounts do
 
     Repo.insert!(user_token)
     UserNotifier.deliver_update_email_instructions(user, update_email_url_fun.(encoded_token))
+  end
+
+  @doc """
+  Returns the url with token to confirm an updated email to the given user.
+  Used, if the update is done by an admin.
+
+  ## Examples
+
+      iex> update_email_confirmation_token(user, current_email, update_email_url_fun)
+      {:ok, %{to: ..., body: ...}}
+
+  """
+  def token_for_update_email_confirmation(%User{} = user, current_email) do
+    {encoded_token, user_token} = UserToken.build_email_token(user, "change:#{current_email}")
+
+    Repo.insert!(user_token)
+    {:ok, encoded_token}
   end
 
   @doc """

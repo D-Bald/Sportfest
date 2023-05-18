@@ -37,6 +37,9 @@
       <li>
         <%= link "Schüler:innen bearbeiten", to: Routes.schueler_index_path(@conn, :index) %>
       </li>
+      <li>
+        <%= link "Accounts bearbeiten", to: Routes.user_settings_path(@conn, :index) %>
+      </li>
     </ul>
   </article>
 <% end %>

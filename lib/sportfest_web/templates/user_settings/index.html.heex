@@ -1,0 +1,23 @@
+<h1>Accounts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for user <- @users do %>
+    <tr>
+      <td>
+        <span><%= user.email %></span>
+      </td>
+      <td>
+        <span><%= link "bearbeiten", to: Routes.user_settings_path(@conn, :edit, user) %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
