@@ -113,18 +113,21 @@ $ _build/prod/rel/sportfest/bin/sportfest start
 
 ### Inhalt
 - Impressum hinzufügen
-- Export von Daten in CSV (in einen angegebenen Ordner) (https://fullstackphoenix.com/tutorials/csv-export)
+- Export von Daten (als Download) (https://fullstackphoenix.com/tutorials/csv-export)
   - Scores
-  - Stationen (funktioniert noch nicht in produktion)
+  - Stationen (gespeicherte Bilder werden noch nicht exportiert)
+  - Eigene Seite mit Auswahl der zu exportierenden Ressourcen und jeweiligen Felder
 - Übersetzung der Validierungs-Errors
 - Anzeigebild für Stationen
   - Feld in Schema und Migration hinzufügen
   - Upload ermöglichen
   - Anzeige neben Namen in Auflistung aller Stationen
-- View für Accountverwaltung für Admins (Hinzufügen neuer Accounts; Bearbeiten und Löschen anderer Accounts)
+- Accountverwaltung für Admins
+ - Schon implementiert: Ändern von Email und Passwort aller Accounts
+ - Offen: Hinzufügen neuer Accounts; Löschen von Accounts
 
 ### Maintenance
-- Zu [NimbleCSV](https://hexdocs.pm/nimble_csv/NimbleCSV.html)  wechseln
+- Stationsbeschreibungen werden zur Zeit `raw` gerendert (https://github.com/D-Bald/Sportfest/blob/main/lib/sportfest_web/live/station_live/show.html.heex#L20). Da nur Admins dieses Feld bearbeiten können, ist das Sicherheitsrisiko gerig. Trotzdem könnte eingegebenet Text in Formularen geprüft werden: https://github.com/rrrene/html_sanitize_ex
 - Deployment mit Docker
 
 ### Performance
