@@ -41,6 +41,8 @@ defmodule SportfestWeb.Router do
     live "/stationen/new", StationLive.Index, :new
     live "/stationen/:id/edit", StationLive.Index, :edit
     live "/stationen/:id/show/edit", StationLive.Show, :edit
+
+    post "/export/:resource", ExportController, :create
   end
 
   scope "/", SportfestWeb do

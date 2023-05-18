@@ -15,6 +15,12 @@
 
 <%= if Sportfest.Accounts.is_admin?(@current_user) do %>
   <span><%= live_patch "Station hinzufügen", to: Routes.station_index_path(@socket, :new) %></span>
+
+  <div>
+    <%= link to: Routes.export_path(@socket, :create, "stationen"), method: :post do %>
+      Alle Stationen als CSV exportieren
+    <% end %>
+  </div>
 <% end %>
 
 <table>
