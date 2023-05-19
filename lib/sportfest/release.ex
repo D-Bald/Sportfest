@@ -18,15 +18,6 @@ defmodule Sportfest.Release do
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
   end
 
-  def maybe_create_accounts do
-    load_app()
-    Application.ensure_all_started(@app)
-
-    if Sportfest.Accounts.list_users() == [] do
-      seeds()
-    end
-  end
-
   def reset_accounts do
     load_app()
     Application.ensure_all_started(@app)
@@ -34,6 +25,15 @@ defmodule Sportfest.Release do
     Sportfest.Repo.delete_all(Sportfest.Accounts.User)
 
     seeds()
+  end
+
+  def maybe_create_accounts do
+    load_app()
+    Application.ensure_all_started(@app)
+
+    if Sportfest.Accounts.list_users() == [] do
+      seeds()
+    end
   end
 
   def maybe_create_accounts_by_role do
