@@ -1,4 +1,4 @@
 #!/bin/sh
 cd -P -- "$(dirname -- "$0")"
 exec ./sportfest eval Sportfest.Release.migrate
-exec ./sportfest eval Sportfest.Release.maybe_create_accounts
+#exec ./sportfest eval Sportfest.Release.maybe_create_accounts
