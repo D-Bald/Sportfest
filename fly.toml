@@ -8,7 +8,7 @@ primary_region = "cdg"
 kill_signal = "SIGTERM"
 
 [deploy]
-  release_command = "/app/bin/migrate_and_init"
+  release_command = "/app/bin/migrate"
 
 [env]
   PHX_HOST = "sportfest.fly.dev"
