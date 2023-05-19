@@ -12,9 +12,9 @@
 
 alias Sportfest.Vorbereitung
 
-{:ok, _ } = Vorbereitung.create_station(%{name: "5.6 Spinnenhof - Klassenstaffellauf", team_challenge: true})
-{:ok, _ } = Vorbereitung.create_station(%{name: "1.1 Paper Toss - Doppeltisch"})
-{:ok, _ } = Vorbereitung.create_station(%{name: "1.2 Paper Toss - Übers Tafeleck"})
+# {:ok, _ } = Vorbereitung.create_station(%{name: "5.6 Spinnenhof - Klassenstaffellauf", team_challenge: true})
+# {:ok, _ } = Vorbereitung.create_station(%{name: "1.1 Paper Toss - Doppeltisch"})
+# {:ok, _ } = Vorbereitung.create_station(%{name: "1.2 Paper Toss - Übers Tafeleck"})
 
 # Hinzufügen von jeweils einem Konto für Schüler:innen, Lehrer:innen und Adminstrator:innen
 Sportfest.Accounts.create_admin(%{email: "admin@test", password: "hallohallohallo"})

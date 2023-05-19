@@ -26,7 +26,7 @@ defmodule SportfestWeb.Endpoint do
   # THAS MAY BE A DIRTY FIX!
   plug Plug.Static,
     at: "/",
-    from: :sportfest,
+    from: :sportfest, # Wieder zurück geändert. Ausprobieren, ob es in production funktioniert
     gzip: false,
     only: ~w(assets fonts images uploads favicon.ico robots.txt)
 

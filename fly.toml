@@ -9,6 +9,7 @@ kill_signal = "SIGTERM"
 
 [deploy]
   release_command = "/app/bin/migrate"
+  release_command = "/app/bin/maybe_create_accounts"
 
 [env]
   PHX_HOST = "sportfest.fly.dev"
