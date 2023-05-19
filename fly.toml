@@ -8,7 +8,7 @@ primary_region = "cdg"
 kill_signal = "SIGTERM"
 
 [deploy]
-  release_command = "sh ./release.sh"
+  release_command = "sh release.sh"
 
 [env]
   PHX_HOST = "sportfest.fly.dev"
