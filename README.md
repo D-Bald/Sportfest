@@ -32,10 +32,11 @@ Es werden aktuell nur Links zu Videos auf [Vimeo](https://vimeo.com/) unterstüt
 
 ## Installation
 
-### Datenbank
-#### Installiere Postgres SQL
+### Lokal
+#### Datenbank
+##### Installiere Postgres SQL
 https://www.postgresql.org/
-#### Konfiguration
+##### Konfiguration
 Aus der [Dokumentation des Phoenix Frameworks](https://hexdocs.pm/phoenix/up_and_running.html):
 > "Phoenix assumes that our PostgreSQL database will have a postgres user account with the correct permissions and a password of "postgres"."
 
@@ -49,7 +50,7 @@ postgres=# ALTER USER postgres PASSWORD 'postgres';
 ALTER ROLE
 ```
 
-#### Erstelle Datenbank `sportfest_prod` für die Sportfest App
+##### Erstelle Datenbank `sportfest_prod` für die Sportfest App
 ```console
 $ psql -U postgres
 psql (13.6)
@@ -59,7 +60,7 @@ postgres=# CREATE DATABASE sportfest_prod;
 CREATE DATABASE
 ```
 
-### Code herunterladen
+#### Code herunterladen
 ```console
 $ sudo git clone https://github.com/D-Bald/Sportfest.git
 $ cd Sportfest
@@ -67,8 +68,8 @@ $ sudo mix deps.get
 $ sudo mix compile
 ```
 
-### Deployment mit Releases
-#### Vorbereiten des Skripts
+#### Deployment mit Releases
+##### Vorbereiten des Skripts
 Benenne das Startskript um:
 ```console
 $ sudo mv setup_and_run.sh.sample setup_and_run.sh
@@ -84,22 +85,39 @@ Setze das generierte Passwort in der entsprechenden Zeile im Skript ein.
 Vgl. auch Hinweis aus der [Phoenix Dokumentation](https://hexdocs.pm/phoenix/1.6.6/deployment.html):
 > "Do not copy those values directly, set `SECRET_KEY_BASE` according to the result of `mix phx.gen.secret` and `DATABASE_URL` according to your database address."
 
-#### Ausführen des Skripts
+##### Ausführen des Skripts
 ```console
 $ sudo sh setup_and_run.sh
 ```
 
 Falls noch keine Accounts angelegt wurden, wird hier durch Ausführen der Funktion `Sportfest.Release.maybe_create_accounts/0` die Eingabe einer E-Mail Adresse und eines Passworts für jeweils einen Account mit den Rollen `"admin"`, `"moderator"` und `"user"` gefordert. Die E-Mail Adresse muss ein @ enthalten und das Passwort mindestens 12 Zeichen lang sein. Um die Accounts zu resetten, kann die Zeile mit der genannten Funktion auskommentiert und dafür die Zeile mit der Funktion `Sportfest.Release.maybe_create_accounts/0` ausgeführt werden.
 
-#### Um die so gestartete App zu stoppen
+##### Um die so gestartete App zu stoppen
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest stop
 ```
 
-#### Option zum Starten der App im Vordergrund
+##### Option zum Starten der App im Vordergrund
 ```console
 $ _build/prod/rel/sportfest/bin/sportfest start
 ```
+### Fly.io
+#### Getting started
+Folge den Schritten in der Dokumentation von Fly.io: https://fly.io/docs/elixir/getting-started/
+Hier werden alle Schritte, von der Installation der `flyctl` bis hin zum Erstellen der Fly App mit `fly launch` vorgestellt.
+
+#### Initialisierung der Accounts
+Die Initialisierung ist am einfachsten von der IEx shell anzustoßen: https://fly.io/docs/elixir/the-basics/iex-into-running-app/
+Angenommen, die Fly App heißt `sportfest`, dann lautet der Befehl:
+```console
+$ fly ssh console --pty -C "app/bin/sportfest remote"
+```
+
+Zur Initialisierung der Accounts, verwende die Funktionen im `Sportfest.Release` Modul:
+```console
+  iex> Sportfest.Release.maybe_create_accounts()
+```
+
 ## TODO
 ### Bug-fixes
 - Fehler: Ändern der Klasse eines Schülers ändert nicht den foreign key für `klasse` des zum Schüler gehörenden Scores. Dadurch wird der Score in der Medaillenbearbeitung in der falschen (vorherigen) Klasse angezeigt.

@@ -24,7 +24,7 @@ defmodule Sportfest.Release do
 
     Sportfest.Repo.delete_all(Sportfest.Accounts.User)
 
-    seeds()
+    create_accounts_by_role()
   end
 
   def maybe_create_accounts do
@@ -32,14 +32,11 @@ defmodule Sportfest.Release do
     Application.ensure_all_started(@app)
 
     if Sportfest.Accounts.list_users() == [] do
-      seeds()
+      create_accounts_by_role()
     end
   end
 
-  def maybe_create_accounts_by_role do
-    load_app()
-    Application.ensure_all_started(@app)
-
+  defp create_accounts_by_role do
     for role <- ["admin", "moderator", "user"] do
       if not Sportfest.Accounts.exists_user_with_role?(role) do
         email = IO.gets("Gib eine Email-Adresse für den Benutzer mit der Rolle \"#{role}\" ein:\n") |> String.trim()
@@ -70,12 +67,5 @@ defmodule Sportfest.Release do
 
   defp load_app do
     Application.load(@app)
-  end
-
-  defp seeds do
-    {:ok, _, _} =
-      Ecto.Migrator.with_repo(Sportfest.Repo, fn _repo ->
-        Code.eval_file("priv/repo/seeds.exs")
-      end)
   end
 end
