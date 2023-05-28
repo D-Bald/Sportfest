@@ -37,21 +37,8 @@ defmodule Sportfest.Utils.CSVData do
   end
 
   def export_stationen_to_csv(field_names \\ stationen_field_names()) do
-    map_repr =
-      Sportfest.Vorbereitung.list_stationen()
-      |> Enum.map(fn station ->
-          Map.from_struct(station)
-          |> Map.take(field_names)
-        end)
-
-    list_with_sorted_fields =
-      Enum.map(map_repr, fn station ->
-        Enum.reduce(field_names, [], &[Map.fetch!(station, &1) | &2])
-        |> Enum.reverse()
-      end)
-
-    [field_names | list_with_sorted_fields]
-    |> CSV.encode()
+    Sportfest.Vorbereitung.list_stationen()
+    |> CSV.encode(headers: field_names)
     |> Enum.to_list()
   end
 
