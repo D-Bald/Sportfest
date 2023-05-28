@@ -104,6 +104,7 @@ $ _build/prod/rel/sportfest/bin/sportfest start
 ### Fly.io
 #### Getting started
 Folge den Schritten in der Dokumentation von Fly.io: https://fly.io/docs/elixir/getting-started/
+
 Hier werden alle Schritte, von der Installation der `flyctl` bis hin zum Erstellen der Fly App mit `fly launch` vorgestellt.
 
 #### Initialisierung der Accounts

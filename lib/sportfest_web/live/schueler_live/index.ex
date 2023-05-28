@@ -37,6 +37,14 @@ defmodule SportfestWeb.SchuelerLive.Index do
     |> assign(:schueler, nil)
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    schueler = Vorbereitung.get_schueler!(id)
+    {:ok, _} = Vorbereitung.delete_schueler(schueler)
+
+    {:noreply, assign(socket, :schueler_collection, list_schueler())}
+  end
+
   @impl Phoenix.LiveView
   def handle_event("validate", _params, socket) do
     {:noreply, socket}
@@ -45,14 +53,6 @@ defmodule SportfestWeb.SchuelerLive.Index do
   @impl Phoenix.LiveView
   def handle_event("cancel-upload", %{"ref" => ref}, socket) do
     {:noreply, cancel_upload(socket, :schueler_data, ref)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    schueler = Vorbereitung.get_schueler!(id)
-    {:ok, _} = Vorbereitung.delete_schueler(schueler)
-
-    {:noreply, assign(socket, :schueler_collection, list_schueler())}
   end
 
   @impl Phoenix.LiveView

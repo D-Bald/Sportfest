@@ -6,8 +6,14 @@ defmodule SportfestWeb.StationLive.Index do
 
   @impl true
   def mount(_params, session, socket) do
-    socket = assign_defaults(session, socket)
-    {:ok, assign(socket, :stationen, list_stationen())}
+    {:ok,
+      assign_defaults(session, socket)
+      |> assign(:stationen, Vorbereitung.list_stationen())
+      |> assign(:stationen, Vorbereitung.list_stationen())
+      # Bei mehreren CSV kommt es vor, dass in der Datenbank zwei Schüler:innen mit der
+      # gleichen ID erstellt werden => max_entries: 1
+      |> allow_upload(:stationen_data, accept: ~w(.csv), max_entries: 1)
+    }
   end
 
   @impl true
@@ -46,10 +52,33 @@ defmodule SportfestWeb.StationLive.Index do
       end
     end
 
-    {:noreply, assign(socket, :stationen, list_stationen())}
+    {:noreply, assign(socket, :stationen, Vorbereitung.list_stationen())}
   end
 
-  defp list_stationen do
-    Vorbereitung.list_stationen()
+  @impl Phoenix.LiveView
+  def handle_event("validate", _params, socket) do
+    {:noreply, socket}
   end
+
+  @impl Phoenix.LiveView
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :stationen_data, ref)}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("save", _params, socket) do
+    with {[_|_] = entries, []} <- uploaded_entries(socket, :stationen_data) do
+      for entry <- entries do
+        consume_uploaded_entry(socket, entry, fn %{path: path} ->
+          {:ok, Sportfest.Utils.CSVData.import_stationen_from_csv(path)}
+        end)
+      end
+    end
+
+    {:noreply, assign(socket, :stationen, Vorbereitung.list_stationen())}
+  end
+
+  def error_to_string(:too_large), do: "Zu große Datei"
+  def error_to_string(:too_many_files), do: "Zu viele Dateien"
+  def error_to_string(:not_accepted), do: "Dieser Datei Typ wird nicht unterstützt"
 end

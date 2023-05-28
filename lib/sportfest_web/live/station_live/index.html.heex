@@ -13,8 +13,39 @@
   </.modal>
 <% end %>
 
-<%= if Sportfest.Accounts.is_admin?(@current_user) do %>
-  <span><%= live_patch "Station hinzufügen", to: Routes.station_index_path(@socket, :new) %></span>
+<%= if Sportfest.Accounts.is_admin?(@current_user) do %><section phx-drop-target={@uploads.stationen_data.ref}>
+  <form id="upload-form" phx-submit="save" phx-change="validate">
+    <%= live_file_input @uploads.stationen_data %>
+    <button type="submit">Hochladen</button>
+  </form>
+  <%= for entry <- @uploads.stationen_data.entries do %>
+    <%= for err <- upload_errors(@uploads.stationen_data, entry) do %>
+      <div class="alert alert-danger">
+        <%= error_to_string(err) %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%# render each stationen_data entry %>
+  <%= for entry <- @uploads.stationen_data.entries do %>
+    <article class="upload-entry">
+
+      <%# entry.progress will update automatically for in-flight entries %>
+      <progress value={entry.progress} max="100"> <%= entry.progress %>% </progress>
+
+      <%# a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 %>
+      <button phx-click="cancel-upload" phx-value-ref={entry.ref} aria-label="abbrechen">&times;</button>
+
+    </article>
+  <% end %>
+
+  <%# Phoenix.LiveView.Helpers.upload_errors/1 returns a list of error atoms %>
+  <%= for err <- upload_errors(@uploads.stationen_data) do %>
+    <p class="alert alert-danger"><%= error_to_string(err) %></p>
+  <% end %>
+  </section>
+
+  <span><%= live_patch "Station manuell hinzufügen", to: Routes.station_index_path(@socket, :new) %></span>
 
   <div>
     <%= link to: Routes.export_path(@socket, :create, "stationen"), method: :post do %>
