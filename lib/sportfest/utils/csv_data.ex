@@ -14,24 +14,12 @@ defmodule Sportfest.Utils.CSVData do
     |> Enum.map(fn attrs -> Vorbereitung.create_or_skip_schueler(attrs) end)
   end
 
-  def export_stationen_to_csv do
-    path = "../../../backups/stationen.csv" |> Path.expand(__DIR__)
-    data = [build_station_headers() | Vorbereitung.list_stationen()
-                                      |> Enum.map(&build_station_row(&1))]
-            |> CSV.encode()
-            |> Enum.to_list()
-    case File.write(path, data) do
-      :ok -> Logger.info("Backup erfolgreich erstellt")
-      {:error, reason} -> Logger.info([File_write: "Backup nicht erfolgreich", reason: reason, path: path])
-    end
-
-  end
-
   defp build_schueler_attributes(line) do
     {jahrgang, _} = Integer.parse(line["Klasse"])
+
     %{name: line["Vorname"] <> " " <> line["Nachname"],
-      klasse: case Vorbereitung.get_klasse_by_name(line["Klasse"])do
-        nil -> case Vorbereitung.create_klasse(%{klasse: line["Klasse"], jahrgang: jahrgang}) do
+      klasse: case Vorbereitung.get_klasse_by_name(line["Klasse"]) do
+        nil -> case Vorbereitung.create_klasse(%{name: line["Klasse"], jahrgang: jahrgang}) do
           {:ok, klasse} -> klasse
           {:error, _} -> raise("Klasse konnte nicht erstellt werden.")
         end
@@ -40,35 +28,34 @@ defmodule Sportfest.Utils.CSVData do
     }
   end
 
-  defp build_station_headers do
-    [
-      "name",
-      "bronze",
-      "silber",
-      "gold",
-      "team_challenge",
-      "beschreibung",
-      "image_uploads",
-      "video_link",
-      "einheit",
-      "bronze_bedingung",
-      "silber_bedingung",
-      "gold_bedingung"
-    ]
+  def import_stationen_from_csv(file) do
+    file
+    |> Path.expand(__DIR__) # Used when read in repo/seeds
+    |> File.stream!
+    |> CSV.decode(headers: true)
+    |> Enum.map(fn {:ok, attrs} -> Vorbereitung.create_station(attrs) end)
   end
-  defp build_station_row(station) do
-    [ station.name,
-      station.bronze,
-      station.silber,
-      station.gold,
-      station.team_challenge,
-      station.beschreibung,
-      station.image_uploads,
-      station.video_link,
-      station.einheit,
-      station.bronze_bedingung,
-      station.silber_bedingung,
-      station.gold_bedingung
+
+  def export_stationen_to_csv(field_names \\ stationen_field_names()) do
+    Sportfest.Vorbereitung.list_stationen()
+    |> CSV.encode(headers: field_names)
+    |> Enum.to_list()
+  end
+
+  defp stationen_field_names do
+    [
+      :name,
+      :bronze,
+      :silber,
+      :gold,
+      :team_challenge,
+      :beschreibung,
+      # :image_uploads, # noch nicht implementiert
+      :video_link,
+      :einheit,
+      :bronze_bedingung,
+      :silber_bedingung,
+      :gold_bedingung
     ]
   end
 end
