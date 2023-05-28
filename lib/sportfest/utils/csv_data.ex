@@ -14,6 +14,28 @@ defmodule Sportfest.Utils.CSVData do
     |> Enum.map(fn attrs -> Vorbereitung.create_or_skip_schueler(attrs) end)
   end
 
+  defp build_schueler_attributes(line) do
+    {jahrgang, _} = Integer.parse(line["Klasse"])
+
+    %{name: line["Vorname"] <> " " <> line["Nachname"],
+      klasse: case Vorbereitung.get_klasse_by_name(line["Klasse"]) do
+        nil -> case Vorbereitung.create_klasse(%{name: line["Klasse"], jahrgang: jahrgang}) do
+          {:ok, klasse} -> klasse
+          {:error, _} -> raise("Klasse konnte nicht erstellt werden.")
+        end
+        klasse -> klasse
+      end
+    }
+  end
+
+  def import_stationen_from_csv(file) do
+    file
+    |> Path.expand(__DIR__) # Used when read in repo/seeds
+    |> File.stream!
+    |> CSV.decode(headers: true)
+    |> Enum.map(fn {:ok, attrs} -> Vorbereitung.create_station(attrs) end)
+  end
+
   def export_stationen_to_csv(field_names \\ stationen_field_names()) do
     map_repr =
       Sportfest.Vorbereitung.list_stationen()
@@ -24,26 +46,13 @@ defmodule Sportfest.Utils.CSVData do
 
     list_with_sorted_fields =
       Enum.map(map_repr, fn station ->
-        Enum.reduce(field_names, [],&[{&1, Map.fetch!(station, &1)} | &2])
+        Enum.reduce(field_names, [], &[Map.fetch!(station, &1) | &2])
         |> Enum.reverse()
       end)
 
     [field_names | list_with_sorted_fields]
     |> CSV.encode()
     |> Enum.to_list()
-  end
-
-  defp build_schueler_attributes(line) do
-    {jahrgang, _} = Integer.parse(line["Klasse"])
-    %{name: line["Vorname"] <> " " <> line["Nachname"],
-      klasse: case Vorbereitung.get_klasse_by_name(line["Klasse"])do
-        nil -> case Vorbereitung.create_klasse(%{klasse: line["Klasse"], jahrgang: jahrgang}) do
-          {:ok, klasse} -> klasse
-          {:error, _} -> raise("Klasse konnte nicht erstellt werden.")
-        end
-        klasse -> klasse
-      end
-    }
   end
 
   defp stationen_field_names do
