@@ -54,13 +54,6 @@ defmodule Sportfest.Release do
     end
   end
 
-  def station_backup do
-    load_app()
-    Application.ensure_all_started(@app)
-
-    Sportfest.Utils.CSVData.export_stationen_to_csv()
-  end
-
   defp repos do
     Application.fetch_env!(@app, :ecto_repos)
   end
