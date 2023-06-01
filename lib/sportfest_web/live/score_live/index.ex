@@ -37,7 +37,7 @@ defmodule SportfestWeb.ScoreLive.Index do
 
     new_filter = socket.assigns.filter |> Map.merge(filter)
 
-    {:ok, ausgewaehlte_station} = get_selected_station(new_filter)
+    {_, ausgewaehlte_station} = get_selected_station(new_filter) # nil darf als ausgewählte station in die assigns
 
     filter_rows = cond do
       Enum.any?(Map.values(new_filter), &match?("None", &1)) -> []
