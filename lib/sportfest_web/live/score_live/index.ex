@@ -74,9 +74,15 @@ defmodule SportfestWeb.ScoreLive.Index do
 
   @impl true
   def handle_info({:score_updated, score}, socket) do
-    {:noreply,
-           socket
-           |> update(:scores, fn scores -> [score | scores] end)}
+
+    # Event `phx-update` soll auf der Scoreliste nur dann ausgelöst werden, wenn der geupdatete Score zur ausgewählten Klasse gehört.
+    # Ansonsten wird ein Score einer anderen Klasse vorne angehangen.
+    if score.klasse.id == String.to_integer(Map.get(socket.assigns.filter, "klasse_id")) do
+      {:noreply, socket |> update(:scores, fn scores -> [score | scores] end)}
+    else
+      {:noreply, socket}
+    end
+
   end
 
   @impl true
