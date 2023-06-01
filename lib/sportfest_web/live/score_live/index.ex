@@ -37,7 +37,7 @@ defmodule SportfestWeb.ScoreLive.Index do
 
     new_filter = socket.assigns.filter |> Map.merge(filter)
 
-    ausgewaehlte_station = get_selected_station_from_filter(new_filter)
+    {:ok, ausgewaehlte_station} = get_selected_station(new_filter)
 
     filter_rows = cond do
       Enum.any?(Map.values(new_filter), &match?("None", &1)) -> []
@@ -75,15 +75,21 @@ defmodule SportfestWeb.ScoreLive.Index do
   @impl true
   def handle_info({:score_updated, score}, socket) do
 
-    # Event `phx-update` soll auf der Scoreliste nur dann ausgelöst werden, wenn der geupdatete Score zur ausgewählten Klasse gehört.
-    # Ansonsten wird ein Score einer anderen Klasse vorne angehangen.
-    if score.klasse.id == String.to_integer(Map.get(socket.assigns.filter, "klasse_id")) do
-      {:noreply, socket |> update(:scores, fn scores -> [score | scores] end)}
+    # Event `phx-update` soll auf der Scoreliste nur dann ausgelöst werden,
+    # wenn der geupdatete Score zur ausgewählten Klasse und Station gehört.
+    with  {:ok, klasse_id} <- get_selected_klasse_id(socket.assigns.filter),
+          {:ok, station_id} <- get_selected_station_id(socket.assigns.filter) do
+          if score.klasse.id == klasse_id
+            and score.station.id == station_id do
+              {:noreply, socket |> update(:scores, fn scores -> [score | scores] end)}
+          else
+          {:noreply, socket}
+          end
     else
-      {:noreply, socket}
+      {:error, nil} -> {:noreply, socket}
     end
-
   end
+
 
   @impl true
   def handle_info({:score_deleted, score}, socket) do
@@ -131,16 +137,30 @@ defmodule SportfestWeb.ScoreLive.Index do
   Gibt `nil` zurück, falls `station_id` nicht im Filter enthalten oder `"None"`
 
   ## Examples
-      iex> get_selected_station_from_filter(%{"station_id" => "1"})
+      iex> get_selected_station(%{"station_id" => "1"})
       %Station{}
 
-      iex> get_selected_station_from_filter(%{"station_id" => "None"})
+      iex> get_selected_station(%{"station_id" => "None"})
       nil
   """
-  def get_selected_station_from_filter(filter) do
+  def get_selected_station(filter) do
     case Map.has_key?(filter, "station_id") and filter["station_id"] != "None" do
-      true -> Vorbereitung.get_station!(filter["station_id"])
-      false -> nil
+      true -> {:ok, Vorbereitung.get_station!(filter["station_id"])}
+      false -> {:error, nil}
+    end
+  end
+
+  defp get_selected_station_id(filter) do
+    case Map.has_key?(filter, "station_id") and filter["station_id"] != "None" do
+      true -> {:ok, String.to_integer(filter["station_id"])}
+      false -> {:error, nil}
+    end
+  end
+
+  defp get_selected_klasse_id(filter) do
+    case Map.has_key?(filter, "klasse_id") and filter["klasse_id"] != "None" do
+      true -> {:ok, String.to_integer(filter["klasse_id"])}
+      false -> {:error, nil}
     end
   end
 
