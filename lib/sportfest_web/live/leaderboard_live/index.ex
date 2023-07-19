@@ -11,20 +11,12 @@ defmodule SportfestWeb.LeaderboardLive.Index do
     klassen_liste = Vorbereitung.list_klassen() |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
     schueler_liste = Vorbereitung.list_schueler() |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
 
-    jhg_klassen_map = Vorbereitung.list_klassen()
-                      |> Enum.group_by(fn klasse -> klasse.jahrgang end) # Workaround, da Jahrgang aus Versehen in schueler schema statt in klasse
-                      |> Enum.map(fn {jahrgang, klassen_liste} ->
-                          {jahrgang, Enum.sort_by(klassen_liste,  fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)}
-                        end)
+    jhg_klassen_map = klassen_liste
+                      |> Enum.group_by(fn klasse -> klasse.jahrgang end)
                       |> Enum.into(%{})
 
-    jhg_schueler_map = Vorbereitung.list_schueler()
+    jhg_schueler_map = schueler_liste
                         |> Enum.group_by(fn schueler -> schueler.klasse.jahrgang end)
-                        |> Enum.map(fn {jahrgang, schueler_liste} ->
-                            {jahrgang,
-                              Enum.filter(schueler_liste, fn s -> s.aktiv end)
-                              |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)}
-                          end)
                         |> Enum.into(%{})
 
     stationen = Vorbereitung.list_stationen() |> Enum.sort_by(fn s -> s.name end, :asc)
