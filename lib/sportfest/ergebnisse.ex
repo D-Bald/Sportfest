@@ -322,6 +322,33 @@ defmodule Sportfest.Ergebnisse do
   end
 
   @doc """
+  Sortiert die Listen von `:klasse`n oder `:schueler`*innen (je nach `ownertype`) nach Score
+  Bei gleichem Score zählen die Anzahlen der Gold und Silbermedaillen.
+
+  """
+  def sort(list, owner_type) do
+    list
+    |> Enum.sort_by(fn owner -> count_silber_medaillen(owner) end, :desc)
+    |> Enum.sort_by(fn owner -> count_gold_medaillen(owner) end, :desc)
+
+    case owner_type do
+      :klasse   -> list |> Enum.sort_by(fn klasse -> scaled_class_score(klasse) end, :desc)
+      :schueler -> list |> Enum.sort_by(fn schueler -> get_score_sum(schueler) end, :desc)
+    end
+  end
+
+  def sort(list, owner_type, station) do
+    list
+    |> Enum.sort_by(fn owner -> count_silber_medaillen(owner) end, :desc)
+    |> Enum.sort_by(fn owner -> count_gold_medaillen(owner) end, :desc)
+
+    case owner_type do
+      :klasse   -> list |> Enum.sort_by(fn klasse -> scaled_class_score(klasse, station) end, :desc)
+      :schueler -> list |> Enum.sort_by(fn schueler -> get_score_sum(schueler) end, :desc)
+    end
+  end
+
+  @doc """
   Gibt alle Scores zurück, die den gegebenen Kriterien entsprechen
 
   ## Examples

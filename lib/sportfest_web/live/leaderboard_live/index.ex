@@ -8,8 +8,8 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket), do: Ergebnisse.subscribe()
-    klassen_liste = Vorbereitung.list_klassen() |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse) end, :desc)
-    schueler_liste = Vorbereitung.list_schueler() |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
+    klassen_liste = Vorbereitung.list_klassen() |> Ergebnisse.sort(:klasse)
+    schueler_liste = Vorbereitung.list_schueler() |> Ergebnisse.sort(:schueler)
 
     jhg_klassen_map = klassen_liste
                       |> Enum.group_by(fn klasse -> klasse.jahrgang end)
@@ -53,7 +53,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   defp klassen_liste_aktualisieren(socket, klasse) do
     update(socket, :klassen_liste, fn klassen ->
       ListItems.replace_item_by_id_or_add(klassen, klasse)
-      |> Enum.sort_by(fn k -> Ergebnisse.scaled_class_score(k) end, :desc)
+      |> Ergebnisse.sort(:klasse)
     end)
   end
 
@@ -64,7 +64,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
         %{jhg_klassen_map | klasse.jahrgang =>
           jhg_klassen_map[klasse.jahrgang]
           |> ListItems.replace_item_by_id_or_add(klasse)
-          |> Enum.sort_by(fn k -> Ergebnisse.scaled_class_score(k) end, :desc)
+          |> Ergebnisse.sort(:klasse)
           }
       end)
   end
@@ -73,7 +73,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
   defp schueler_liste_aktualisieren(socket, schueler) do
     update(socket, :schueler_liste, fn schueler_list ->
       ListItems.replace_item_by_id_or_add(schueler_list, schueler)
-      |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
+      |> Ergebnisse.sort(:schueler)
     end)
   end
 
@@ -85,7 +85,7 @@ defmodule SportfestWeb.LeaderboardLive.Index do
         %{jhg_schueler_map | jahrgang =>
         jhg_schueler_map[jahrgang]
           |> ListItems.replace_item_by_id_or_add(schueler)
-          |> Enum.sort_by(fn s -> Ergebnisse.get_score_sum(s) end, :desc)
+          |> Ergebnisse.sort(:schueler)
           }
       end)
   end

@@ -18,8 +18,7 @@ defmodule SportfestWeb.LeaderboardLive.Station do
 
     scores = Ergebnisse.query_table(%{"station_id" => station.id, "klasse_id" => "All"})
 
-    klassen = Vorbereitung.list_klassen() |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse, station) end, :desc)
-
+    klassen = Vorbereitung.list_klassen() |> Ergebnisse.sort(:klasse, station)
     socket =  socket
               |> assign(:station, station)
 
@@ -50,7 +49,7 @@ defmodule SportfestWeb.LeaderboardLive.Station do
   defp klassen_liste_aktualisieren(klasse, socket) do
     update(socket, :klassen, fn klassen ->
       ListItems.replace_item_by_id_or_add(klassen, klasse)
-      |> Enum.sort_by(fn klasse -> Ergebnisse.scaled_class_score(klasse, socket.assigns.station) end, :desc)
+      |> Ergebnisse.sort(:klasse, socket.assigns.station)
     end)
   end
 end
