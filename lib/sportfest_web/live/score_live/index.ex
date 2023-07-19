@@ -67,27 +67,20 @@ defmodule SportfestWeb.ScoreLive.Index do
 
   @impl true
   def handle_info({:score_created, score}, socket) do
-    {:noreply,
-           socket
-           |> update(:scores, fn scores -> [score | scores] end)}
+    evaluate_if_affects_applied_filter(
+      socket,
+      score,
+      {:noreply, socket |> update(:scores, fn scores -> [score | scores] end)},
+      {:noreply, socket})
   end
 
   @impl true
   def handle_info({:score_updated, score}, socket) do
-
-    # Event `phx-update` soll auf der Scoreliste nur dann ausgelöst werden,
-    # wenn der geupdatete Score zur ausgewählten Klasse und Station gehört.
-    with  {:ok, klasse_id} <- get_selected_klasse_id(socket.assigns.filter),
-          {:ok, station_id} <- get_selected_station_id(socket.assigns.filter) do
-          if score.klasse.id == klasse_id
-            and score.station.id == station_id do
-              {:noreply, socket |> update(:scores, fn scores -> [score | scores] end)}
-          else
-          {:noreply, socket}
-          end
-    else
-      {:error, nil} -> {:noreply, socket}
-    end
+    evaluate_if_affects_applied_filter(
+      socket,
+      score,
+      {:noreply, socket |> update(:scores, fn scores -> [score | scores] end)},
+      {:noreply, socket})
   end
 
 
@@ -161,6 +154,22 @@ defmodule SportfestWeb.ScoreLive.Index do
     case Map.has_key?(filter, "klasse_id") and filter["klasse_id"] != "None" do
       true -> {:ok, String.to_integer(filter["klasse_id"])}
       false -> {:error, nil}
+    end
+  end
+
+  # Event soll auf der Scoreliste nur dann ausgelöst werden,
+  # wenn der geupdatete/erstellte Score zur ausgewählten Klasse und Station gehört.
+  defp evaluate_if_affects_applied_filter(socket, score, expr, else_expr) do
+    with  {:ok, klasse_id} <- get_selected_klasse_id(socket.assigns.filter),
+          {:ok, station_id} <- get_selected_station_id(socket.assigns.filter) do
+          if score.klasse.id == klasse_id
+            and score.station.id == station_id do
+              expr
+          else
+              else_expr
+          end
+    else
+      {:error, nil} -> else_expr
     end
   end
 
