@@ -8,7 +8,7 @@ defmodule Sportfest.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
 
-    field :role, :string, null: false, default: "user"
+    field :role, :string, default: "user"
 
     timestamps()
   end
