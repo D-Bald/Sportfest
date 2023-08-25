@@ -327,9 +327,9 @@ defmodule Sportfest.Ergebnisse do
 
   """
   def sort(list, owner_type) do
-    list
-    |> Enum.sort_by(fn owner -> count_silber_medaillen(owner) end, :desc)
-    |> Enum.sort_by(fn owner -> count_gold_medaillen(owner) end, :desc)
+    list = list
+            |> Enum.sort_by(fn owner -> count_silber_medaillen(owner) end, :desc)
+            |> Enum.sort_by(fn owner -> count_gold_medaillen(owner) end, :desc)
 
     case owner_type do
       :klasse   -> list |> Enum.sort_by(fn klasse -> scaled_class_score(klasse) end, :desc)
@@ -338,9 +338,9 @@ defmodule Sportfest.Ergebnisse do
   end
 
   def sort(list, owner_type, station) do
-    list
-    |> Enum.sort_by(fn owner -> count_silber_medaillen(owner) end, :desc)
-    |> Enum.sort_by(fn owner -> count_gold_medaillen(owner) end, :desc)
+    list = list
+          |> Enum.sort_by(fn owner -> count_silber_medaillen(owner) end, :desc)
+          |> Enum.sort_by(fn owner -> count_gold_medaillen(owner) end, :desc)
 
     case owner_type do
       :klasse   -> list |> Enum.sort_by(fn klasse -> scaled_class_score(klasse, station) end, :desc)
