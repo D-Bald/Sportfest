@@ -163,3 +163,9 @@
   min-width : 40px;
   max-width : 60px;
 }
+
+.keine-medaille-selected {
+  font-size: larger;
+  font-weight: bolder;
+  color: darkblue;
+}

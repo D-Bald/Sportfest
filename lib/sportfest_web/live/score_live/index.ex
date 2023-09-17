@@ -13,8 +13,8 @@ defmodule SportfestWeb.ScoreLive.Index do
 
     socket = assign_defaults(session, socket)
               |> assign(:page_title, "Scores")
-              |> assign(klassen: Vorbereitung.list_klassen(%{preloads: false}),
-                        stationen: Vorbereitung.list_stationen(),
+              |> assign(klassen: Vorbereitung.list_klassen(%{preloads: false}), # TODO: Statt list_klassen mit preloads: false einfach eine neue Funktoni mit DTO mit nur benötigten Daten.
+                        stationen: Vorbereitung.list_stationen(), # TODO: Hier reichen Stationsnamen. Alle anderen Infos müssen nicht in den Socket => abgespeckten API Call einrichten
                         ausgewählte_station: nil, # Assign aktuelle station, damit die Bedingungen für Medaillen gelesen werden können
                         filter: filter,
                         scores: [])
@@ -50,9 +50,14 @@ defmodule SportfestWeb.ScoreLive.Index do
   end
 
   # handles clicks on different medals
-  def handle_event("set_medaille", %{"score_id" => score_id, "medaille" => medaille}, socket) do
+  def handle_event("toggle_medaille", %{"score_id" => score_id, "medaille" => target_medaille}, socket) do
+    target_medaille_atom = String.to_existing_atom(target_medaille)
     with score = Ergebnisse.get_score!(score_id) do
-      case Ergebnisse.update_score(score, %{"medaille" => medaille}) do
+      update_medaille = case score.medaille do
+        ^target_medaille_atom -> :leer
+        _ -> target_medaille_atom
+      end
+      case Ergebnisse.update_score(score, %{"medaille" => update_medaille}) do
 
         {:ok, _score} ->
           {:noreply,

@@ -71,29 +71,53 @@
         <td>
           <div class="row">
           <div class="column">
-              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="keine">
+              <a
+                href="#"
+                phx-click="toggle_medaille"
+                phx-value-score_id={score.id}
+                phx-value-medaille="keine"
+                class={"#{if score.medaille == :keine do "keine-medaille-selected" end}"}
+              >
                 keine
               </a>
             </div>
             <div class="column">
-              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="bronze">
+              <a
+                href="#"
+                phx-click="toggle_medaille"
+                phx-value-score_id={score.id}
+                phx-value-medaille="bronze"
+              >
                 <img  src={Routes.static_path(@socket, "/images/bronze_medaille.png")}
                       class={"medaille-img-#{if score.medaille != :bronze do "not-" end}selected"}
-                      alt="Bronzemedaille"/>
+                      alt="Bronzemedaille"
+                />
               </a>
             </div>
             <div class="column">
-              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="silber">
+              <a
+                href="#"
+                phx-click="toggle_medaille"
+                phx-value-score_id={score.id}
+                phx-value-medaille="silber"
+              >
                 <img  src={Routes.static_path(@socket, "/images/silber_medaille.png")}
                       class={"medaille-img-#{if score.medaille != :silber do "not-" end}selected"}
-                      alt="Silbermedaille"/>
+                      alt="Silbermedaille"
+                />
               </a>
             </div>
             <div class="column">
-              <a href="#" phx-click="set_medaille" phx-value-score_id={score.id} phx-value-medaille="gold">
+              <a
+                href="#"
+                phx-click="toggle_medaille"
+                phx-value-score_id={score.id}
+                phx-value-medaille="gold"
+                >
                 <img  src={Routes.static_path(@socket, "/images/gold_medaille.png")}
                       class={"medaille-img-#{if score.medaille != :gold do "not-" end}selected"}
-                      alt="Goldmedaille"/>
+                      alt="Goldmedaille"
+                />
               </a>
             </div>
           </div>

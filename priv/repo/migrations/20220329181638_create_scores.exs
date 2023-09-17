@@ -12,6 +12,7 @@ defmodule Sportfest.Repo.Migrations.CreateScores do
       timestamps()
     end
 
+    # TODO: optimize indeces
     create index(:scores, [:schueler_id])
     create index(:scores, [:klasse_id])
     create index(:scores, [:station_id])
